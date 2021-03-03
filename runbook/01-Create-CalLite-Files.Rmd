@@ -120,7 +120,7 @@ if(writeForecastToDB == T) {
 ```
 
 ```{r message=FALSE, warning=FALSE}
-for (p in c(1:7)) {
+for (p in c(2:7)) {
   for (t in c(1:9)) {
     #Set run directory
     pChangeVal = pChangeList[[p]]; pChangeName = names(pChangeList)[p]
@@ -134,13 +134,13 @@ for (p in c(1:7)) {
     # Station Sim
     obs11stations <- stationRead(pChangeVal,tChangeVal,con,
                                  calLiteRunCount,modelYears,
-                                 'sim_obs11stations_maf', 
+                                 paste0('sim_obs11stations_',hydrology,'_maf'), 
                                  paste("Year,","Month,","AMF,","BLB,","BND,","FTO,",
                                        "MRC,","SIS,","SJF,","SNS,","TLG,","TNL,","YRS"),TRUE)
     
     add9stations <- stationRead(pChangeVal,tChangeVal,con,
                                 calLiteRunCount,modelYears,
-                                 'sim_add9stations_taf', # remove '_taf' if already in TAF
+                                 paste0('sim_add9stations_',hydrology,'_taf'), 
                                  paste("Year,","Month,","BearRiver,","CacheCreek,",
                                                 "CalaverasRiver,","ChowchillaRiver,",
                                                 "CosumnesRiver,","FresnoRiver,",
@@ -148,7 +148,7 @@ for (p in c(1:7)) {
 
     rim12stations <- stationRead(pChangeVal,tChangeVal,con,
                                  calLiteRunCount,modelYears,
-                                 'sim_rim12stations',
+                                 paste0('sim_rim12stations_',hydrology),
                                  paste("I_FOLSM,","I_MCLRE,","I_MELON,","I_MLRTN,",
                                                 "I_MOKELUMNE,","I_NHGAN,","I_OROVL,","I_PEDRO,",
                                                 "I_SHSTA,","I_TRNTY,","I_YUBA,","I_WKYTN"),FALSE)

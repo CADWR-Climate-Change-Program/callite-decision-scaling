@@ -1,16 +1,16 @@
 slrGUI <- function(SLR_Type, ANN_set, pt_run_folder, dir_newtbls, dir_callite_tbls) {
-  
+
   SLRtable <- readLines(file.path(dir_callite_tbls, "GUI_HydroClimate.table"))
 
   if (ANN_set=='x64') {
-  
+
     SLRlimits <- data.frame(
       "Type" = c("0SLR", "15SLR", "30SLR", "45SLR", "60SLR", rep("BaseCase", 9)),
       "T_lev" = c(NA, NA, NA, NA, NA, "0_0", "0_5", "1_0", "1_5", "2_0","2_5", "3_0", "3_5", "4_0"),
       "SLRamt" = c(0, 1, 2, 3, 4, 0, 1, 2, 3, 4, 4, 4, 4, 4))
-  
+
     SLR <- subset(SLRlimits, Type == SLR_Type & (T_lev == substring(pt_run_folder, 6, 8) | is.na(T_lev)))
-  
+
     SLRtable[11] <- paste0("3\t", SLR$SLRamt,
                            paste("\t!Simulated SLR level",
                                  "0=Base (+0 C),",
@@ -18,21 +18,21 @@ slrGUI <- function(SLR_Type, ANN_set, pt_run_folder, dir_newtbls, dir_callite_tb
                                  "2=30cm (+1.0 C),",
                                  "3=45cm (+1.5 C),",
                                  "4=60cm (+2.0 C) "))
-    
+
   } else if (ANN_set=='x32'){
-    
+
     SLRlimits <- data.frame(
       "Type" = c("0SLR", "15SLR", "45SLR", rep("BaseCase", 9)),
-      "T_lev" = c(NA, NA, NA, "0_0", "0_5", "1_0", "1_5", "2_0","2_5", "3_0", "3_5", "4_0"), 
+      "T_lev" = c(NA, NA, NA, "0_0", "0_5", "1_0", "1_5", "2_0","2_5", "3_0", "3_5", "4_0"),
       "SLRamt" = c(0, 1, 2, 0, 1, 1, 2, 2, 2, 2, 2, 2))
-    
+
     SLR <- subset(SLRlimits, Type == SLR_Type & (T_lev == substring(pt_run_folder, 6, 8) | is.na(T_lev)))
-    
+
     SLRtable[11] <- paste0("3\t", SLR$SLRamt,
                            paste("\t!Simulated SLR level",
                                  "0= Base (0 degree Temp increase),",
                                  "1= 15cm (0.5-1.0 degree Temp increase),",
-                                 "2= 45cm (1.5 and above Temp increase) "))
+                                 "3= 45cm (1.5 and above Temp increase) "))
   }
 
   writeLines(SLRtable, con = file.path(dir_newtbls, paste0("GUI_HydroClimate_", SLR_Type, ".table")))
@@ -88,7 +88,7 @@ calliteForecastTblsWrite <- function(forecast_tbls, dir_newForetbls, run, dir_ca
 }
 
 calliteINITwriteDSS <- function(run, default_input_dir, dir_callite_SV, java_py_dir,
-  calLite_input_dir, dir_newdss, last_cent_only) {
+  calLite_input_dir, dir_newdss, last_cent_only=FALSE, init_py="dss_to_text_DV_to_INIT.py") {
   if (run == 1 | (run == 21 & last_cent_only == TRUE)) {
 
     file.copy(file.path(default_input_dir, "CL_INIT.dss"),
@@ -103,20 +103,25 @@ calliteINITwriteDSS <- function(run, default_input_dir, dir_callite_SV, java_py_
   } else{
 
     system(paste(file.path(java_py_dir,"vscript"),
-                 file.path(java_py_dir,"dss_to_text_DV_to_INIT.py"),
+                 file.path(java_py_dir,init_py),
                  file.path(calLite_input_dir, "data.txt"),
                  file.path(dir_newdss,paste0("Output_DV_",run - 1,".dss"))),
            invisible = TRUE, wait = TRUE)
 
     checkinit <- read.csv(file.path(calLite_input_dir, "data.txt"))
 
-    if (checkinit[1, 46] != 0) {
+    if (checkinit[1, 45] != 0) {
 
       temptxt <- readLines(con = file.path(calLite_input_dir, "data.txt"))
       temptxt[4] <- sub("value,", x = temptxt[2], "")
       temptxt[2] <- sub("pathname,", x = temptxt[1], "")
       temptxt[2] <- gsub("2020D09E", x = temptxt[2], "INITIAL")
-      temptxt[1] <- paste((rep("30SEP1921 2400,", 56)), collapse = " ")
+      temptxt[1] <- paste((rep("30SEP1921 2400,", 55)), collapse = " ")
+      # temptxt[3] <- paste(c(rep("CFS", 4), "DAYS", "None", rep("CFS", 5),
+      #                       "TAF", rep("CFS", 3), rep("TAF", 3),"CFS", rep("TAF", 5),
+      #                       "CFS", rep("TAF", 4), rep("CFS", 2), rep("NONE", 2),
+      #                       rep("TAF", 20), "UMHOS/CM", "TAF", "KM"),
+      #                     collapse = "     ,")
 
       writeLines(temptxt, con = file.path(calLite_input_dir, "data.txt"))
 

@@ -12,69 +12,87 @@ metrics <- as.data.frame(read.csv(file= file.path('..','src','Metrics.csv')))
 metrics
 ```
 
+
 ## PLOTTING PARAMETERS
 ```{r}
+# set the annual metrics table name from the database
+# dbAnnualMetricsTbl <- 'sim_calliteDV_DSCVA_interp_annual'
+dbAnnualMetricsTbl <- 'sim_calliteDV_DSCVA_interp_annual'
+
 # set the period of analysis
 compYear <- 2050
 # set the unit system
 chooseUnits <- 1 # 1=California units (AF, CFS), 2=International units (MM3, M3/s)
+
 # figure save directory
-figureDir <- file.path(calLiteInputDir,'Results','Figures')
+# figureDir <- file.path('../../investigations/interannual-variability-and-DSCVA/figures','DSCVA-dtdp')
+# figureDir <- file.path('../../investigations/interannual-variability-and-DSCVA/figures','DSCVA-dtdsd')
+figureDir <- file.path('')
+
+# precip perturbation
+perturbX <- "P_lev"
+# perturbX <- "SD_lev"
 ```
 
 ## PROBABILITY DENSITIES
 ```{r}
 # load the climate period bivariate normal densities
-prob_rds_file = 'biv_norm_values_dt-dsd.RDS'
+prob_rds_file = 'Biv_norm_values.RDS'
+# prob_rds_file = 'biv_norm_values_dt-dsd.RDS'
 histBivNormVal <- readRDS(file.path('../gcm/processed/',prob_rds_file))[[1]]
+histBivNormVal[,'Biv_Norm_Prob']=0
 futBivNormVal <- readRDS(file.path('../gcm/processed/',prob_rds_file))[[compYear-1995]]
 futBivNormVal <- futBivNormVal[order(futBivNormVal$Biv_Norm_Prob, decreasing = TRUE),]
 futBivNormVal$CumSum <- cumsum(futBivNormVal$Biv_Norm_Prob)
 likelihoodSpace <- futBivNormVal[c(perturbY, perturbX, "CumSum")] %>%
 	spread(key = perturbY, value = "CumSum")
-likelihoodSpace <- likelihoodSpace[-1,-1]
+if (perturbX =="P_lev"){
+  likelihoodSpace <- likelihoodSpace[-1,-1]
+  histBivNormVal[28,'Biv_Norm_Prob']=1
+} else {
+  likelihoodSpace <- likelihoodSpace[,-1]
+  histBivNormVal[46,'Biv_Norm_Prob']=1
+}
+
 ```
 
 ## RESPONSE SURFACES FOR AVERAGES
 ```{r}
 # LOOP THROUGH ALL METRICS
-for (chooseMetric in c(1:17)) {
+for (chooseMetric in c(7)) {
   # set figure directory
   saveDir <- file.path(figureDir, metrics$Folder[chooseMetric])
   if (!dir.exists(saveDir)) {dir.create(saveDir,recursive=T)}
   # query metric from database
-  evalData <- getMetricAnnualData(con, metrics, chooseMetric, 
-                                  paste0('sim_calliteDV_',runName,'_annual'), perturbY, perturbX)
+  evalData <- getMetricAnnualData(con, metrics, chooseMetric, dbAnnualMetricsTbl, perturbY, perturbX)
   print(paste('Queried data for:', metrics$Var[chooseMetric]))
   ### Response Surface ###
   responseMatrices <- calcResponseMatrix(evalData,perturbY,perturbX,'avg')
   plotResponseSurface(responseMatrices,metrics,chooseUnits,saveDir,21,
                                        compYear,likelihoodSpace,
                                        as.numeric(unique(evalData[,perturbX])),
-                                       as.numeric(unique(evalData[,perturbY])),'avg',perturbX)
+                                       as.numeric(unique(evalData[,perturbY])),'avg',perturbX,T)
  }
 ```
 
-## RESPONSE SURFACES FOR CV
+## RESPONSE SURFACES FOR SD
 ```{r}
 # LOOP THROUGH ALL METRICS
-for (chooseMetric in c(1:17)) {
+for (chooseMetric in c(8)) {
   # set figure directory
   saveDir <- file.path(figureDir, metrics$Folder[chooseMetric])
   if (!dir.exists(saveDir)) {dir.create(saveDir,recursive=T)}
   # query metric from database
-  evalData <- getMetricAnnualData(con, metrics, chooseMetric, 
-                                  paste0('sim_calliteDV_',runName,'_annual'), perturbY, perturbX)
+  evalData <- getMetricAnnualData(con, metrics, chooseMetric, dbAnnualMetricsTbl, perturbY, perturbX)
   print(paste('Queried data for:', metrics$Var[chooseMetric]))
   ### Response Surface ###
-  responseMatrices <- calcResponseMatrix(evalData,perturbY,perturbX,'cv')
+  responseMatrices <- calcResponseMatrix(evalData,perturbY,perturbX,'sd')
   plotResponseSurface(responseMatrices,metrics,chooseUnits,saveDir,21,
                                        compYear,likelihoodSpace,
                                        as.numeric(unique(evalData[,perturbX])),
-                                       as.numeric(unique(evalData[,perturbY])),'cv',perturbX)
+                                       as.numeric(unique(evalData[,perturbY])),'sd',perturbX,T)
  }
 ```
-
 
 ## RESPONSE SURFACE FOR PERCENTILES
 ```{r}
@@ -83,15 +101,14 @@ chooseMetric <-  c(7)
 saveDir <- file.path(figureDir, metrics$Folder[chooseMetric])
 if (!dir.exists(saveDir)) {dir.create(saveDir,recursive=T)}
 # query metric from database
-evalData <- getMetricAnnualData(con, metrics, chooseMetric, 
-                                paste0('sim_calliteDV_',runName,'_annual'), perturbY, perturbX)
+evalData <- getMetricAnnualData(con, metrics, chooseMetric, dbAnnualMetricsTbl, perturbY, perturbX)
 print(paste('Queried data for:', metrics$Var[chooseMetric]))
 ### Response Surface ###
 responseMatrices <- calcResponseMatrix(evalData,perturbY,perturbX,'p',percentile=0.05)
 plotResponseSurface(responseMatrices,metrics,chooseUnits,saveDir,21,
                                      compYear,likelihoodSpace,
                                      as.numeric(unique(evalData[,perturbX])),
-                                     as.numeric(unique(evalData[,perturbY])),'P-95 Reliability of',perturbX)
+                                     as.numeric(unique(evalData[,perturbY])),'P-95 Reliability of',perturbX,T)
 ```
 
 ## RESPONSE SURFACE FOR FREQUENCY
@@ -101,8 +118,7 @@ chooseMetric <-  c(8)
 saveDir <- file.path(figureDir, metrics$Folder[chooseMetric])
 if (!dir.exists(saveDir)) {dir.create(saveDir,recursive=T)}
 # query metric from database
-evalData <- getMetricAnnualData(con, metrics, chooseMetric, 
-                                paste0('sim_calliteDV_',runName,'_annual'), perturbY, perturbX)
+evalData <- getMetricAnnualData(con, metrics, chooseMetric, dbAnnualMetricsTbl, perturbY, perturbX)
 print(paste('Queried data for:', metrics$Var[chooseMetric]))
 ### Response Surface ###
 responseMatrices <- calcResponseMatrix(evalData,perturbY,perturbX,'freq')
@@ -116,30 +132,91 @@ plotResponseSurface(responseMatrices,metrics,chooseUnits,saveDir,21,
 ### CDF AND PDF
 ```{r}
 # LOOP THROUGH ALL METRICS
-for (chooseMetric in c(1:17)) {
+for (chooseMetric in c(8)) {
   
   # set figure directory
   saveDir <- file.path(figureDir, metrics$Folder[chooseMetric], 'CDF-PDF')
   if (!dir.exists(saveDir)) {dir.create(saveDir,recursive=T)}
   # query metric from database
-  evalData <- getMetricAnnualData(con, metrics, chooseMetric, 
-                                  paste0('sim_calliteDV_',runName,'_annual'), perturbY, perturbX)
+  evalData <- getMetricAnnualData(con, metrics, chooseMetric, dbAnnualMetricsTbl, perturbY, perturbX)
   print(paste('Queried data for:', metrics$Var[chooseMetric]))
   # bin data
   bins <- seq(min(evalData$Metric, na.rm=TRUE), max(evalData$Metric, na.rm= TRUE), length.out=75)
-  binAve <- rollmean(bins,2, align="left", na.pad=FALSE)
-  if (metrics$Var[chooseMetric]=="SHORTAGE") {binAve <- c(binAve=binAve[-75], 0)}
+  binAve <- rollmean(bins,2, align="left", na.pad=FALSE) 
+  # if (metrics$Var[chooseMetric]=="SHORTAGE") {binAve <- c(binAve=binAve[-75], 0)}
   evalData$Bin <- bins[.bincode(evalData$Metric, bins, right=TRUE, include.lowest=TRUE)]
   evalData$BinAve <-binAve[.bincode(evalData$Metric, bins, right=TRUE, include.lowest=TRUE)]
-  if (metrics$Var[chooseMetric]=="SHORTAGE") {evalData[which(evalData$Metric==0), c("Bin", "BinAve")] <- 0}
+  # if (metrics$Var[chooseMetric]=="SHORTAGE") {evalData[which(evalData$Metric==0), c("Bin", "BinAve")] <- 0}
   # compute CDF
   evalDataHist = metricCDF(evalData,histBivNormVal,perturbX,perturbY)
+  write.table(evalDataHist, paste0(metrics$Var[chooseMetric],'_','historical','_cdf','.csv'),
+              sep=',',row.names = FALSE)
   evalDataFut = metricCDF(evalData,futBivNormVal,perturbX,perturbY,compYear)
+  write.table(evalDataFut, paste0(metrics$Var[chooseMetric],'_',compYear,'_cdf','.csv'),
+              sep=',',row.names = FALSE)
   # plot cdf and pdf
-  plots.cdfpdf <- plotCDFPDF(evalDataFut,evalDataHist,chooseUnits,compYear,chooseMetric,metrics)
+  plots.cdfpdf <- plotCDFPDFshortage(evalDataFut,evalDataHist,chooseUnits,compYear,chooseMetric,metrics)
   # save out
   saveCDFPDF(metrics,chooseMetric,chooseUnits,binAve,compYear,plots.cdfpdf,saveDir)
   
 }
+```
+
+
+```{r}
+for (chooseMetric in c(15,2,9,7)) {
+  evalData <- getMetricAnnualData(con, metrics, chooseMetric, dbAnnualMetricsTbl, perturbY, perturbX)
+  print(paste('Queried data for:', metrics$Var[chooseMetric]))
+  # bin data
+  bins <- seq(min(evalData$Metric, na.rm=TRUE), max(evalData$Metric, na.rm= TRUE), length.out=75)
+  binAve <- rollmean(bins,2, align="left", na.pad=FALSE) 
+  # if (metrics$Var[chooseMetric]=="SHORTAGE") {binAve <- c(binAve=binAve[-75], 0)}
+  evalData$Bin <- bins[.bincode(evalData$Metric, bins, right=TRUE, include.lowest=TRUE)]
+  evalData$BinAve <-binAve[.bincode(evalData$Metric, bins, right=TRUE, include.lowest=TRUE)]
+  # if (metrics$Var[chooseMetric]=="SHORTAGE") {evalData[which(evalData$Metric==0), c("Bin", "BinAve")] <- 0}
+  # compute CDF
+  evalDataHist = metricCDF(evalData,histBivNormVal,perturbX,perturbY)
+  write.table(evalDataHist, paste0(metrics$Var[chooseMetric],'_','historical','_cdf','.csv'),
+    sep=',',row.names = FALSE)
+  evalDataFut = metricCDF(evalData,futBivNormVal,perturbX,perturbY,compYear)
+  write.table(evalDataFut, paste0(metrics$Var[chooseMetric],'_',compYear,'_cdf','.csv'),
+              sep=',',row.names = FALSE)
+}
+```
+
+```{r}
+dbTable = 'sim_obs11stations_pSacTmonoNoAdap_maf'
+# dbTable = 'sim_rim12stations_pSacTmonoNoAdap'
+s = 'YRS'
+sql <- paste0('SELECT Year, dt AS T_lev, 100*dp-100 AS P_lev,',
+  		               ' SUM(`',s,'`) AS Metric', ' FROM ',dbTable,
+              ' WHERE dp != 0.7 GROUP BY Year, T_lev, P_lev ')
+res <- dbSendQuery(con,sql)
+evalData <- dbFetch(res, n=-1)
+
+# evalMerge <- merge(x=evalData,y=histBivNormVal,by=c("T_lev","P_lev"))
+# evalMerge$Metric_weighted <- evalMerge$Metric * evalMerge$Biv_Norm_Prob
+# evalWeighted <- aggregate(evalMerge$Metric_weighted, by=list(evalMerge$Year), FUN=sum)
+# mean(evalWeighted$x)
+# 
+# evalMerge <- merge(x=evalData,y=futBivNormVal,by=c("T_lev","P_lev"))
+# evalMerge$Metric_weighted <- evalMerge$Metric * evalMerge$Biv_Norm_Prob
+# evalWeighted <- aggregate(evalMerge$Metric_weighted, by=list(evalMerge$Year), FUN=sum)
+# mean(evalWeighted$x)
+
+print(paste('Queried data for:', s))
+# bin data
+bins <- seq(min(evalData$Metric, na.rm=TRUE), max(evalData$Metric, na.rm= TRUE), length.out=50)
+binAve <- rollmean(bins, 2, align="left", na.pad=FALSE)
+# if (metrics$Var[chooseMetric]=="SHORTAGE") {binAve <- c(binAve=binAve[-75], 0)}
+evalData$Bin <- bins[.bincode(evalData$Metric, bins, right=TRUE, include.lowest=TRUE)]
+evalData$BinAve <-binAve[.bincode(evalData$Metric, bins, right=TRUE, include.lowest=TRUE)]
+evalDataHist = metricCDF(evalData,histBivNormVal,perturbX,perturbY,year_label='Year')
+write.table(evalDataHist, paste0(s,'_','historical','_cdf','.csv'),
+            sep=',',row.names = FALSE)
+evalDataFut = metricCDF(evalData,futBivNormVal,perturbX,perturbY,compYear,year_label='Year')
+write.table(evalDataFut, paste0(s,'_',compYear,'_cdf','.csv'),
+            sep=',',row.names = FALSE)
+
 ```
 

@@ -57,7 +57,7 @@ if (ANNset=='x64') {
 
 
 ## CalLite Run Loop
-```{r}
+```{r warning=FALSE}
 stop = FALSE
 # un-comment if not running SD perutbations (don't foreget bracket at end of loop):
 # for (sd in c(1:10)){
@@ -65,15 +65,15 @@ stop = FALSE
 #   runName <- paste0("pSac_",sdChangeName,"SD_TmonoNoAdap")
 #   calLiteInputDir <- file.path(calliteRuns,runName)
 #   print(calLiteInputDir)
-    
-  for (p in c(2:7)) {
-    for (t in c(1:9)) {
+for (SLRType in slrChangeList[c(3)]) {    
+  for (p in c(4)) {
+    for (t in c(1,3,5)) {
       for (run in 1:calLiteRunCount) {
   
         #Set run directory
         pChangeVal = pChangeList[[p]]; pChangeName = names(pChangeList)[p]
         tChangeVal = tChangeList[[t]]; tChangeName = names(tChangeList)[t]
-        ptRunFolder <- paste0(pChangeName, "DP", tChangeName, "DT")
+        ptRunFolder <- paste0(pChangeName, "DP", tChangeName, "DT", SLRType)
         print(ptRunFolder)
         
         # Set Callite Generated Input by Perturbation File Paths
@@ -132,10 +132,12 @@ stop = FALSE
           Sys.sleep(3)
         }
         # model is complete, check to verify
-        if (noError != file.info(file.path(
-          dir_callite_DV, "/Run/=ILP=/D.config/Error.log"))$mtime) {
-          stop = TRUE 
-          break
+        errFile =file.path(dir_callite_DV, "/Run/=ILP=/D.config/Error.log")
+        if (file.exists(errFile)) {
+          if (noError != file.info(errFile)$mtime) {
+            stop = TRUE 
+            break 
+          }
         }
         
         # copy output dss back to perturbation folder
@@ -161,6 +163,6 @@ stop = FALSE
     if (stop){break} 
   }
   if (stop){break} 
-
+}
 # }
 ```

@@ -20,12 +20,16 @@ library(cowplot)
 
 ### Directories
 ```{r sourceCode}
+source(file.path('..','src','func_callite_input.R'))
 # Set run directory
-runDir <- file.path("")
+runDir <- file.path('..','Run')
+
+# Set CalLite program path (must be full path)
+calliteV3 <- "C:\\CalLite_v3_64bit"
 
 # Location of monthly 9 addt'l, 11 observed, and 12 rim stations
 # simulated by SAC-SMA-DS
-simulatedMonthlyDir <- file.path("")
+simulatedMonthlyDir <- ""
 
 # Location of daily baseline gridded data
 climData <- file.path("")
@@ -35,8 +39,8 @@ defaultInputDir <- file.path(runDir,'Default')
 defTableDir <- file.path(defaultInputDir,"Default_Tables")
 defDSSDir <- file.path(defaultInputDir,"Default_DSS")
 
-# MariaDB connection
-con <- dbConnect(MySQL(), host='127.0.0.1', port=1,
+# DB connection
+con <- dbConnect(MySQL(), host='127.0.0.1', port=,
                  user= "", password="",
                  dbname="callite-ds")
 
@@ -50,11 +54,12 @@ javaPy <- file.path('..','src','python')
 ### Simulation Config
 ```{r}
 ################################################################################################################
-runName <- "pSacSDTmonoNoAdap"  # descriptive (unique) name for runs under consistent assumptions and hydrology
+runName <- "pSacTmonoNoAdap"  # descriptive (unique) name for runs under consistent assumptions and hydrology
 perturbY <- "T_lev"             # currently always "T_lev"
-perturbX <- "SD_lev"            # "P_lev" or "SD_lev" (set perturbation framework)
+perturbX <- "P_lev"            # "P_lev" or "SD_lev" (set perturbation framework)
 calLiteInputDir <- file.path(calliteRuns,runName)
-wytAdap <- T
+wytAdap <- F
+hydrology <- "pSacTmonoNoAdap"
 ################################################################################################################
 ANNset <- "x64"         # "x32" (15 and 45 cm ANNs) or "x64" (15,30,45, and 60cm ANNs)
 SLRType <- "BaseCase"   # Select from "0SLR", "15SLR", "30SLR", "45SLR", "60SLR" or "BaseCase"
@@ -63,7 +68,7 @@ warmingType <- 'Mono'   # "Dist" or "Mono"
 forecastCase <- 'base'  # "max" or "base"
 sacTempTrigger <-  12   # air temp trigger in degree C, 12 C in default run
 calLiteRunCount <- 22   # number of individual CalLite model runs per perturbation
-modelYears <- 50        # number of years for each indiviudal CalLite model
+modelYears <- 50        # number of years for each individual CalLite model
 writeForecastToDB <- F  # whether to output forecast lookup tables to db
 ################################################################################################################
 ```
@@ -71,6 +76,7 @@ writeForecastToDB <- F  # whether to output forecast lookup tables to db
 ### Perturbation List
 ```{r}
 # Create incremental perturbation lookup list
+slrChangeList <-  c("0SLR", "15SLR", "30SLR", "45SLR", "60SLR")
 sdChangeList <- vector(mode = "list", length = 10)
 pChangeList <- vector(mode = "list", length = 7)
 tChangeList <- vector(mode = "list", length = 9)
@@ -133,5 +139,4 @@ stationsToDatabase(perturbDIR, con, tChangeList,
   pChangeList, "sim_add9stations", "sim_obs11stations", "sim_rim12stations",
   'SACSMA_Inflow_CalLite_9.txt', 'SACSMA_Inflow_CalLite_11.txt', 'SACSMA_Inflow_CalLite_12.txt')
 ```
-
 

@@ -30,41 +30,122 @@ dbClearResult(res)
 res <-  dbSendQuery(con, paste(
   "SELECT * FROM calliteDV_var WHERE id IN (",
   paste(shQuote(c(
-                  # 635, # C_CALAV
-                  # 637, # C_CHOWBYP1
-                  # 643, # C_CHOWBYP2
-                  # 644, # C_CHOWR
-                  # 645, # C_CHRISPP
-                  # 646, # C_COASTAQDCT
-                  # 647, # C_CONYIS
-                  # 649, # C_CVPDMC
+                  1205, # C_YoloBP
+                  981, # C_SacDXC
+                  720, # C_Hood,
+                  977, # C_SacAm
+                  2596, # I_Hood
+                  2080, # D_Hood
+                  675, # C_DXC
+                  891, # C_NBA
+                  985, # C_SacND
+                  2586, # I_BrananIS
+                  1999, # D_BrananIS
+                  2600, # I_MarchCr
+                  2614, # I_SacSJR
+                  2191, # D_SacSJR
+                  1948, # D_Antioch
+                  986, # C_SacRV
+                  1082, # C_SJRVI
                   659, # C_DELTA
                   993, # C_SACSJR
                   2043, # D_DELTAREQD
-                  621, #CVP TOTAL DEL
-                  1790, # CVP_PAG_S DEL
-                  3575:3717, # SWP Deliveries
-                  # 3575, # SWP TOTAL DEL
-                  # 3613, # SWP CO TOTAL DEL
-                  # 3658, # SWP IN TOTAL DEL
-                  # 3713, # SWP TA TOTAL DEL
-                  # 3664, # SWP Percent
-                  # 3666, # SWP Percent DV
-                  2567, # IBU (in-basin use met with storage)
-                  3972, # Ustored-water-for-export (UWFE)
-                  2384:2386, # Extra water needed for Delta Flow Criteria
+                  2007, # D_CCWD
+                  2589, # I_ConeyIs
+                  2024, # D_ConeyIs
+                  2057, # D_ExpTD
+                  1072, # C_SJRVer
+                  916, # C_OldRiver
+                  1046, # C_SJROldR
+                  31, # AD_SJRCalALL
+                  2623, # I_Stockton
+                  2235, # D_Stockton
+                  2624, # I_Terminous
+                  2238, # D_Terminous
+                  2603, # I_MedfordIS
+                  2140, # D_MedfordIS
+                  25, # AD_Mokelumne
+                  2731, # NET DELTA DICU
+                  1929, # DO_REQ
+                  662, #C_Delta_ANN
+                  540, #CO_MRDO
+                  2341, #EM_MRDO
+                  2640, #JP_MRDO
+                  3016:3018, # RS_MRDO 1,2 and 3
+                  671, # C_DELTA WHLCV
+                  672, # C_DELTA WHLJP
+                  665, # C_DELTA CVP
+                  668, # C_DELTA SWP
+                  917, # OMR
+                  250, # C408 LBOUND
+                  2087, # D_JONES
+                  2106, # D_JONES_TD
+                  2094, # D_JONES_CVP_TD
+                  2090, # D_JONES_CVP
+                  1950, # D_BANKS
+                  1988, # D_BANKS_TD
+                  1987, # D_BANKS_SWP_TD
+                  1981, # D_BANKS_SWP
+                  1969, # D_BANKS_CVP_TD
+                  2358, # EXPORTACTUALTD
+                  217, # BANKS ALLOW
+                  2630, # JONES ALLOW
+                  2631, # JONES MIN HS
+                  2327, # EI EXP CTRL
+                  189, # APRMAYEXPCTRL
+                  2741, # NMFS_MAXECPCCDV
+                  2742, # NMFS_MAXEXP
+                  2475, # FWS_MAXEXP
+                  2360, # EXPORT DEC RPA
+                  2574, # INFFORX2NOV_DV
+                  4037, # X2VERNMIN_REQDV
+                  4040, # X2_PRV
+                  185, # AN_EC_MONTH__SALINITY
+                  353, # CH_EC_MONTH__SALINITY
+                  354, # CI_EC_MONTH__SALINITY
+                  473, # CO_EC_MONTH__SALINITY
+                  474, # CO_EC_STD__SALINITY
+                  628, # CV_EC_MONTH__SALINITY
+                  2276, # EC_587_FINAL__SALINITY-EC
+                  2279, # EC_589_FINAL__SALINITY-EC
+                  2282, # EC_595_FINAL__SALINITY-EC
+                  2285, # EC_605_FINAL__SALINITY-EC
+                  2286, # EC_607_FINAL__SALINITY-EC
+                  2289, # EC_608_FINAL__SALINITY-EC
+                  2292, # EC_611_FINAL__SALINITY-EC
+                  2295, # EC_614_FINAL__SALINITY-EC
+                  2298, # EC_620_FINAL__SALINITY-EC
+                  2301, # EC_637_FINAL__SALINITY-EC
+                  2306, # EC_MERCED2_FINAL__SALINITY-EC
+                  2309, # EC_SJRMAZE_FINAL__SALINITY-EC
+                  2312, # EC_SJRMPBYP_FINAL__SALINITY-EC
+                  2315, # EC_SJRSAND_FINAL__SALINITY-EC
+                  2318, # EC_SJRTUOL_FINAL__SALINITY-EC
+                  2321, # EC_STANRIPN_FINAL__SALINITY-EC
+                  2324, # EC_TUOL_FINAL__SALINITY-EC
+                  2337, # EM_EC_MONTH__SALINITY
+                  2338, # EM_EC_STD__SALINITY
+                  2636, # JP_EC_MONTH__SALINITY
+                  2637, # JP_EC_STD__SALINITY
+                  2670, # LV_EC_MONTH__SALINITY
+                  2725, # MR_EC_MONTH__SALINITY
+                  3008, # RS_CL_MONTH__SALINITY
+                  3009, # RS_CL_STD__SALINITY
+                  3010, # RS_EC_MONTH__SALINITY
+                  3011, # RS_EC_STD__SALINITY
+                  3012, # RS_ESTCL_NODXCDV__SALINITY
+                  3001, # RSESTCLNODXCMEDV__SALINITY
+                  4015, # VERNWQFINAL__SALINITY-EC
+                  4016, # VERNWQNONPULSEDV__SALINITY-EC
+                  4017, # VERNWQPULSEDV__SALINITY-EC
+                  4018, # VI_EC_MONTH__SALINITY
                   1913, # DI_CVP
                   1914, # DI_SWP
                   1924, # DLT_IDX_CVP
                   1925, # DLT_IDX_SWP
-                  1927, # DO_REQ_DV__DO-FLOW-REQ
-                  1929, # DO_REQ_FLOW_OUT__FLOW-REQ-NDOI
-                  1930, # DO_REQ_RELDV__DO-FLOW-REL
-                  1933, # DO_REQ_X2CHS_OUT__FLOW-REQ-X2CHS
-                  1935, # DO_REQ_X2CNF_OUT__FLOW-REQ-X2CNF
-                  1937, # DO_REQ_X2ROE_OUT__FLOW-REQ-X2ROE
-                  1950, # D_BANKS
-                  2087, # D_JONES
+                  621, # CVP TOTAL DEL
+                  1790, # CVP_PAG_S DEL
+                  3575:3717, # SWP Deliveries
                   3141:3150, # ShortAD
                   3157, # SHORT_C_MERCED1
                   3251, # SHORT_D_HST
@@ -121,7 +202,7 @@ dbExecute(con,paste("DROP TABLE IF EXISTS",simName))
       ptRunFolder <- paste0(pChangeName, "DP", tChangeName, "DT")
       print(ptRunFolder)
       collectDSSvar(varType, dvVar, con, simName, calLiteInputDir, ptRunFolder,
-                    'DSS/DV', calLiteRunCount, pChangeVal, tChangeVal, sdChangeVal=1) # <- also change this to sdChangeVal
+                    'DSS', calLiteRunCount, pChangeVal, tChangeVal, sdChangeVal=1) # <- also change this to sdChangeVal
     }
   }
 
@@ -131,5 +212,45 @@ dbExecute(con,paste("DROP TABLE IF EXISTS",simName))
 ```{r}
 # create annual summary table in database
 createAnnualTable(con,runName,perturbY,perturbX)
+```
+
+```{r}
+# Interpolation
+dt_index <- 2
+dp_index <- 3
+water_years = c(900:1999)
+for (chooseMetric in c(9)) {
+  for (wy in water_years) {
+    sql <- paste0('SELECT Water_Year, dt, ',
+                  metrics$dbTableVar[chooseMetric], ' AS Metric',
+                  ' FROM ', dbAnnualMetricsTbl,' WHERE dp=1.0 and Water_Year=',wy,
+                  ' ORDER BY dt')
+    res <- dbSendQuery(con,sql)
+    dt_data <- dbFetch(res, n=-1)
+    
+    sql <- paste0('SELECT Water_Year, dp, ',
+                  metrics$dbTableVar[chooseMetric], ' AS Metric',
+                  ' FROM ', dbAnnualMetricsTbl,' WHERE dt=0.5 and Water_Year=',wy,
+                  ' ORDER BY dp')
+    res <- dbSendQuery(con,sql)
+    dp_data <- dbFetch(res, n=-1)
+    
+    dt_data[dt_index,'Metric'] <- NA
+    dp_data[dp_index,'Metric'] <- NA
+    
+    dt_data <- as.data.frame(na.approx(dt_data))
+    dp_data <- as.data.frame(na.approx(dp_data))
+    
+    interp_val <- (dt_data[dt_index,'Metric'] + dp_data[dp_index,'Metric']) / 2
+    
+    sql <- paste0('UPDATE ',dbAnnualMetricsTbl, 
+                  ' SET ', metrics$dbTableVar[chooseMetric],
+                  '=',interp_val,
+                  ' WHERE Water_Year=',wy,
+                  ' and dp=',pChangeList[dp_index+1],' and dt=',tChangeList[dt_index])
+    res <- dbSendQuery(con,sql)
+  }
+}
+
 ```
 

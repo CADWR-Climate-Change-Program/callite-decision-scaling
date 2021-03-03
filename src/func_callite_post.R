@@ -9,7 +9,7 @@ collectDSSvar <- function(type, vars, callite_DB, sim_name, calLite_input_dir,
 
     for (i in 1:callite_run_count) {
 
-      dss <-  file.path(calLite_input_dir,pt_run_folder,folder_sub_path,paste0('Output_',type,'_',i,'_BaseCase.dss'))
+      dss <-  file.path(calLite_input_dir,pt_run_folder,folder_sub_path,paste0('Output_',type,'_',i,'.dss'))
       mydss = opendss(dss, warnIfNew=TRUE, stopIfNew=FALSE)
 
       for (var in 1:nrow(vars)) {
@@ -60,6 +60,8 @@ createAnnualTable <- function (dbCon,runname,perturbY,perturbX) {
           sum(SWP_IN_TOTAL__SWP_DELIVERY * 59.4) AS SWP_DELIVERIES,
           sum(`EXP_ANN_RELAX__SOFT-CONSTRAINT` * 59.4) AS EXP_ANN_RELAX,
           sum(`MRDO_ANN_RELAX__SOFT-CONSTRAINT` * 59.4) AS MRDO_ANN_RELAX,
+          sum(`SHORT_C_MERCED1TOTAL__SHORTAGE-FLOW` * 59.4) + 
+          sum(`SHORT_D_HST__SHORTAGE-FLOW` * 59.4) + 
           sum(`EXP_ANN_RELAX__SOFT-CONSTRAINT` * 59.4) + 
           sum(`MRDO_ANN_RELAX__SOFT-CONSTRAINT` * 59.4) +
           sum(`SHORT_AD_HST__SHORTAGE-FLOW` * 59.4) +
@@ -71,7 +73,7 @@ createAnnualTable <- function (dbCon,runname,perturbY,perturbX) {
           sum(`SHORT_AD_THERM__SHORTAGE-FLOW` * 59.4) +
           sum(`SHORT_AD_WILKNS__SHORTAGE-FLOW` * 59.4) +
           sum(`SHORT_AD_YOLOBP__SHORTAGE-FLOW` * 59.4) +
-          sum(`SHORT_AD_YUBFEA__SHORTAGE-FLOW` * 59.4) AS SHORTAGES, -- SHORT_C_MERCED1TOTAL and SHORT_D_HST
+          sum(`SHORT_AD_YUBFEA__SHORTAGE-FLOW` * 59.4) AS SHORTAGES,
           sum(`D_BANKS__FLOW-DELIVERY` * 59.4) AS D_BANKS,
             sum(`D_JONES__FLOW-DELIVERY` * 59.4) AS D_JONES,
             sum(`D_BANKS__FLOW-DELIVERY` * 59.4) + sum(`D_JONES__FLOW-DELIVERY` * 59.4) AS DELTA_EXPORTS,
