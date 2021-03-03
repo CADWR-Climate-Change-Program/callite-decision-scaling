@@ -1,0 +1,135 @@
+# CalLite Output Extraction
+
+## Source Code
+```{r sourceCode}
+source(file.path('..','src','func_callite_post.R'))
+```
+
+## Load DSS Rip Package (only runs in 32bit R)
+```{r message=FALSE, warning=FALSE}
+options(dss_location="C:\\Program Files (x86)\\HEC\\HEC-DSSVue 2.0.1")
+options(dss_jre_location="C:\\Program Files (x86)\\HEC\\HEC-DSSVue 2.0.1\\java")
+Sys.setenv(JAVA_HOME="C:\\Program Files (x86)\\HEC\\HEC-DSSVue 2.0.1\\java")
+library(dssrip)
+```
+
+## Declare SV Variables
+```{r}
+#  collect certain variables from the sv dss
+res <-  dbSendQuery(con, paste(
+  "SELECT * FROM calliteSV_var WHERE id IN (",
+  paste(shQuote(c(487:525 #res inflows
+                  # 45:62 #AD terms
+                  )), collapse=", "),");"))
+svVar <- dbFetch(res)
+dbClearResult(res)
+```
+
+## Declare DV Variables
+```{r message=FALSE, warning=FALSE}
+res <-  dbSendQuery(con, paste(
+  "SELECT * FROM calliteDV_var WHERE id IN (",
+  paste(shQuote(c(
+                  # 635, # C_CALAV
+                  # 637, # C_CHOWBYP1
+                  # 643, # C_CHOWBYP2
+                  # 644, # C_CHOWR
+                  # 645, # C_CHRISPP
+                  # 646, # C_COASTAQDCT
+                  # 647, # C_CONYIS
+                  # 649, # C_CVPDMC
+                  659, # C_DELTA
+                  993, # C_SACSJR
+                  2043, # D_DELTAREQD
+                  621, #CVP TOTAL DEL
+                  1790, # CVP_PAG_S DEL
+                  3575:3717, # SWP Deliveries
+                  # 3575, # SWP TOTAL DEL
+                  # 3613, # SWP CO TOTAL DEL
+                  # 3658, # SWP IN TOTAL DEL
+                  # 3713, # SWP TA TOTAL DEL
+                  # 3664, # SWP Percent
+                  # 3666, # SWP Percent DV
+                  2567, # IBU (in-basin use met with storage)
+                  3972, # Ustored-water-for-export (UWFE)
+                  2384:2386, # Extra water needed for Delta Flow Criteria
+                  1913, # DI_CVP
+                  1914, # DI_SWP
+                  1924, # DLT_IDX_CVP
+                  1925, # DLT_IDX_SWP
+                  1927, # DO_REQ_DV__DO-FLOW-REQ
+                  1929, # DO_REQ_FLOW_OUT__FLOW-REQ-NDOI
+                  1930, # DO_REQ_RELDV__DO-FLOW-REL
+                  1933, # DO_REQ_X2CHS_OUT__FLOW-REQ-X2CHS
+                  1935, # DO_REQ_X2CNF_OUT__FLOW-REQ-X2CNF
+                  1937, # DO_REQ_X2ROE_OUT__FLOW-REQ-X2ROE
+                  1950, # D_BANKS
+                  2087, # D_JONES
+                  3141:3150, # ShortAD
+                  3157, # SHORT_C_MERCED1
+                  3251, # SHORT_D_HST
+                  2720, # MRDO ANN Relax
+                  2362, # EXP ANN Relax
+                  3156, # SHORT CVP TOTAL
+                  3266:3268, # SHORT SWP N, S and TOTAL
+                  3269:3272, # SIO STORAGE
+                  3273:3276, # SJR Restoration
+                  3572, # SWPRULECV
+                  3718, # ESTMN
+                  3725, # FOLSM
+                  3742, # HNSLY
+                  3749, # MCLRE
+                  3757, # MELON
+                  3763, # MLRTN
+                  3773, # NHGAN
+                  3781, # OROVL
+                  3801, # PEDRO
+                  3807, # SHSTA
+                  3830, # SLCVP
+                  3843, # SLSWP
+                  3856, # TRNTY
+                  3871, # WKYTN
+                  2476:2484, # SPILLS
+                  2435, # FOL Forecast
+                  2766, # ORO Forecast
+                  3140, # SHA Forecast
+                  4033:4036 # WSI-DI
+                  )), collapse=", "),");"))
+dvVar <- dbFetch(res)
+dbClearResult(res)
+```
+
+
+```{r message=FALSE, warning=FALSE}
+varType <- 'DV'
+simName <- paste0('sim_callite',varType,'_',runName)
+dbExecute(con,paste("DROP TABLE IF EXISTS",simName))
+
+# un-comment if not running SD perutbations (don't forget bracket at end of loop):
+# simName <- paste0('sim_callite',varType,'_','pSacSD_TmonoNoAdap')
+# dbExecute(con,paste("DROP TABLE IF EXISTS",simName))
+# for (sd in c(1:10)){
+#   sdChangeVal = sdChangeList[[sd]]; sdChangeName = names(sdChangeList)[sd]
+#   runName <- paste0("pSac_",sdChangeName,"SD_TmonoNoAdap")
+#   calLiteInputDir <- file.path(calliteRuns,runName)
+#   print(calLiteInputDir)  
+  
+  for (p in c(2:7)) { # <- also change this if sd mode to `p in c(4)` 
+    for (t in c(1:9)) {
+      pChangeVal = pChangeList[[p]]; pChangeName = names(pChangeList)[p]
+      tChangeVal = tChangeList[[t]]; tChangeName = names(tChangeList)[t]
+      ptRunFolder <- paste0(pChangeName, "DP", tChangeName, "DT")
+      print(ptRunFolder)
+      collectDSSvar(varType, dvVar, con, simName, calLiteInputDir, ptRunFolder,
+                    'DSS/DV', calLiteRunCount, pChangeVal, tChangeVal, sdChangeVal=1) # <- also change this to sdChangeVal
+    }
+  }
+
+# }
+```
+
+```{r}
+# create annual summary table in database
+createAnnualTable(con,runName,perturbY,perturbX)
+```
+

@@ -1,0 +1,145 @@
+# Response Surfaces and CDF / PDF
+
+## SOURCE CODE
+```{r}
+source(file.path('..','src','func_ds_figures.R'))
+```
+
+## METRICS
+```{r}
+# load metric list
+metrics <- as.data.frame(read.csv(file= file.path('..','src','Metrics.csv')))
+metrics
+```
+
+## PLOTTING PARAMETERS
+```{r}
+# set the period of analysis
+compYear <- 2050
+# set the unit system
+chooseUnits <- 1 # 1=California units (AF, CFS), 2=International units (MM3, M3/s)
+# figure save directory
+figureDir <- file.path(calLiteInputDir,'Results','Figures')
+```
+
+## PROBABILITY DENSITIES
+```{r}
+# load the climate period bivariate normal densities
+prob_rds_file = 'biv_norm_values_dt-dsd.RDS'
+histBivNormVal <- readRDS(file.path('../gcm/processed/',prob_rds_file))[[1]]
+futBivNormVal <- readRDS(file.path('../gcm/processed/',prob_rds_file))[[compYear-1995]]
+futBivNormVal <- futBivNormVal[order(futBivNormVal$Biv_Norm_Prob, decreasing = TRUE),]
+futBivNormVal$CumSum <- cumsum(futBivNormVal$Biv_Norm_Prob)
+likelihoodSpace <- futBivNormVal[c(perturbY, perturbX, "CumSum")] %>%
+	spread(key = perturbY, value = "CumSum")
+likelihoodSpace <- likelihoodSpace[-1,-1]
+```
+
+## RESPONSE SURFACES FOR AVERAGES
+```{r}
+# LOOP THROUGH ALL METRICS
+for (chooseMetric in c(1:17)) {
+  # set figure directory
+  saveDir <- file.path(figureDir, metrics$Folder[chooseMetric])
+  if (!dir.exists(saveDir)) {dir.create(saveDir,recursive=T)}
+  # query metric from database
+  evalData <- getMetricAnnualData(con, metrics, chooseMetric, 
+                                  paste0('sim_calliteDV_',runName,'_annual'), perturbY, perturbX)
+  print(paste('Queried data for:', metrics$Var[chooseMetric]))
+  ### Response Surface ###
+  responseMatrices <- calcResponseMatrix(evalData,perturbY,perturbX,'avg')
+  plotResponseSurface(responseMatrices,metrics,chooseUnits,saveDir,21,
+                                       compYear,likelihoodSpace,
+                                       as.numeric(unique(evalData[,perturbX])),
+                                       as.numeric(unique(evalData[,perturbY])),'avg',perturbX)
+ }
+```
+
+## RESPONSE SURFACES FOR CV
+```{r}
+# LOOP THROUGH ALL METRICS
+for (chooseMetric in c(1:17)) {
+  # set figure directory
+  saveDir <- file.path(figureDir, metrics$Folder[chooseMetric])
+  if (!dir.exists(saveDir)) {dir.create(saveDir,recursive=T)}
+  # query metric from database
+  evalData <- getMetricAnnualData(con, metrics, chooseMetric, 
+                                  paste0('sim_calliteDV_',runName,'_annual'), perturbY, perturbX)
+  print(paste('Queried data for:', metrics$Var[chooseMetric]))
+  ### Response Surface ###
+  responseMatrices <- calcResponseMatrix(evalData,perturbY,perturbX,'cv')
+  plotResponseSurface(responseMatrices,metrics,chooseUnits,saveDir,21,
+                                       compYear,likelihoodSpace,
+                                       as.numeric(unique(evalData[,perturbX])),
+                                       as.numeric(unique(evalData[,perturbY])),'cv',perturbX)
+ }
+```
+
+
+## RESPONSE SURFACE FOR PERCENTILES
+```{r}
+chooseMetric <-  c(7)
+# set figure directory
+saveDir <- file.path(figureDir, metrics$Folder[chooseMetric])
+if (!dir.exists(saveDir)) {dir.create(saveDir,recursive=T)}
+# query metric from database
+evalData <- getMetricAnnualData(con, metrics, chooseMetric, 
+                                paste0('sim_calliteDV_',runName,'_annual'), perturbY, perturbX)
+print(paste('Queried data for:', metrics$Var[chooseMetric]))
+### Response Surface ###
+responseMatrices <- calcResponseMatrix(evalData,perturbY,perturbX,'p',percentile=0.05)
+plotResponseSurface(responseMatrices,metrics,chooseUnits,saveDir,21,
+                                     compYear,likelihoodSpace,
+                                     as.numeric(unique(evalData[,perturbX])),
+                                     as.numeric(unique(evalData[,perturbY])),'P-95 Reliability of',perturbX)
+```
+
+## RESPONSE SURFACE FOR FREQUENCY
+```{r}
+chooseMetric <-  c(8)
+# set figure directory
+saveDir <- file.path(figureDir, metrics$Folder[chooseMetric])
+if (!dir.exists(saveDir)) {dir.create(saveDir,recursive=T)}
+# query metric from database
+evalData <- getMetricAnnualData(con, metrics, chooseMetric, 
+                                paste0('sim_calliteDV_',runName,'_annual'), perturbY, perturbX)
+print(paste('Queried data for:', metrics$Var[chooseMetric]))
+### Response Surface ###
+responseMatrices <- calcResponseMatrix(evalData,perturbY,perturbX,'freq')
+plotResponseSurface(responseMatrices,metrics,chooseUnits,saveDir,21,
+                                     compYear,likelihoodSpace,
+                                     as.numeric(unique(evalData[,perturbX])),
+                                     as.numeric(unique(evalData[,perturbY])),'freq',perturbX)
+```
+
+
+### CDF AND PDF
+```{r}
+# LOOP THROUGH ALL METRICS
+for (chooseMetric in c(1:17)) {
+  
+  # set figure directory
+  saveDir <- file.path(figureDir, metrics$Folder[chooseMetric], 'CDF-PDF')
+  if (!dir.exists(saveDir)) {dir.create(saveDir,recursive=T)}
+  # query metric from database
+  evalData <- getMetricAnnualData(con, metrics, chooseMetric, 
+                                  paste0('sim_calliteDV_',runName,'_annual'), perturbY, perturbX)
+  print(paste('Queried data for:', metrics$Var[chooseMetric]))
+  # bin data
+  bins <- seq(min(evalData$Metric, na.rm=TRUE), max(evalData$Metric, na.rm= TRUE), length.out=75)
+  binAve <- rollmean(bins,2, align="left", na.pad=FALSE)
+  if (metrics$Var[chooseMetric]=="SHORTAGE") {binAve <- c(binAve=binAve[-75], 0)}
+  evalData$Bin <- bins[.bincode(evalData$Metric, bins, right=TRUE, include.lowest=TRUE)]
+  evalData$BinAve <-binAve[.bincode(evalData$Metric, bins, right=TRUE, include.lowest=TRUE)]
+  if (metrics$Var[chooseMetric]=="SHORTAGE") {evalData[which(evalData$Metric==0), c("Bin", "BinAve")] <- 0}
+  # compute CDF
+  evalDataHist = metricCDF(evalData,histBivNormVal,perturbX,perturbY)
+  evalDataFut = metricCDF(evalData,futBivNormVal,perturbX,perturbY,compYear)
+  # plot cdf and pdf
+  plots.cdfpdf <- plotCDFPDF(evalDataFut,evalDataHist,chooseUnits,compYear,chooseMetric,metrics)
+  # save out
+  saveCDFPDF(metrics,chooseMetric,chooseUnits,binAve,compYear,plots.cdfpdf,saveDir)
+  
+}
+```
+

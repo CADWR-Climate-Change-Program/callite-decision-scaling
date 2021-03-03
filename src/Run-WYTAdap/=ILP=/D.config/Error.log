@@ -1,0 +1,10 @@
+==================
+1921_10_c02
+==================
+(t:\data_callite-decision-scaling\testing\io\runs\paleosjr_monotonictemp_noadap\run\sanjoaquin\stanislaus\stan_defs.wresl:188)1921/10/31 cycle 2 (sjrbase), oid_south_pct in svar definition: divided by 0.
+(t:\data_callite-decision-scaling\testing\io\runs\paleosjr_monotonictemp_noadap\run\sanjoaquin\stanislaus\stan_defs.wresl:220)1921/10/31 cycle 2 (sjrbase), oidred_n in svar definition: divided by 0.
+(t:\data_callite-decision-scaling\testing\io\runs\paleosjr_monotonictemp_noadap\run\sanjoaquin\stanislaus\stan_defs.wresl:221)1921/10/31 cycle 2 (sjrbase), oidred_s in svar definition: divided by 0.
+(t:\data_callite-decision-scaling\testing\io\runs\paleosjr_monotonictemp_noadap\run\sanjoaquin\stanislaus\stan_defs.wresl:222)1921/10/31 cycle 2 (sjrbase), ssjidred in svar definition: divided by 0.
+(t:\data_callite-decision-scaling\testing\io\runs\paleosjr_monotonictemp_noadap\run\sanjoaquin\stanislaus\stanislaus_dems.wresl:304)1921/10/31 cycle 2 (sjrbase), d521_lim_oid in svar definition: divided by 0.
+(t:\data_callite-decision-scaling\testing\io\runs\paleosjr_monotonictemp_noadap\run\sanjoaquin\stanislaus\stanislaus_dems.wresl:312)1921/10/31 cycle 2 (sjrbase), d521_lim_ssj in svar definition: divided by 0.
+1921/10/31 cycle 2 (sjrbase), limit_d_stangdwnc in constraint definition: 0.0 appears in divisor

@@ -1,0 +1,28 @@
+# See email exchange below regarding application of RPA 4.2.1 (SJR I/E)
+
+From: Reyes, Erik@DWR <Erik.Reyes@water.ca.gov> 
+Sent: Tuesday, February 18, 2020 1:27 PM
+To: Schwarz, Andrew@DeltaCouncil <andrew.schwarz@deltacouncil.ca.gov>
+Cc: Arnold, Wyatt@DWR <Wyatt.Arnold@water.ca.gov>
+Subject: RE: RPA 4.2.1 in CalSim modeling
+ 
+Hi Andrew,
+ 
+That particular RPA is being applied inconsistently at the moment. It is an official part of the NMFS 2009 BiOps. The BiOps that were recently released do not assume the SJR Inflow/Export ratio criteria. The current application submitted by DWR for a CDFW Incidental Take Permit assumes the SJR I/E. So the Feds have removed it as a regulation while the State assumes SJR I/E is still in place however only the SWP adheres to their proportional share of that regulation. The State assumption definitely makes for a more complicated implementation. It might be simpler for your applications to leave it out. However if or when the State ITP is approved by CDFW then you may need to include the implementation.
+ 
+Thanks,
+Erik
+ 
+From: Schwarz, Andrew@DeltaCouncil <andrew.schwarz@deltacouncil.ca.gov> 
+Sent: Tuesday, February 18, 2020 1:09 PM
+To: Reyes, Erik@DWR <Erik.Reyes@water.ca.gov>
+Cc: Arnold, Wyatt@DWR <Wyatt.Arnold@water.ca.gov>
+Subject: RPA 4.2.1 in CalSim modeling
+ 
+Hi Erik,
+ 
+In the CalSim modeling that you guys are doing for planning purposes (DCR, VA’s, etc.) do you guys operate with or without RPA 4.2.1 from the NMFS BO(SJR inflow to Export Ratio).  I think there was a reason that we turned it off in our previous CalLite runs but I can’t remember that reason anymore and we are doing some new runs for the Stewardship Council’s Climate Change Vulnerability Assessment and we want to make sure we have the most appropriate operations included. Should we include that RPA or not? 
+
+Thanks,
+ 
+Andrew Schwarz signature
