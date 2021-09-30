@@ -18,19 +18,54 @@ getMetricAnnualData <- function(dbCon,metricsList,chooseMetric,dbTable,perturbY,
 }
 
 metricCDF <- function(evalData,bivNormVal,perturbX,perturbY,compYear=NULL,year_label="Water_Year") {
+  
+  evalDataCDF <- merge(evalData, bivNormVal[1:3], by=c(perturbY, perturbX))
+  if (is.null(compYear)) {
+    evalDataCDF$PerfPeriod <- "Current Conditions"
+  } else {
+    evalDataCDF$PerfPeriod <- paste0(compYear, " Conditions")
+  }
+  year_count <- length(unique(evalDataCDF[[year_label]]))
+  evalDataCDF <- setNames(aggregate(evalDataCDF$Biv_Norm_Prob, by=list(Bin=evalDataCDF$Bin,
+                                                                       BinAve=evalDataCDF$BinAve,
+                                                                       PerfPeriod=evalDataCDF$PerfPeriod
+  ), FUN=sum), 
+  c('Bin','BinAve','PerfPeriod','Joint_Prob'))
+  evalDataCDF$Joint_Prob <- evalDataCDF$Joint_Prob/year_count
+  evalDataCDF$CumProb <- cumsum(evalDataCDF$Joint_Prob)
+  evalDataCDF <- evalDataCDF[complete.cases(evalDataCDF),]
+  
+  return(evalDataCDF) 
+}
 
-	evalDataCDF <- merge(evalData, bivNormVal[1:3], by=c(perturbY, perturbX))
-	if (is.null(compYear)) {
-		evalDataCDF$PerfPeriod <- "Current Conditions"
-	} else {
-		evalDataCDF$PerfPeriod <- paste0(compYear, " Conditions")
-	}
-	evalDataCDF <- group_by(evalDataCDF, Bin, BinAve, PerfPeriod) %>% 
-	  summarize("Joint_Prob"=sum(Biv_Norm_Prob)/length(unique(evalData[[year_label]])))
-	evalDataCDF$CumProb <- cumsum(evalDataCDF$Joint_Prob)
-	evalDataCDF <- evalDataCDF[complete.cases(evalDataCDF),]
-
-	return(evalDataCDF) 
+metricCDF2 <- function(evalData,bivNormVal,perturbX,perturbY,compYear=NULL,year_label="Water_Year") {
+  
+  evalDataCDF <- merge(evalData, bivNormVal[1:3], by=c(perturbY, perturbX))
+  if (is.null(compYear)) {
+    evalDataCDF$PerfPeriod <- "Current Conditions"
+  } else {
+    evalDataCDF$PerfPeriod <- paste0(compYear, " Conditions")
+  }
+  
+  evalDataCDF$Metric_Prob_Weighted <- evalDataCDF$Metric * evalDataCDF$Biv_Norm_Prob
+  
+  evalDataCDF_weighted <- setNames(
+    aggregate(evalDataCDF$Metric_Prob_Weighted, 
+              by=list(Year=evalDataCDF[[year_label]],PerfPeriod=evalDataCDF$PerfPeriod), FUN=sum), 
+    c('Year','PerfPeriod','Metric_Weighted'))
+  
+  year_count <- length(unique(evalDataCDF[[year_label]]))
+  evalDataCDF <- setNames(aggregate(evalDataCDF$Biv_Norm_Prob, 
+                                    by=list(Bin=evalDataCDF$Bin,
+                                            BinAve=evalDataCDF$BinAve,
+                                            PerfPeriod=evalDataCDF$PerfPeriod), 
+                                    FUN=sum), 
+                          c('Bin','BinAve','PerfPeriod','Joint_Prob'))
+  evalDataCDF$Joint_Prob <- evalDataCDF$Joint_Prob/year_count
+  evalDataCDF$CumProb <- cumsum(evalDataCDF$Joint_Prob)
+  evalDataCDF <- evalDataCDF[complete.cases(evalDataCDF),]
+  
+  return(evalDataCDF) 
 }
 
 plotCDFPDF <- function(evalDataFut,evalDataHist,chooseUnits,compYear,chooseMetric,metricsList) {
