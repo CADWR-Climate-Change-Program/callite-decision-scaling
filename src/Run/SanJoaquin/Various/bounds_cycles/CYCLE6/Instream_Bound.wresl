@@ -103,7 +103,7 @@ goal set1C_STANGDWN_exc_acycle6 {
           lhs<rhs   penalty 0 }
      case JunthruSep {
           condition month >= jun
-          rhs       C_STANGDWN_exc_a[VAMP_AND_DO]
+          rhs       C_STANGDWN_exc_a[SJR_WQ2]
           lhs<rhs   penalty 0 }
           }
 ! Excess flow on reach C_STANGDWN for cycle 6 (?)
@@ -115,7 +115,7 @@ goal set2C_STANGDWN_exc_acycle6 {
           lhs>rhs   penalty 0 }
      case JunthruSep {
           condition month >= jun
-          rhs       C_STANGDWN_exc_a[VAMP_AND_DO]
+          rhs       C_STANGDWN_exc_a[SJR_WQ2]
           lhs>rhs   penalty 0 }
           }
 
@@ -135,26 +135,26 @@ define C_MELONmequivcycle6 {
     case April {
         condition month  == apr
         value     max (0.,
-                         min( 14.*C_MELONm[SJR_WQ1]/30. + 16.*C_MELONm[VAMP_AND_DO]/30.,
+                         min( 14.*C_MELONm[SJR_WQ1]/30. + 16.*C_MELONm[SJR_WQ2]/30.,
                               maxGoodwin - AD_STANGDWN - I_STANGDWN
-                              + 14.*D_STANGDWNA[SJR_WQ1]/30. + 16.*D_STANGDWNA[VAMP_AND_DO]/30.
-                              + 14.*D_STANGDWNA1[SJR_WQ1]/30. + 16.*D_STANGDWNA1[VAMP_AND_DO]/30.
-                              + 14.*D_STANGDWNB[SJR_WQ1]/30. + 16.*D_STANGDWNB[VAMP_AND_DO]/30.
-                              + 14.*D_STANGDWNC[SJR_WQ1]/30. + 16.*D_STANGDWNC[VAMP_AND_DO]/30.)   ) }
+                              + 14.*D_STANGDWNA[SJR_WQ1]/30. + 16.*D_STANGDWNA[SJR_WQ2]/30.
+                              + 14.*D_STANGDWNA1[SJR_WQ1]/30. + 16.*D_STANGDWNA1[SJR_WQ2]/30.
+                              + 14.*D_STANGDWNB[SJR_WQ1]/30. + 16.*D_STANGDWNB[SJR_WQ2]/30.
+                              + 14.*D_STANGDWNC[SJR_WQ1]/30. + 16.*D_STANGDWNC[SJR_WQ2]/30.)   ) }
      case MayOnly {
         condition month  == may
         value     max (0.,
-                         min( 15.*C_MELONm[VAMP_AND_DO]/31. + 16.*C_MELONm[SJR_WQ1]/31.,
+                         min( 15.*C_MELONm[SJR_WQ2]/31. + 16.*C_MELONm[SJR_WQ1]/31.,
                               maxGoodwin - AD_STANGDWN - I_STANGDWN
-                              + 15.*D_STANGDWNA[VAMP_AND_DO]/31. + 16.*D_STANGDWNA[SJR_WQ1]/31.
-                              + 15.*D_STANGDWNA1[VAMP_AND_DO]/31. + 16.*D_STANGDWNA1[SJR_WQ1]/31.
-                              + 15.*D_STANGDWNB[VAMP_AND_DO]/31. + 16.*D_STANGDWNB[SJR_WQ1]/31.
-                              + 15.*D_STANGDWNC[VAMP_AND_DO]/31. + 16.*D_STANGDWNC[SJR_WQ1]/31.)    ) }
+                              + 15.*D_STANGDWNA[SJR_WQ2]/31. + 16.*D_STANGDWNA[SJR_WQ1]/31.
+                              + 15.*D_STANGDWNA1[SJR_WQ2]/31. + 16.*D_STANGDWNA1[SJR_WQ1]/31.
+                              + 15.*D_STANGDWNB[SJR_WQ2]/31. + 16.*D_STANGDWNB[SJR_WQ1]/31.
+                              + 15.*D_STANGDWNC[SJR_WQ2]/31. + 16.*D_STANGDWNC[SJR_WQ1]/31.)    ) }
     case NonPulsePlusDO {
         condition always
-        value     max (0., min(C_MELONm[VAMP_AND_DO],
+        value     max (0., min(C_MELONm[SJR_WQ2],
                                maxGoodwin - AD_STANGDWN - I_STANGDWN
-                               + D_STANGDWNA[VAMP_AND_DO] + D_STANGDWNA1[SJR_WQ1] + D_STANGDWNB[VAMP_AND_DO] + D_STANGDWNC[VAMP_AND_DO])) }
+                               + D_STANGDWNA[SJR_WQ2] + D_STANGDWNA1[SJR_WQ1] + D_STANGDWNB[SJR_WQ2] + D_STANGDWNC[SJR_WQ2])) }
         }
 !goal maintainC_MELONm1cycle6 { C_MELONm > max(0.,C_MELONmequivcycle6 ) }
 ! Maintain Stanislaus instream flow for cycle 6
@@ -175,13 +175,13 @@ define D_TUOLAequivcycle6 {
           value     max (0., D_TUOLA[SJR_WQ1]) }
     case April {
         condition month  == apr
-        value     max (0., 14.*D_TUOLA[SJR_WQ1]/30. + 16.*D_TUOLA[VAMP_AND_DO]/30.) }
+        value     max (0., 14.*D_TUOLA[SJR_WQ1]/30. + 16.*D_TUOLA[SJR_WQ2]/30.) }
     case MayOnly {
         condition month  == may
-        value     max (0., 15.*D_TUOLA[VAMP_AND_DO]/31. + 16.*D_TUOLA[SJR_WQ1]/31.) }
+        value     max (0., 15.*D_TUOLA[SJR_WQ2]/31. + 16.*D_TUOLA[SJR_WQ1]/31.) }
     case NonPulsePlusDO {
         condition always
-        value     max (0., D_TUOLA[VAMP_AND_DO]) }
+        value     max (0., D_TUOLA[SJR_WQ2]) }
 }
 ! New Don Pedro re-paid
 goal setD_TUOLAcycle6 { D_TUOLA = max(0., D_TUOLAequivcycle6) - D530_VAMP  }
@@ -193,23 +193,23 @@ define C_PEDROmequivcycle6 {
           value     max (0., C_PEDROm[SJR_WQ1]) }
     case April {
         condition month  == apr
-        value     max (0., 14.*C_PEDROm[SJR_WQ1]/30. + 16.*C_PEDROm[VAMP_AND_DO]/30.) }
+        value     max (0., 14.*C_PEDROm[SJR_WQ1]/30. + 16.*C_PEDROm[SJR_WQ2]/30.) }
     case MayOnly {
         condition month  == may
-        value     max (0., 15.*C_PEDROm[VAMP_AND_DO]/31. + 16.*C_PEDROm[SJR_WQ1]/31.) }
+        value     max (0., 15.*C_PEDROm[SJR_WQ2]/31. + 16.*C_PEDROm[SJR_WQ1]/31.) }
     case NonPulsePlusDO {
         condition always
-        value     max (0., C_PEDROm[VAMP_AND_DO]) }
+        value     max (0., C_PEDROm[SJR_WQ2]) }
         }
 ! New Don Pedro minimum flow at pulse period without VAMP (Cycle 6)
 goal setC_PEDROm1cycle6 { C_PEDROm = max(0., C_PEDROmequivcycle6) - D530_VAMP  }
 !goal setC_PEDROm2cycle6 { C_PEDROm = C_PEDROmequivcycle6  }
 ! McClure minimum flow for cycle 6
-goal setC_MCLREm1cycle6 { C_MCLREm = max(0., C_MCLREm[VAMP_AND_DO] ) }
-!goal setC20m2cycle6 { C20m = C20m[VAMP_AND_DO]  }
+goal setC_MCLREm1cycle6 { C_MCLREm = max(0., C_MCLREm[SJR_WQ2] ) }
+!goal setC20m2cycle6 { C20m = C20m[SJR_WQ2]  }
 
 ! New Melones dissolved Oxygen release for cycle 6
 goal setC_MELONDOcycle6 {
     lhs  C_MELONDO
-    rhs  C_MELONDO[VAMP_AND_DO]
+    rhs  C_MELONDO[SJR_WQ1]
      }

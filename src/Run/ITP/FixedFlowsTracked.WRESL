@@ -1,0 +1,72 @@
+! FixedDeliveries.wresl
+! Diversions fixed to the Wheeling cycle
+
+!Sacramento River upstream of Red Bluff 
+goal fixC3 {C_WKYTN = C_WKYTN[Wheeling]}
+!goal fixC5 {lhs C5 rhs C5[Wheeling] lhs>rhs penalty 0 lhs<rhs constrain}
+
+
+!Sacramento River at Wilkins Slough
+!goal fixC129 {lhs C129 rhs C129[Wheeling] lhs>rhs penalty 0 lhs<rhs constrain}
+
+
+!Feather/ Yuba River
+!goal fixC203 {C203 = C203[Wheeling]}
+!goal fixC223 {C223 = C223[Wheeling]}
+
+
+!American River
+!goal fixC9 {C9 = C9[Wheeling]}
+!goal fixC303 {C303 = C303[Wheeling]}
+
+
+!Lower Sacramento River
+/*goal fixC160 {lhs C160 rhs C160[Wheeling]
+			  lhs>rhs penalty 0
+			  lhs<rhs constrain
+}*/
+
+goal fixC166 {lhs C_SACFEA rhs C_SACFEA[Wheeling]
+			  lhs>rhs penalty 0
+			  lhs<rhs constrain
+}/*
+goal fixC169 {lhs C169 rhs C169[Wheeling] + release_SWPITP_Carryover + SMSCG_Oro_Rel_for_DO - SWPITP_ExpCut_Carryover + remain_ITP_Carryover_Oro_rel*taf_cfs
+			  lhs>rhs penalty 0
+			  lhs<rhs constrain
+}*/
+goal fixC400_ {lhs C_HOOD rhs C_HOOD[Wheeling] + release_SWPITP_OROCarryover + SMSCG_Oro_Rel_for_DO - SWPITP_ExpCut_Carryover + SMSCG_Carryover_Rel
+			  lhs>rhs penalty 99999
+			  lhs<rhs constrain
+}
+
+goal fixC157 {lhs C_YOLOBP rhs C_YOLOBP[Wheeling]
+			  lhs>rhs penalty 99999
+			  lhs<rhs constrain
+}
+
+!Delta Outflow
+/*
+goal fixC406_ {lhs C_SACSJR rhs C_SACSJR[Wheeling]  + SWPITPExpCut + SMSCG_cut
+			  lhs>rhs penalty 99999
+			  lhs<rhs constrain
+}*/
+
+
+
+! If there is remaining ITP Oroville carryover after paying 60 day SMSCG water cost during D following W, AN, push the remaining to delta outflow 
+goal fixNDOI_ADD_swp { C_Delta_SWP = C_Delta_SWP[WHEELing] + SWPITP_ExpCut_SJRIE + SWPITP_ExpCut_X2 + SWPITP_ExpCut_Outflow
+			      + release_SWPITP_OROCarryover + SMSCG_Oro_Rel_for_DO +SMSCG_Carryover_Rel}
+
+
+goal fixD407 {D_DeltaReqd = D_DeltaReqd[Wheeling]}
+
+goal fixC407_ANN {C_Delta_ANN = C_Delta_ANN[Wheeling]}
+!goal fixC407_ANN {lhs C407_ANN rhs C407_ANN[Wheeling] lhs>rhs penalty 99999 lhs<rhs penalty 99999 }
+!goal fixC407_CVP {C407_CVP = C407_CVP[Wheeling]}
+goal fixC407_CVP {lhs C_Delta_CVP rhs C_Delta_CVP[Wheeling] lhs>rhs constrain lhs < rhs constrain}
+!goal fixC407_SWP {C407_SWP = C407_SWP[Wheeling]}
+!goal fixC407_SWP {lhs C_Delta_SWP rhs C_Delta_SWP[Wheeling] lhs>rhs penalty 0 lhs < rhs constrain}
+!goal fixC407_WTS {C407_WTS = C407_WTS[Wheeling]}	!-KS, defined in TransfersFixOps.wresl
+goal fixC407_WHLCV {C_Delta_WHLCV = C_Delta_WHLCV[Wheeling]}	!-KS, defined in TransfersFixOps.wresl
+goal fixC407_WHLJP {C_Delta_WHLJP = C_Delta_WHLJP[Wheeling]}	!-KS, defined in TransfersFixOps.wresl
+goal fixC407_ITP {C_Delta_ITP = 0.0}

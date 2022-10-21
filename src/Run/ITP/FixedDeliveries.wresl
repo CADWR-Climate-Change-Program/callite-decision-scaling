@@ -1,0 +1,264 @@
+! FixedDeliveries.wresl
+! Diversions fixed to the Wheeling cycle
+
+!Trinity Exports into Sac Valley
+goal fixD100 {D_ClearTu = D_ClearTu[Wheeling]}
+goal fixD3 {D_Spring = D_Spring[Wheeling]}
+
+
+
+/*
+!Stony Creek Diversions
+goal fixD42 {D42 = D42[Wheeling]}
+goal fixD17301 {D17301 = D17301[Wheeling]}
+*/
+
+!goal ITPlimitD104diff {D104[Wheeling] - D104 = D104_psc[Wheeling] - D104_psc}
+goal ITPfixD112  {D_RedBlf_P  = D_RedBlf_P[Wheeling]}
+!goal ITPfixC142A {C142A = C142A[Wheeling]}
+!goal ITPlimitC142Bdiff {C142B[Wheeling] - C142B = D114[Wheeling] - D114}
+goal ITPfixD143B {D_Wilkns_prf = D_Wilkns_prf[Wheeling]} 
+!goal ITPfixD145B {D145B = D145B[Wheeling]}
+
+!goal ITPfixC308   {lhs c308 rhs c308[Wheeling] lhs>rhs penalty 99999 lhs<rhs penalty 99999}
+!goal ITPfixD308A  {lhs D308A rhs D308A[Wheeling] lhs>rhs penalty 99999 lhs<rhs penalty 99999}
+!goal ITPfixD308B  {D308B[Wheeling] - D308B 
+
+!goal ITPfixD168A  {lhs D168a rhs d168a[Wheeling] lhs>rhs penalty 99999 lhs<rhs penalty 99999}
+!goal ITPfixD168B  {lhs D168B  rhs D168B[Wheeling] lhs>rhs penalty 99999 lhs<rhs penalty 99999}
+!goal ITPfixD168C  {lhs D168C  rhs D168C[Wheeling] lhs>rhs penalty 99999 lhs<rhs penalty 99999}
+!goal ITPfixD167B  {lhs D167B  rhs D167B[Wheeling] lhs>rhs penalty 99999 lhs<rhs penalty 99999}
+
+!goal ITPfixD163  {D163  = D163[Wheeling]}
+
+
+!goal fixC136B {C136B = C136B[Wheeling]}
+!goal fixC216B {C216B = C216B[Wheeling]}
+!goal fixC221 {C221 = C221[Wheeling]}
+goal fixD7A_PRF {D7A_PRF = D7A_PRF[Wheeling]}
+goal fixD7B_PRF {D7B_PRF = D7B_PRF[Wheeling]}
+
+goal fixD201_PMI {D201_PMI = D201_PMI[Wheeling]}
+goal fixD204_PMI {D204_PMI = D204_PMI[Wheeling]}
+goal fixD204_PCO {D204_PCO = D204_PCO[Wheeling]}
+goal fixD7A_PAG {D7A_PAG = D7A_PAG[Wheeling] }
+goal fixD7B_PAG {D7B_PAG = D7B_PAG[Wheeling] }
+goal fixD206A_PAG {D206A_PAG = D206A_PAG[Wheeling]}
+goal fixD206B_PAG {D206B_PAG = D206B_PAG[Wheeling]}
+goal fixD206C_PAG {D206C_PAG = D206C_PAG[Wheeling]}
+goal fixD6_PWR {D6_PWR = D6_PWR[Wheeling]}
+goal fixD202_PWR {D202_PWR = D202_PWR[Wheeling]}
+goal fixD7A_PWR {D7A_PWR = D7A_PWR[Wheeling]}
+goal fixD7B_PWR {D7B_PWR = D7B_PWR[Wheeling]}
+goal fixD206B_PWR {D206B_PWR = D206B_PWR[Wheeling]}
+goal fixD206C_PWR {D206C_PWR = D206C_PWR[Wheeling]}
+goal fixD7C {D7C = D7C[Wheeling] }
+!goal fixD230 {D230 = D230[Wheeling]}
+!goal fixD285 {D285 = D285[Wheeling]}
+!goal fixD223 {D223 = D223[Wheeling]}
+!goal fixD283 {D283 = D283[Wheeling]}
+goal fixD207A {D207A = D207A[Wheeling]}	!-KS. Defined in wheelfixes_DELTA.wresl
+!goal fixD217 {D217 = D217[Wheeling]}
+/*
+goal fixD168B_CCWD {D168B_CCWD = D168B_CCWD[Wheeling]}
+goal fixD168B_EBMUD {D168B_EBMUD = D168B_EBMUD[Wheeling]}
+
+goal fixD168c_exc_ntDep1 {D168c_exc_ntDep1 = D168c_exc_ntDep1[Wheeling]}
+goal fixD168c_exc_ntDep2 {D168c_exc_ntDep2 = D168c_exc_ntDep2[Wheeling]}
+*/
+!Net DICU diversions
+!goal fixD400B {D400B = D400B[Wheeling]}
+!goal fixD404 {D404 = D404[Wheeling]}
+!goal fixD406 {D406 = D406[Wheeling]}
+!goal fixD409B {D409B = D409B[Wheeling]}
+!goal fixD410 {D410 = D410[Wheeling]}
+!goal fixD412 {D412 = D412[Wheeling]}
+!goal fixD413 {D413 = D413[Wheeling]}
+
+!In-Delta diversions
+goal fixD403A {D_Solano = D_Solano[Wheeling]}
+goal fixD403B {D_Napa = D_Napa[Wheeling]}
+goal fixD403C {D_Vallejo = D_Vallejo[Wheeling]}
+goal fixD403D {D_FVB = D_FVB[Wheeling]}
+!goal fixD406A_MS {D406A_MS = D406A_MS[Wheeling]}
+!goal fixD406B {D406B = D406B[Wheeling]}
+goal fixD408 {D_CCWDVCOR = D_CCWDVCOR[Wheeling]}
+!goal fixD416 {D416 = D416[Wheeling]}
+!goal fixD446A {D446A = D446A[Wheeling]}
+goal fixD408_CVP {D_CCWDINTK = D_CCWDINTK[Wheeling]}
+goal fixD408_DS {D_CCWDVCOR = D_CCWDVCOR[Wheeling]}
+goal fixD408_ECC {D_CCWDINTK = D_CCWDINTK[Wheeling]}
+goal fixD408_P {D_CCWD = D_CCWD[Wheeling]}
+!goal fixD408_TX {D408_TX = D408_TX[Wheeling]}
+goal fixD418_CVP {D_JONES_CVP = D_JONES_CVP[Wheeling] }
+goal fixD419_CVP {D_BANKS_CVP = D_BANKS_CVP[Wheeling] }
+!goal fixD419_SWP {D_BANKS_SWP = D_BANKS_SWP[Wheeling] - Alt2BSWPExpCut - SMSCG_cut}
+
+!Delta Mendota Canal/ San Felipe Aqueduct
+goal fixD11 {D_SLCVP = D_SLCVP[Wheeling]}
+goal fixD700_PAG {D700_PAG = D700_PAG[Wheeling]}
+goal fixD701_PAG {D701_PAG = D701_PAG[Wheeling]}
+goal fixD702_PLS {D702_PLS = D702_PLS[Wheeling]}
+!goal fixD704 {D704 = D704[Wheeling]}	!CVL SNL deliveries to CA Aqueduct
+!goal fixD705 {D705 = D705[Wheeling]}	!CVL SNL deliveries to CA Aqueduct
+goal fixD706_PAG {D706_PAG = D706_PAG[Wheeling]}
+goal fixD707_PEX {D707_PEX = D707_PEX[Wheeling]}
+goal fixD708_PRF {D708_PRF = D708_PRF[Wheeling]}
+/*
+goal fixD708_LV {D708_LV = D708_LV[Wheeling]}
+goal fixD710_PAG {D710_PAG = D710_PAG[Wheeling]}
+goal fixD710_LV {D710_LV = D710_LV[Wheeling]}
+goal fixD711_PMI {D711_PMI = D711_PMI[Wheeling]}
+goal fixD711_LV {D711_LV = D711_LV[Wheeling]}*/
+/*
+!Mendota Pool
+goal fixD607A_PAG {D607A_PAG = D607A_PAG[Wheeling]}
+goal fixD607B_PEX {D607B_PEX = D607B_PEX[Wheeling]}
+goal fixD607C_PRF {D607C_PRF = D607C_PRF[Wheeling]}
+goal fixD607C_NDS {D607C_NDS = D607C_NDS[Wheeling]}
+goal fixD607D_PLS {D607D_PLS = D607D_PLS[Wheeling]}
+goal fixD608B_PEX {D608B_PEX = D608B_PEX[Wheeling]}
+goal fixD608C_PRF {D608C_PRF = D608C_PRF[Wheeling]}
+*/
+
+!California Aqueduct
+!! South Bay Aqueduct
+!goal fixD801 {D801 = D801[Wheeling]}
+goal fixD810_PMI {D810_PMI = D810_PMI[Wheeling]}
+goal fixD810_PCO {D810_PCO = D810_PCO[Wheeling]}
+!goal fixD810_LV {D810_LV = D810_LV[Wheeling]}
+!goal fixD811 {D811 = D811[Wheeling]}
+goal fixD813_PMI {D813_PMI = D813_PMI[Wheeling]}
+goal fixD813_PCO {D813_PCO = D813_PCO[Wheeling]}
+!goal fixD813_LV {D813_LV = D813_LV[Wheeling]}
+goal fixD814_PMI {D814_PMI = D814_PMI[Wheeling]}
+goal fixD814_PCO {D814_PCO = D814_PCO[Wheeling]}
+!goal fixD814_LV {D814_LV = D814_LV[Wheeling]}
+goal fixD815_PMI {D815_PMI = D815_PMI[Wheeling]}
+goal fixD815_PCO {D815_PCO = D815_PCO[Wheeling]}
+!goal fixD815_WTS {D815_WTS = D815_WTS[Wheeling]}	!-KS, fixed in TransfersFixOps.wresl
+!goal fixD815_LV {D815_LV = D815_LV[Wheeling]}
+goal fixD816_PLS {D816_PLS = D816_PLS[Wheeling]}
+
+!!Upper CAA
+goal fixD802A_PAG {D802A_PAG = D802A_PAG[Wheeling]}
+goal fixD802A_PCO {D802A_PCO = D802A_PCO[Wheeling]}
+goal fixD803_PLS {D803_PLS = D803_PLS[Wheeling]}
+
+!!Joint Use Canal
+!goal fixD807 {D807 = D807[Wheeling]}
+goal fixD824_PLS {D824_PLS = D824_PLS[Wheeling]}
+goal fixD826_PLS {D826_PLS = D826_PLS[Wheeling]}
+goal fixD827_PLS {D827_PLS = D827_PLS[Wheeling]}
+goal fixD828_PLS {D828_PLS = D828_PLS[Wheeling]}
+goal fixD829_PLS {D829_PLS = D829_PLS[Wheeling]}
+goal fixD833_PAG {D833_PAG = D833_PAG[Wheeling]}
+goal fixD834_PLS {D834_PLS = D834_PLS[Wheeling]}
+goal fixD835_PAG {D835_PAG = D835_PAG[Wheeling]}
+goal fixD836_PAG {D836_PAG = D836_PAG[Wheeling]}
+goal fixD837_PAG {D837_PAG = D837_PAG[Wheeling]}
+goal fixD838_PLS {D838_PLS = D838_PLS[Wheeling]}
+goal fixD839_PAG {D839_PAG = D839_PAG[Wheeling]}
+goal fixD840_PLS {D840_PLS = D840_PLS[Wheeling]}
+goal fixD841_PAG {D841_PAG = D841_PAG[Wheeling]}
+goal fixD842_PLS {D842_PLS = D842_PLS[Wheeling]}
+goal fixD843_PAG {D843_PAG = D843_PAG[Wheeling]}
+goal fixD844_PMI {D844_PMI = D844_PMI[Wheeling]}
+goal fixD845_PLS {D845_PLS = D845_PLS[Wheeling]}
+goal fixD846_PAG {D846_PAG = D846_PAG[Wheeling]}
+goal fixD846_PCO {D846_PCO = D846_PCO[Wheeling]}
+goal fixD847_PAG {D847_PAG = D847_PAG[Wheeling]}
+goal fixD847_PCO {D847_PCO = D847_PCO[Wheeling]}
+goal fixD848_PAG {D848_PAG = D848_PAG[Wheeling]}
+goal fixD848_PCO {D848_PCO = D848_PCO[Wheeling]}
+goal fixD849_PAG {D849_PAG = D849_PAG[Wheeling]}
+goal fixD849_PCO {D849_PCO = D849_PCO[Wheeling]}
+goal fixD851_PAG {D851_PAG = D851_PAG[Wheeling]}
+goal fixD851_PCO {D851_PCO = D851_PCO[Wheeling]}
+goal fixD851A_PMI {D851A_PMI = D851A_PMI[Wheeling]}
+goal fixD851B_PMI {D851B_PMI = D851B_PMI[Wheeling]}
+goal fixD854_PLS {D854_PLS = D854_PLS[Wheeling]}
+goal fixD855_PAG {D855_PAG = D855_PAG[Wheeling]}	!-KS, D855 fixed in the WheelFixCVC.wresl
+goal fixD856_PRF {D856_PRF = D856_PRF[Wheeling]}
+!goal fixD856_NDS {D856_NDS = D856_NDS[Wheeling]}
+!goal fixD856_LV {D856_LV = D856_LV[Wheeling]}
+goal fixD859_PAG {D859_PAG = D859_PAG[Wheeling]}
+goal fixD859_PCO {D859_PCO = D859_PCO[Wheeling]}
+!goal fixD859_GWRECHARGE {D859_GWRECHARGE = D859_GWRECHARGE[Wheeling]}
+goal fixD862_PLS {D862_PLS = D862_PLS[Wheeling]}
+goal fixD863_PAG {D863_PAG = D863_PAG[Wheeling]}
+goal fixD863_PCO {D863_PCO = D863_PCO[Wheeling]}
+goal fixD864_PLS {D864_PLS = D864_PLS[Wheeling]}
+
+!!Coastal Aqueduct
+!goal fixD850 {D850 = D850[Wheeling]}
+goal fixD867_PAG {D867_PAG = D867_PAG[Wheeling]}
+goal fixD867_PCO {D867_PCO = D867_PCO[Wheeling]}
+goal fixD868_PAG {D868_PAG = D868_PAG[Wheeling]}
+goal fixD868_PCO {D868_PCO = D868_PCO[Wheeling]}
+goal fixD869_PMI {D869_PMI = D869_PMI[Wheeling]}
+goal fixD869_PCO {D869_PCO = D869_PCO[Wheeling]}
+goal fixD870_PMI {D870_PMI = D870_PMI[Wheeling]}
+goal fixD870_PCO {D870_PCO = D870_PCO[Wheeling]}
+
+!!East Branch
+goal fixD877_PMI {D877_PMI = D877_PMI[Wheeling]}
+goal fixD877_PCO {D877_PCO = D877_PCO[Wheeling]}
+goal fixD878_PMI {D878_PMI = D878_PMI[Wheeling]}
+goal fixD878_PCO {D878_PCO = D878_PCO[Wheeling]}
+goal fixD879_PMI {D879_PMI = D879_PMI[Wheeling]}
+goal fixD879_PCO {D879_PCO = D879_PCO[Wheeling]}
+goal fixD880_PLS {D880_PLS = D880_PLS[Wheeling]}
+goal fixD881_PMI {D881_PMI = D881_PMI[Wheeling]}
+goal fixD881_PCO {D881_PCO = D881_PCO[Wheeling]}
+goal fixD882_PLS {D882_PLS = D882_PLS[Wheeling]}
+goal fixD883_PMI {D883_PMI = D883_PMI[Wheeling]}
+goal fixD883_PCO {D883_PCO = D883_PCO[Wheeling]}
+goal fixD884_PMI {D884_PMI = D884_PMI[Wheeling]}
+goal fixD884_PCO {D884_PCO = D884_PCO[Wheeling]}
+goal fixD885_PMI {D885_PMI = D885_PMI[Wheeling]}
+goal fixD885_PCO {D885_PCO = D885_PCO[Wheeling]}
+goal fixD886_PMI {D886_PMI = D886_PMI[Wheeling]}
+goal fixD886_PCO {D886_PCO = D886_PCO[Wheeling]}
+goal fixD887_PMI {D887_PMI = D887_PMI[Wheeling]}
+goal fixD887_PCO {D887_PCO = D887_PCO[Wheeling]}
+goal fixD888_PMI {D888_PMI = D888_PMI[Wheeling]}
+goal fixD888_PCO {D888_PCO = D888_PCO[Wheeling]}
+goal fixD889_PLS {D889_PLS = D889_PLS[Wheeling]}
+goal fixD25_PMI {D25_PMI = D25_PMI[Wheeling]}
+goal fixD25_PCO {D25_PCO = D25_PCO[Wheeling]}
+goal fixD27_PMI {D27_PMI = D27_PMI[Wheeling]}
+goal fixD27_PCO {D27_PCO = D27_PCO[Wheeling]}
+
+!!West Branch
+goal fixD891_PLS {D891_PLS = D891_PLS[Wheeling]}
+goal fixD893_PLS {D893_PLS = D893_PLS[Wheeling]}
+goal fixD894_PLS {D894_PLS = D894_PLS[Wheeling]}
+goal fixD895_PMI {D895_PMI = D895_PMI[Wheeling]}
+goal fixD895_PCO {D895_PCO = D895_PCO[Wheeling]}
+goal fixD896_PMI {D896_PMI = D896_PMI[Wheeling]}
+goal fixD896_PCO {D896_PCO = D896_PCO[Wheeling]}
+!goal fixD899_PMI {D899_PMI = D899_PMI[Wheeling]}
+goal fixD899_PMI    {lhs D899_PMI rhs D899_PMI[Wheeling] lhs>rhs penalty 99999 lhs<rhs penalty 99999}
+goal fixD899_PCO {D899_PCO = D899_PCO[Wheeling]}
+goal fixD28_PMI {D28_PMI = D28_PMI[Wheeling]}
+goal fixD28_PCO {D28_PCO = D28_PCO[Wheeling]}
+goal fixD29_PMI {D29_PMI = D29_PMI[Wheeling]}
+goal fixD29_PCO {D29_PCO = D29_PCO[Wheeling]}
+
+goal AD_HST_ACTUAL_ {AD_HST_ACTUAL = AD_HST_ACTUAL[Wheeling]}
+goal AD_KSWCK_ACTUAL_ {AD_KSWCK_ACTUAL = AD_KSWCK_ACTUAL[Wheeling]}
+goal AD_NIMBUS_ACTUAL_ {AD_NIMBUS_ACTUAL = AD_NIMBUS_ACTUAL[Wheeling]}
+goal AD_REDBLF_ACTUAL_ {AD_REDBLF_ACTUAL = AD_REDBLF_ACTUAL[Wheeling]}
+goal AD_SACAME_ACTUAL_ {AD_SACAME_ACTUAL = AD_SACAME_ACTUAL[Wheeling]}
+
+goal AD_SACFEA_ACTUAL_ {AD_SACFEA_ACTUAL = AD_SACFEA_ACTUAL[Wheeling]}
+goal AD_THERM_ACTUAL_ {AD_THERM_ACTUAL = AD_THERM_ACTUAL[Wheeling]}
+goal AD_WILKNS_ACTUAL_ {AD_WILKNS_ACTUAL = AD_WILKNS_ACTUAL[Wheeling]}
+goal AD_YOLOBP_ACTUAL_ {AD_YOLOBP_ACTUAL = AD_YOLOBP_ACTUAL[Wheeling]}
+goal AD_YUBFEA_ACTUAL_ {AD_YUBFEA_ACTUAL = AD_YUBFEA_ACTUAL[Wheeling]}
+
+
+
+
+

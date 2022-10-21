@@ -25,7 +25,7 @@ month   Req      ReqCrit
 ! Select DO requirement from lookup table
 define DO_req {
    case ConfCrit {
-   condition  NMforecast1 < 940.
+  condition  wyt_SJR_stan > 4.5 ! SP MBK
         select ReqCrit from DO where month = month
    }
    case otherwise {

@@ -542,7 +542,8 @@ define frespill { value (frespill_1 + frespill_2 + frespill_3 + frespill_4 + fre
 define frespilldv {alias frespill kind 'FLOW-DELIVERY' units 'cfs'}
 
 goal actfwflow_day {D_FreWeir = frespill}
-
+!DEFINE D160 {TIMESERIES kind 'FLOW-DELIVERY' units 'CFS'}
+!goal actfwflow_day {D_FreWeir = D160}
 ! total flow entering SacFeather node
 define QSacFth {alias C_Wilkns + C_YubFea + AD_SacFea kind 'flow-channel' units 'cfs'}
 
@@ -699,6 +700,8 @@ define sacspill { value (sacspill_1 + sacspill_2 + sacspill_3 + sacspill_4 + sac
 define sacspilldv {alias sacspill kind 'debug' units 'cfs'}
 
 goal actswflow_day {D_SacWeir = sacspill}
+!DEFINE D166A {TIMESERIES kind 'FLOW-DELIVERY' units 'CFS'}
+!goal actSwflow_day {D_SacWeir = D166A}
 
 ! total flow entering SacAmerican node
 define QSacAme {alias C_SacFea + C_HSt + AD_SacAme - D_SacAme kind 'flow-channel' units 'cfs'}

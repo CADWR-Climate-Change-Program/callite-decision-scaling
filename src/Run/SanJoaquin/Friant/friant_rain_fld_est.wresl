@@ -23,15 +23,8 @@ define curr_fr_del {
 
 ! use an average monthly value for the restoration flow release
 
-goal compute_rain_rel {
-    lhs Fr_rain_rel
-    case initialize {
-        condition month == sep .and. wateryear == 1921
-        rhs 0.0 }
-    case otherwise {
-        condition always
-        rhs max ( 0.0, SIO_FWUA(-1) + I_MLRTN*cfs_taf - curr_Fr_del - Friant_est_evap - TF_est_evap
-                     - S_MLRTNlevel5 - S17level3 - mam_fc_credit  + Friant_fs_req - SJRR_mon*cfs_taf)  } }
+goal compute_rain_rel {Fr_rain_rel = max ( 0.0, SIO_FWUA(-1) + I_MLRTN*cfs_taf - curr_Fr_del - SJRR_mon*cfs_taf - Friant_est_evap - TF_est_evap
+                     - S_MLRTNlevel5 - S17level3 - mam_fc_credit  + Friant_fs_req )  } ! SP MBK
 
 ! Estimated total flood control release, maximum of rainflood and snowmelt releases
 define Fr_fc_rel {value max ( 0.0, SIO_FWUA(-1) + I_MLRTN*cfs_taf - curr_Fr_del - Friant_est_evap - TF_est_evap

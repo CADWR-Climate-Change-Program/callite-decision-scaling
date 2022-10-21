@@ -129,16 +129,17 @@ goal COA_Balance {UWFE - IBU = C_Delta_CVP + C_Delta_SWP + D_CCWD + 2./3.*D_Napa
 goal UWFE_force {UWFE < int_IBU_UWFE * IBU_UWFE_max}                                ! if int=0, UWFE=0, IBU=pos
 goal IBU_force  {IBU < IBU_UWFE_max - int_IBU_UWFE * IBU_UWFE_max}                  ! if int=1, UWFE=pos, IBU=0
 
-define CVP_UWFE {value 0.55}                                                        ! CVP COA Share of unstored water for export
-define CVP_IBU  {value 0.75}                                                        ! CVP COA Share of storage withdrawals
+!define CVP_UWFE {value 0.55}                                                        ! CVP COA Share of unstored water for export
+!define CVP_IBU  {value 0.75}                                                        ! CVP COA Share of storage withdrawals
 goal CVP_Split {CVP_share = int_IBU_UWFE * CVP_UWFE + CVP_IBU - CVP_IBU * int_IBU_UWFE}  !CVP Share
 goal SWP_Split {SWP_share = 1.0 - CVP_share }                                       !SWP Share
 
 /*  Restrict exports to satisfy COA:  Exports = storage withdrawal - storage increase -
     share of in basin uses + share of unstored water for export + other party's unused share  */
+    
 
-goal COA_CVP { D_Jones_EXP1 + Surp1Terms + D_CCWD = SHADS + FOLDS + WHSSW - .75*IBU + .55*UWFE - UNUSED_FS - C_Delta_CVP}
-goal COA_SWP { D_Banks_EXP1 + 2./3.*D_Napa + 2./3.* D_Solano + Surp2Terms = SWPDS - .25*IBU + .45*UWFE - UNUSED_SS - C_Delta_SWP}
+goal COA_CVP { D_Jones_EXP1 + Surp1Terms + D_CCWD = SHADS + FOLDS + WHSSW - CVP_IBU*IBU + CVP_UWFE*UWFE - UNUSED_FS - C_Delta_CVP}
+goal COA_SWP { D_Banks_EXP1 + 2./3.*D_Napa + 2./3.* D_Solano + Surp2Terms = SWPDS - SWP_IBU*IBU + SWP_UWFE*UWFE - UNUSED_SS - C_Delta_SWP}
 
 goal setUNUSED_FS { D_Banks_EXP2 < UNUSED_FS }
 goal setUNUSED_SS { D_Jones_EXP2 < UNUSED_SS }
@@ -171,7 +172,7 @@ goal EI_split_swp {
     lhs     D_Banks_EXP1_TD
     case ei_control {
     condition   EI_control_on > 0.5 .and. C_OMR[base] > C408_Limit .and. MAXEXP_RPA > d_exptd[base]
-     rhs        0.5*EiExpCtrl[Upstream] + ExpRatio*c_therm - ExpRatio*c_therm[Upstream] /*- ExpRatio*D_Banks_EXP1_IF
+     rhs        SWPExpCapShare_blncd*EiExpCtrl[Upstream] + ExpRatio*c_therm - ExpRatio*c_therm[Upstream] /*- ExpRatio*D_Banks_EXP1_IF
      			+ ExpRatio*D_Jones_exp2[Upstream] - ExpRatio*D_Jones_exp2*/
      lhs>rhs    penalty 1285
      lhs<rhs    penalty 0}
@@ -180,7 +181,7 @@ goal EI_split_cvp {
     lhs     D_Jones_EXP1_TD
     case ei_control {
     condition   EI_control_on > 0.5 .and. C_OMR[base] > C408_Limit .and. MAXEXP_RPA > d_exptd[base]
-     rhs        0.5*EiExpCtrl[Upstream] + ExpRatio*c_wkytn_m + ExpRatio*c_kswck_m + ExpRatio*c_nimbus_m 
+     rhs        CVPExpCapShare_blncd*EiExpCtrl[Upstream] + ExpRatio*c_wkytn_m + ExpRatio*c_kswck_m + ExpRatio*c_nimbus_m 
                               - ExpRatio*c_wkytn_m[Upstream] - ExpRatio*c_kswck_m[Upstream] - ExpRatio*c_nimbus_m[Upstream]
                                /*- ExpRatio*D_Jones_EXP1_IF + ExpRatio*D_Banks_exp2[Upstream] - ExpRatio*D_Banks_exp2*/
      lhs>rhs    penalty 1285
@@ -226,10 +227,11 @@ goal No_EI_split_cvp2 {
     lhs<rhs    penalty 0
     lhs>rhs    penalty 1290}
 }
-
+}
 
 
 ! Only apply sharing logic under the AprilMay pulse flow export contraint when this constraint was controlling operations in the Upstream cycle.
+/*
 goal AprMay_split_swp {
     lhs     D_Banks_EXP1_TD
      case AprMay {
@@ -255,4 +257,4 @@ goal AprMay_split_cvp {
      }
 }
 
-}
+*/

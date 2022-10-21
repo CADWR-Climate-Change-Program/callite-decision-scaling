@@ -13,3 +13,4 @@ define S_FolsmLevel5 {timeseries kind 'storage-level' units 'taf'}
 define S_SLCVP {std kind 'STORAGE' units 'TAF'}
 define S_SLSWP {std kind 'STORAGE' units 'TAF'}
 
+define D_Jones {lower 0. upper 4600. kind 'FLOW-DELIVERY' units 'CFS'} !CVP Jones Pumping Plant to Upper DMC

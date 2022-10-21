@@ -23,7 +23,7 @@ define short_d206c_pag {alias target_d206c_pag - d206c_pag kind 'delivery-shorta
 define short_swp_pag_n {alias short_d7a_pag + short_d7b_pag + short_d206a_pag + short_d206b_pag + short_d206c_pag
                          kind 'delivery-shortage-swp' units 'cfs'}
 
-define del_swp_pag_n {alias d7a_pag + d7b_pag + d206a_pag + d206b_pag + d206c_pag
+define del_swp_pag_n {alias d7a_pag + d7b_pag + d206a_pag + d206b_pag + d206c_pag + D7C ! SP MBK
                          kind 'delivery-swp' units 'cfs'}
 
 ! MI Shortage
@@ -196,7 +196,7 @@ define del_swp_pls {alias D403B_PLS + D803_PLS + D824_PLS + D826_PLS +
  define short_D815_PIN {alias dem_D815_PIN*perdel_swp_int - D815_PIN kind 'delivery-shortage' units 'cfs'}
 */
 
-define del_swp_pin {alias D27_PIN + D403B_PIN + D846_PIN + D848_PIN +
+define del_swp_pin {alias D27_PIN + D403B_PIN + D403C_PIN + D846_PIN + D848_PIN +
                           D849_PIN + D868_PIN + D859_PIN + D877_PIN +
                           D883_PIN + D884_PIN + D885_PIN + D899_PIN +
                           D895_PIN + D810_PIN + D814_PIN + D815_PIN

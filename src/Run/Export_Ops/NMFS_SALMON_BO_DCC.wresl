@@ -34,7 +34,7 @@ define NMFSdaysopentarg {
 define NMFSdaysopentgdv  {alias NMFSdaysopentarg kind 'DCC-DAYS-OPEN' UNITS 'NONE'}  !for output only
 
 define maxdaysofftarget {value max(0.,D1641_days_open - NMFSdaysopentarg)}
-define NMFSMaxExpDCCest {value min(D_ExpTD[Base],FWS_MaxExp_X2) * (daysin - maxdaysofftarget)/daysin +  min(2000.,D_ExpTD[Base],FWS_MaxExp_X2) * maxdaysofftarget/daysin}
+define NMFSMaxExpDCCest {value D_ExpTD[Base] * (daysin - maxdaysofftarget)/daysin +  min(2000.,D_ExpTD[Base]) * maxdaysofftarget/daysin}
 define NMFSMaxExDCCest_ {alias NMFSMaxExpDCCest kind 'Export-Limit' units 'cfs'} !for output only
 
 

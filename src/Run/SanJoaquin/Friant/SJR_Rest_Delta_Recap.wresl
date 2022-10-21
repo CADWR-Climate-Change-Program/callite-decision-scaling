@@ -1,0 +1,78 @@
+! SJR_Rest_Delta_Recap.wresl
+
+
+!******************************************************************************
+! how much discretionary restoration flow reached HORB and is thus available for either recapture
+define SJRR_Disc_Delta {value D639B[B2_BO2]}
+define SJRR_Disc_Delta_ {alias SJRR_Disc_Delta kind 'SJRR-flow' units 'cfs'}
+define SJRR_to_HORB { value SJRR_Disc_Delta * C417B[B2_BO2]/C644[B2_BO2] } 
+define SJRR_to_HORB_ { alias SJRR_to_HORB kind 'SJRR-flow' units 'cfs'} 
+
+!******************************************************************************
+! Any restoration flows that are not destined to Delta Outflow can be exported
+
+define Delta_Recap_lmt  {value max(0., SJRR_Disc_Delta )}
+define Delta_Recap_lmt_ {alias Delta_Recap_lmt kind 'flow' units 'cfs'}
+
+! Export capacity limits
+define Jones_SRPrecap_lmt { value max(0., min(min(TracyCapPhys,TracyMaxAllow)-D418[B2_BO2],
+                                              4400. - C700[B2_BO2],
+                                              4400. - C701[B2_BO2],
+                                              4200. - C702[B2_BO2])) }
+define Banks_SRPrecap_lmt { 
+    case ITPAction {
+        condition SWPITP_ExpCutdv[B2_BO2] > 1.
+        value 0. }
+    case otherwise {
+        condition always
+        value max(0., min(min(BanksCapPhys,max_ba,BanksMaxAllow)-D419[B2_BO2],
+                          10300. - C800[B2_BO2],
+                          10000. - C801[B2_BO2],
+                          10000. - C802[B2_BO2],
+                          10000. - C803[B2_BO2],
+                          10000. - C804[B2_BO2])) }
+}
+
+define AprMayExpCtrl_wRecap {
+        case April {
+            condition     month == APR
+            value         NonPulseExpCtrl[B2_BO2]*14.0/daysin + D639b[sjr_wq1]*14./daysin
+                        + PulseExpCtrl[B2_BO2]*16.0/daysin + D639b[sjr_wq2]*16./daysin }
+        case May {
+            condition     month == MAY
+            value         NonPulseExpCtrl[B2_BO2]*16.0/daysin + D639b[sjr_wq1]*16./daysin
+                        + PulseExpCtrl[B2_BO2]*15.0/daysin + D639b[sjr_wq2]*15./daysin  }
+        case otherwise {
+            condition   always
+            value     99999. }
+}
+
+define Jones_SRPrecap_lmt_ {alias Jones_SRPrecap_lmt kind 'Debug' units 'cfs'}
+define Banks_SRPrecap_lmt_ {alias Banks_SRPrecap_lmt kind 'Debug' units 'cfs'}
+
+define APRMAY_SRPrecap_lmt { value max(AprMayExpCtrl_wRecap-D418_TD[B2_BO2]-D419_TD[B2_BO2] ,0.) }
+define APRMAY_SRPrecap_lmt_ {alias APRMAY_SRPrecap_lmt kind 'Debug' units 'cfs'}
+
+define Delta_SRP_limit {value min(APRMAY_SRPrecap_lmt, Jones_SRPrecap_lmt+Banks_SRPrecap_lmt)}
+define Delta_SRP_limit_ {alias Delta_SRP_limit kind 'SJRR-flow' units 'cfs'}
+
+define SRP_Export_limit {value min(Delta_Recap_lmt, Delta_SRP_limit)}
+define SRP_Export_limit_ {alias SRP_Export_limit kind 'SJRR-flow' units 'cfs'}
+
+! D4009_SRP is a placeholder for future recapture - flow is removed in the south delta
+! D418_SRP and D419_SRP are one possible calculation of the split in export of recaptured water
+! They are not actual exports at Jones and Banks.  Current calculation assumes a preference for Jones export.
+
+goal set_Delta_SRP_lmt1 {D4009_SRP < SRP_Export_limit }
+goal set_Delta_SRP_lmt2 {D4009_SRP = D418_SRP + D419_SRP}
+goal set_Delta_SRP_lmt3 {D418_SRP  < Jones_SRPrecap_lmt}
+
+! Any restoration flows that are eligible for recapture but cannot be exported go to outflow
+define FriantRecap_EXC {std kind 'SJRR-flow' units 'cfs'}
+goal DistribSJRR1 {D4009_SRP + FriantRecap_EXC = D639B[B2_BO2]}
+
+goal limitFriantRecap_EXC {
+    lhs FriantRecap_EXC
+    rhs 0.
+    lhs>rhs penalty 1900}
+goal setC407_SJRR {C407_SJRR = FriantRecap_EXC}

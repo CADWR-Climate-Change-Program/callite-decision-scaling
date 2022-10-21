@@ -27,7 +27,7 @@ define swp_FRSA      {alias D7A_PAG
 
 !Feather River
 define swp_TA_Butte  {alias D201 kind 'swp_delivery' units 'cfs'} !County of Butte
-define swp_TA_Yuba   {alias D204 kind 'swp_delivery' units 'cfs'} !City of Yuba City
+define swp_TA_Yuba   {alias D204_pmi kind 'swp_delivery' units 'cfs'} !City of Yuba City
 
 
 define swp_TA_Feath  {alias swp_TA_Butte + swp_TA_Yuba kind 'swp_delivery' units 'cfs'} !sub-total
@@ -50,7 +50,7 @@ define swp_TA_BayArea {alias swp_TA_SBay + swp_TA_NBay kind 'swp_delivery' units
 define swp_TA_Oak    {alias D802A_PAG kind 'swp_delivery' units 'cfs'} !Oak Flat WD
 define swp_TA_Kings  {alias D847_PAG kind 'swp_delivery' units 'cfs'} !County of Kings
 define swp_TA_Dudley {alias D849_PAG kind 'swp_delivery' units 'cfs'} !Dudley Ridge WD
-define swp_TA_CLWA1  {alias D868_PAG kind 'swp_delivery' units 'cfs'} !Castaic Lake WA
+define swp_TA_CLWA1  {alias D868_PAG kind 'swp_delivery' units 'cfs'} !Santa Clarita Valley Water Agency
 define swp_TA_Empire {alias D846_PAG kind 'swp_delivery' units 'cfs'} !Empire West Side ID
 define swp_TA_KernAg {alias D867_PAG + D851_PAG + D859_PAG + D863_PAG kind 'swp_delivery' units 'cfs'} !Kern County WA
 define swp_TA_Tulare {alias D848_PAG kind 'swp_delivery' units 'cfs'} !Tulare Lake Basin WSD
@@ -70,13 +70,13 @@ define swp_TA_SJV_MI {alias swp_TA_KernMI kind 'swp_delivery' units 'cfs'} !sub-
 define swp_TA_SJV {alias swp_TA_SJV_Ag + swp_TA_SJV_MI kind 'swp_delivery' units 'cfs'} !sub-total
 
 !Central Coastal
-define swp_TA_SLO    {alias D870_PMI kind 'swp_delivery' units 'cfs'} !San Luis Obispo County FC&WCD
-define swp_TA_SB     {alias D869_PMI kind 'swp_delivery' units 'cfs'} !Santa Barbara County FC&WCD
+define swp_TA_SLO    {alias D869_PMI kind 'swp_delivery' units 'cfs'} !San Luis Obispo County FC&WCD
+define swp_TA_SB     {alias D870_PMI kind 'swp_delivery' units 'cfs'} !Santa Barbara County FC&WCD
 define swp_TA_CCoast {alias swp_TA_SLO + swp_TA_SB kind 'swp_delivery' units 'cfs'} !sub-total
 
 !South Coast
-define swp_TA_CLWA2 {alias D896_PMI kind 'swp_delivery' units 'cfs'}    !Castaic Lake WA
-define swp_TA_MWD   {alias D27_PMI + /*D851B_PMI +*/ D885_PMI + D895_PMI + D899_PMI kind 'swp_delivery' units 'cfs'} !Metropolitan WDSC
+define swp_TA_CLWA2 {alias D896_PMI kind 'swp_delivery' units 'cfs'}    !Santa Clarita Valley Water Agency
+define swp_TA_MWD   {alias D27_PMI + D851B_PMI + D885_PMI + D895_PMI + D899_PMI kind 'swp_delivery' units 'cfs'} !Metropolitan WDSC
 define swp_TA_SBV   {alias D886_PMI kind 'swp_delivery' units 'cfs'}    !San Bernadino Valley MWD
 define swp_TA_SGV   {alias D887_PMI kind 'swp_delivery' units 'cfs'}    !San Gabriel Valley MWD
 define swp_TA_SGP   {alias D888_PMI kind 'swp_delivery' units 'cfs'}    !San Gorgonio Pass WA
@@ -143,7 +143,7 @@ define swp_TA_total {alias swp_TA_Feath  +
 
 !Feather River
 define swp_CO_Butte  {alias 0. kind 'swp_delivery' units 'cfs'} !County of Butte
-define swp_CO_Yuba   {alias 0. kind 'swp_delivery' units 'cfs'} !City of Yuba City
+define swp_CO_Yuba   {alias D204_PCO kind 'swp_delivery' units 'cfs'} !City of Yuba City
 define swp_CO_Feath  {alias swp_CO_Butte + swp_CO_Yuba kind 'swp_delivery' units 'cfs'} !sub-total
 
 !North Bay
@@ -161,7 +161,7 @@ define swp_CO_SBay {alias swp_CO_ACFC + swp_CO_ACWD + swp_CO_SCV kind 'swp_deliv
 define swp_CO_Oak    {alias D802A_PCO kind 'swp_delivery' units 'cfs'} !Oak Flat WD
 define swp_CO_Kings  {alias D847_PCO kind 'swp_delivery' units 'cfs'} !County of Kings
 define swp_CO_Dudley {alias D849_PCO kind 'swp_delivery' units 'cfs'} !Dudley Ridge WD
-define swp_CO_CLWA1  {alias D868_PCO kind 'swp_delivery' units 'cfs'} !Castaic Lake WA
+define swp_CO_CLWA1  {alias D868_PCO kind 'swp_delivery' units 'cfs'} !Santa Clarita Valley Water Agency
 define swp_CO_Empire {alias D846_PCO kind 'swp_delivery' units 'cfs'} !Empire West Side ID
 define swp_CO_Kern   {alias D851_PCO + D859_PCO + D863_PCO + D867_PCO kind 'swp_delivery' units 'cfs'} !Kern County WA
 define swp_CO_Tulare {alias D848_PCO kind 'swp_delivery' units 'cfs'} !Tulare Lake Basin WSD
@@ -180,7 +180,7 @@ define swp_CO_CCoast {alias swp_CO_SLO + swp_CO_SB kind 'swp_delivery' units 'cf
 
 !Southern California
 define swp_CO_AVEK  {alias D877_PCO kind 'swp_delivery' units 'cfs'}    !Antelope Valley-East Kern WA
-define swp_CO_CLWA2 {alias D896_PCO kind 'swp_delivery' units 'cfs'}    !Castaic Lake WA
+define swp_CO_CLWA2 {alias D896_PCO kind 'swp_delivery' units 'cfs'}    !Santa Clarita Valley Water Agency
 define swp_CO_CVWD  {alias D883_PCO kind 'swp_delivery' units 'cfs'}    !Coachella Valley WD
 define swp_CO_CLA   {alias D25_PCO  kind 'swp_delivery' units 'cfs'}    !Crestline-Line Arrowhead WA
 define swp_CO_Desert{alias D884_PCO kind 'swp_delivery' units 'cfs'}    !Desert WA
@@ -222,12 +222,12 @@ goal set_swp_CO_total {swp_CO_total = swp_CO_Feath  +
 
 !Feather River
 define swp_IN_Butte  {alias 0. kind 'swp_delivery' units 'cfs'} !County of Butte
-define swp_IN_Yuba   {alias 0. kind 'swp_delivery' units 'cfs'} !City of Yuba City
+define swp_IN_Yuba   {alias D204_PIN kind 'swp_delivery' units 'cfs'} !City of Yuba City
 define swp_IN_Feath  {alias swp_IN_Butte + swp_IN_Yuba kind 'swp_delivery' units 'cfs'} !sub-total
 
 !North Bay
 define swp_IN_Napa   {alias D403B_PIN kind 'swp_delivery' units 'cfs'} !Napa County FC&WCD
-define swp_IN_Solano {alias 0. kind 'swp_delivery' units 'cfs'} !Solano County WA
+define swp_IN_Solano {alias D403C_PIN kind 'swp_delivery' units 'cfs'} !Solano County WA
 define swp_IN_NBay   {alias swp_IN_Napa + swp_IN_Solano kind 'swp_delivery' units 'cfs'} !sub-total
 
 !South Bay
@@ -240,10 +240,10 @@ define swp_IN_SBay {alias swp_IN_ACFC + swp_IN_ACWD + swp_IN_SCV kind 'swp_deliv
 define swp_IN_BayArea {alias swp_IN_SBay + swp_IN_NBay kind 'swp_delivery' units 'cfs'} !sub-total
 
 !San Joaquin Valley
-define swp_IN_Oak    {alias 0. kind 'swp_delivery' units 'cfs'} !Oak Flat WD
-define swp_IN_Kings  {alias 0. kind 'swp_delivery' units 'cfs'} !County of Kings
+define swp_IN_Oak    {alias D802A_PIN kind 'swp_delivery' units 'cfs'} !Oak Flat WD
+define swp_IN_Kings  {alias D847_PIN kind 'swp_delivery' units 'cfs'} !County of Kings
 define swp_IN_Dudley {alias D849_PIN kind 'swp_delivery' units 'cfs'} !Dudley Ridge WD
-define swp_IN_CLWA1  {alias D868_PIN kind 'swp_delivery' units 'cfs'} !Castaic Lake WA
+define swp_IN_CLWA1  {alias D868_PIN kind 'swp_delivery' units 'cfs'} !Santa Clarita Valley Water Agency
 define swp_IN_Empire {alias D846_PIN kind 'swp_delivery' units 'cfs'} !Empire West Side ID
 define swp_IN_Kern   {alias D859_PIN kind 'swp_delivery' units 'cfs'} !Kern County WA
 define swp_IN_Tulare {alias D848_PIN kind 'swp_delivery' units 'cfs'} !Tulare Lake Basin WSD
@@ -256,17 +256,17 @@ define swp_IN_SJV    {alias swp_IN_Oak    +
                             swp_IN_Tulare kind 'swp_delivery' units 'cfs'} !sub-total
 
 !Central Coastal
-define swp_IN_SLO    {alias 0. kind 'swp_delivery' units 'cfs'} !San Luis Obispo County FC&WCD
-define swp_IN_SB     {alias 0. kind 'swp_delivery' units 'cfs'} !Santa Barbara County FC&WCD
+define swp_IN_SLO    {alias D869_PIN kind 'swp_delivery' units 'cfs'} !San Luis Obispo County FC&WCD
+define swp_IN_SB     {alias D870_PIN kind 'swp_delivery' units 'cfs'} !Santa Barbara County FC&WCD
 define swp_IN_CCoast {alias swp_IN_SLO + swp_IN_SB kind 'swp_delivery' units 'cfs'} !sub-total
 
 !South Coast
-define swp_IN_CLWA2 {alias 0. kind 'swp_delivery' units 'cfs'}    !CasINic Lake WA
+define swp_IN_CLWA2 {alias 0. kind 'swp_delivery' units 'cfs'}    !Santa Clarita Valley Water Agency
 define swp_IN_MWD   {alias D27_PIN + D885_PIN + D895_PIN + D899_PIN kind 'swp_delivery' units 'cfs'} !MetropoliINn WDSC
-define swp_IN_SBV   {alias 0. kind 'swp_delivery' units 'cfs'}    !San Bernadino Valley MWD
-define swp_IN_SGV   {alias 0. kind 'swp_delivery' units 'cfs'}    !San Gabriel Valley MWD
-define swp_IN_SGP   {alias 0. kind 'swp_delivery' units 'cfs'}    !San Gorgonio Pass WA
-define swp_IN_VC    {alias 0. kind 'swp_delivery' units 'cfs'} !Ventura County FCD
+define swp_IN_SBV   {alias D886_PIN kind 'swp_delivery' units 'cfs'}    !San Bernadino Valley MWD
+define swp_IN_SGV   {alias D887_PIN kind 'swp_delivery' units 'cfs'}    !San Gabriel Valley MWD
+define swp_IN_SGP   {alias D888_PIN kind 'swp_delivery' units 'cfs'}    !San Gorgonio Pass WA
+define swp_IN_VC    {alias D29_PIN kind 'swp_delivery' units 'cfs'} !Ventura County FCD
 define swp_IN_SCoast {alias swp_IN_CLWA2  +
                            swp_IN_MWD    +
                            swp_IN_SBV    +
@@ -284,7 +284,7 @@ define swp_IN_CLA   {alias 0.  kind 'swp_delivery' units 'cfs'}    !Crestline-Li
 define swp_IN_Desert{alias D884_PIN kind 'swp_delivery' units 'cfs'}    !Desert WA
 define swp_IN_LCID  {alias 0. kind 'swp_delivery' units 'cfs'}    !Littlerock Creek ID
 define swp_IN_MWA   {alias 0. kind 'swp_delivery' units 'cfs'}    !Mojave WA
-define swp_IN_PWD   {alias 0. kind 'swp_delivery' units 'cfs'}    !Palmdale WD
+define swp_IN_PWD   {alias D878_PIN kind 'swp_delivery' units 'cfs'}    !Palmdale WD
 define swp_IN_Other {alias swp_IN_AVEK   +
                            swp_IN_CVWD   +
                            swp_IN_CLA    +

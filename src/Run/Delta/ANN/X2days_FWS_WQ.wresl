@@ -61,38 +61,21 @@ define flowcap_chs {       ! cfs for Chipps Island
      case FebtoJun {
           condition      month >= FEB .and. month <= JUN
           value 11400. }
-     case AUG_FWS {
-          condition      month == AUG .and. FallX2 == 1
-          value 11400. }
-     case SEP {
-          condition      month == SEP .and. FallX2 == 1
-          value 99999. }
-     case OCT {
-          condition      month == OCT .and. FallX2 == 1
-          value 99999. }
      case NOV_FWS {
-          condition      month == NOV .and. FallX2 == 1
-          value /*mrdo_finaldv[BASE]*/ DO_req_flow + InfForX2Nov }
+          condition      month == NOV .and. wyt_sac<=2 
+          value mrdo_finaldv[base] + InfForX2Nov }
      case othermonths {
           condition      always
           value 99999. }
 }
+
 define flowcap_cnf {       ! cfs for Confluence (Sac & SJR)
      case FebtoJun {
           condition      month >= FEB .and. month <= JUN
           value 7100. }
-     case AUG_FWS {
-          condition      month == AUG .and. FallX2 == 1
-          value 7100. }
-     case SEP {
-          condition      month == SEP .and. FallX2 == 1
-          value 99999. }
-     case OCT {
-          condition      month == OCT .and. FallX2 == 1
-          value 99999. }
      case NOV_FWS {
-          condition      month == NOV .and. FallX2 == 1
-          value /*mrdo_finaldv[BASE]*/ DO_req_flow + InfForX2Nov  }
+          condition      month == NOV .and. wyt_sac<=2
+          value mrdo_finaldv[base] + InfForX2Nov  }
      case othermonths {
           condition      always
           value 99999. }
@@ -113,10 +96,13 @@ define daysX2_roe {
           condition      X2Udef_Select == 1
           value daysin }
      case FebtoJun {
-          condition      month >= FEB .and. month <= JUN
+          condition      month >= FEB .and. month <= JUN .and. wyt_Driest == 0
           select         roe_days
           from           x2days
           where          wateryear=wateryear,month=month    }
+     case FebtoJunTUCP {
+          condition      month >= FEB .and. month <= JUN .and. wyt_Driest == 1    !@jmg 2017.08.16 on/off for 7 extreme years
+          value          0. }
      case StandardOff {
           condition      always
           value          0.    }
@@ -127,19 +113,22 @@ define daysX2_roe {
           condition      X2Udef_Select == 1
           value 0 }
      case FebtoJun {
-          condition      month >= FEB .and. month <= JUN
+          condition      month >= FEB .and. month <= JUN .and. wyt_Driest == 0
           select         chs_days
           from           x2days
           where          wateryear=wateryear,month=month    }
+      case FebtoJunTUCP {
+          condition      month >= FEB .and. month <= JUN .and. wyt_Driest == 1    !@jmg 2017.08.16 on/off for 7 extreme years
+          value          0. }
      case Aug_FWS_W {
           condition      month == AUG .and. wyt_SAC <= 1 .and. FallX2 == 1 ! Aug ramped so it is in range of SEP target
           value          0.    }
      case Sep_FWS_W {
           condition      month == SEP .and. wyt_SAC <= 1 .and. FallX2 == 1 ! FWS BO (Dec 08) Action 4 - Fall X2 for Wet Years
-          value          daysin    }
+          value          0.} !@jmg - turning off Fall X2 daysin    }
      case OctNov_FWS_W {
           condition      month <= NOV .and. wyt_SAC <= 1 .and. FallX2 == 1 ! FWS BO (Dec 08) Action 4 - Fall X2 for Wet Years
-          value          daysin    }
+          value          0.} !@jmg - turning off Fall X2 daysin    }
      case StandardOff {
           condition      always
           value          0.    }
@@ -149,19 +138,25 @@ define daysX2_cnf {
           condition      X2Udef_Select == 1
           value 0 }
      case FebtoJun {
-          condition      month >= FEB .and. month <= JUN
+          condition      month >= FEB .and. month <= JUN .and. wyt_Driest == 0 
           select         cnf_days
           from           x2days
           where          wateryear=wateryear,month=month    }
-     case Aug_FWS_AN {
+     case FebtoJunTUCP {
+          condition      month >= FEB .and. month <= JUN .and. wyt_Driest == 1    !@jmg 2017.08.16 on/off for 7 extreme years
+          value          0. }
+     case Aug_FWS {
           condition      month == AUG .and. wyt_SAC <= 2 .and. FallX2 == 1  ! Aug ramped so it is in range of SEP target
-          value          0.    }
-     case Sep_FWS_AN {
+          value          14.    }
+     case Sep_FWS {
           condition      month == SEP .and. wyt_SAC <= 2 .and. FallX2 == 1 ! FWS BO (Dec 08) Action 4 - Fall X2 for Above Normal Years
           value          daysin    }
-     case OctNov_FWS_AN {
-          condition      month <= NOV .and. wyt_SAC <= 2 .and. FallX2 == 1 ! FWS BO (Dec 08) Action 4 - Fall X2 for Above Normal Years
+     case Oct_FWS {
+          condition      month == OCT .and. wyt_SAC <= 2 .and. FallX2 == 1 ! FWS BO (Dec 08) Action 4 - Fall X2 for Above Normal Years
           value          daysin    }
+     case Nov_FWS {
+          condition      month == NOV .and. wyt_SAC <= 2 .and. FallX2 == 1 ! FWS BO (Dec 08) Action 4 - Fall X2 for Above Normal Years
+          value          0.    }
      case StandardOff {
           condition      always
           value          0.    }
@@ -208,17 +203,32 @@ define daysX2_chs_mod {
 }
 
 
-define daysX2_cnf_mod {  
-
-     case SpecialStd {
-          condition       daysX2_cnf > 0.5
-          value           daysin - daysX2_chs_mod - daysX2_roe_mod}       ! days here make up the balance
-     case StandardOff {                                                   ! for the period unless the original
-          condition       always                                          ! days at cnf are zero.  in this case
-          value           0.   }                                          ! there is no standard!!
+define daysX2_bkg_mod {
+    case PA_SmeltAug {
+          condition      daysX2_cnf > 0.5 .and. month == AUG .and. wyt_Sac<=2
+          value          daysin - daysX2_cnf    }
+    case zero {                                                      
+          condition      always                                       
+          value          0.   }                                       
+}
+define daysX2_cnf_mod {
+    case PA_SmeltAug {
+          condition      daysX2_cnf > 0.5 .and. month == AUG .and. wyt_Sac<=2
+          value          daysin - daysX2_bkg_mod }
+    /*case CnfTrigOutofSeason {
+          condition      month <= JAN .or. month >= JUL       ! If outside D1641 standard X2 season don't do this adjustment
+          value          daysX2_cnf    } */!Not working to be checked later SP
+    case SpecialStd {
+        condition       daysX2_cnf > 0.5
+        value           daysin - daysX2_chs_mod - daysX2_roe_mod  }     ! days here make up the balance
+    case StandardOff {                                                      ! for the period unless the original
+        condition       always                                              ! days at cnf are zero.  in this case
+        value           0.   }                                              ! there is no standard!!
 }
 define modroeday {alias daysX2_roe_mod kind 'debug' units 'none'}
 define modchsday {alias daysX2_chs_mod kind 'debug' units 'none'}
 define modcnfday {alias daysX2_cnf_mod kind 'debug' units 'none'}
+define modbkgday {alias daysX2_bkg_mod kind 'debug' units 'none'}
+
 
 ! ******************************************************************************************

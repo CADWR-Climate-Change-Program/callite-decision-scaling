@@ -1,0 +1,21 @@
+! THIS code estimates current month X2
+! X2 is the 2ppt bottom isohaline line used to describe the entrapment zone.
+
+! ******************************************************************************************
+
+define NDO_est {value D_DeltaReqd[Base] + C_Delta[Base]}
+
+
+! ******************************************************************************************
+! Estimate current month's X2 position using ANN
+
+define X2_est {
+    value  ANN_X2(
+               X2_prv(-4),X2_prv(-3),X2_prv(-2),X2_prv(-1),X2_prv[Base],
+               NDO_adj(-4),NDO_adj(-3),NDO_adj(-2),NDO_adj(-1),NDO_adj[Base],
+               int(daysindv(-4)),int(daysindv(-3)),int(daysindv(-2)),int(daysindv(-1)),int(daysin),
+               int(monthly_avg),month,wateryear)
+}
+define X2_est_dv {alias X2_est kind 'X2-POSITION-ESTIMATE' units 'KM'}
+
+

@@ -49,6 +49,9 @@ define fwslope1 {value 0.79808}
 ! weir flow will be a sum of all the segment's linearized functions
 goal actfwflow {D_FreWeir = fwslope0*C_SacFea_0 + fwslope1*C_SacFea_1 }
 
+!DEFINE D160 {TIMESERIES kind 'FLOW-DELIVERY' units 'CFS'}
+!goal actfwflow_day {D_FreWeir = D160}
+
 ! integer variable to bound segments for proper filling step by step
 define int_fweir {INTEGER STD KIND 'INTEGER' UNITS 'NONE'}
 goal boundN_SacFea_in_0 {C_SacFea_0 > int_fweir * 62000.}
@@ -72,6 +75,8 @@ define swslope1 {value 0.8738}
 
 ! weir flow will be a sum of all the segment's linearized functions
 goal actswflow {D_SacWeir = swslope0*C_SacAme_0 + swslope1*C_SacAme_1 }
+!DEFINE D166A {TIMESERIES kind 'FLOW-DELIVERY' units 'CFS'}
+!goal actSwflow_day {D_SacWeir = D166A}
 
 ! integer variable to bound segments for proper filling step by step
 define int_sweir {INTEGER STD KIND 'INTEGER' UNITS 'NONE'}

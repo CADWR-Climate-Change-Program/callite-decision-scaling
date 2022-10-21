@@ -191,6 +191,7 @@ goal totalGPSTANRIPNA {GPSTANRIPNA = GPSTANRIPNA_MI_A }
 /*
 Oakdale ID South and Non-District M & I pumping, units = CFS
 */
+define GP528ATS {timeseries kind 'GW-PUMPING' units 'cfs'}
 ! Define Oakdale ID South groundwater pumping
 define GP530 {std kind 'GW-PUMPING' units 'cfs'}
 ! Define Oakdale ID South minimum project Ag groundwater pumping

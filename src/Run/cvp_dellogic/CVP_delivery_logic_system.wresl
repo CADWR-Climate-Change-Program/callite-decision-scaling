@@ -12,7 +12,7 @@ INCLUDE '\CVP_delivery_logic_system\JamesBypass_BanksCVPcapacity.wresl' ! sets J
                                                                         ! CVP capacity at Banks
 INCLUDE '\CVP_delivery_logic_system\sum_cvp_demands_system.wresl'  ! reads in timeseries for annual demands
 INCLUDE '\CVP_delivery_logic_system\WSIandDI_CVP_system.wresl'  ! defines WSI and DI
-INCLUDE '\CVP_delivery_logic_system\Delivery_carryover_split_CVP_system.wresl' ! splits DI into delivery target  
+!INCLUDE '\CVP_delivery_logic_system\Delivery_carryover_split_CVP_system.wresl' ! splits DI into delivery target  
                                                                                ! and carryover target
 INCLUDE '\CVP_delivery_logic_system\CVPcut_system.wresl' ! Develops system wide cutback numbers, and Cuts back NOD deliveries based on difference between 
                                                         ! delivery target defined above and minimum of annual 

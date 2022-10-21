@@ -1,0 +1,47 @@
+
+!Add the Dry year-BN year 30 days criteria . 
+!The new criteria will enforce 500 cfs DO from export cuts from the SWP only provided that we donâ€™t
+!Violate the 600 cfs H&S requirement. Here, we should test where to impose the export cut 
+
+!AA 04/23/2020
+!check whether the previous year is BN and the current is DRY.
+
+define WY_cndtn_DV { std kind 'Flag' units 'None' }
+
+define WY_cndtn {   
+	case firstyear	{
+		condition wateryear == 1922. .and. month == 1.
+		value 0. }
+	case BN_Sept	{                 
+		condition wyt_SAC == 3. .and. month == 4. 
+		value 2. }
+	case D_Oct	{                 
+		condition wyt_SAC == 4. .and. month == 5. .and. WY_cndtn_DV(-1) == 2. 
+		value 1. }
+	case D_rest_of_month	{                 
+		condition  month > 5.   .and. WY_cndtn_DV(-1) == 1. 
+		value 1. }		
+	case otherwise {
+		condition always
+		value 0. }
+}
+goal setPrv_yr_DVflag { WY_cndtn_DV = WY_cndtn }
+
+define WYT {alias wyt_SAC kind 'Flag' units 'None'}
+		
+
+define all_SMSCG_cut {value D_BANKS_SWP[WHEELING] - 600. }  !available export cut beyond the 600 cfs
+
+define SMSCG_cut {  
+	case exp_cut_active {
+		condition WY_cndtn == 1.  .and. month == 10.  !10 for July and 12 for Sept
+		value max(0,min(500.,all_SMSCG_cut))  }
+	case otherwise {
+		condition always
+		value 0. }
+}
+
+
+define SMSCG_cutdv {alias SMSCG_cut kind 'flow-delivery' units 'CFS'}
+
+

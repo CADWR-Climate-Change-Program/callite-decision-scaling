@@ -9,14 +9,6 @@
 !Water Quality cycles
 !*****************************************************************************************
 
-!Water Quality definitions
-!The following is the table
-!Uses modified Kratzer Eqn supplied by USBR; 1=IR; 2=NI
-!Units: Cap=TAF; Salinity=microseimens/cm; mult&exp=dimensionless
-!VERNWQCONSTANTS
-!option CAP1STYR    WQSTD   ACCR    GOOD    WestSide    WQMULT      WQEXP
-!1  70.     700.    190.    85. 2300.       54645.      -0.44346
-!2  70.     1000.   380.    85. 2300.       866201.49   -0.69289
 
 define WQRelCapdv {std kind 'WQ-REL-CAP' units 'TAF'}
 define WQRelCap {           !each march select new Cap based on New Melones forecast
@@ -32,17 +24,6 @@ goal set_WQRelCap {WQRelCapdv = WQRelCap }
 define remWQrelCap { std kind 'storage' units 'TAF' }   !remaining WQ cap calculated in Cycle 6
 
 define VernWQstd {select WQstd from Vern_WQ_std where month = month }
-
-/*define VernWQstd {      !micromhos/cm; note: Irrigation Season is different than the rest
-    case Irrigation {
-        condition   month >= apr .and. month <= aug
-        select      WQstd from VernWQconstants where option = 1 }
-    case NonIrrigation {
-        condition   always
-        select      WQstd from VernWQconstants where option = 2 }
-        }
- */
-
 
 ! Define lookup variables for the San Joaquin EC Link-Node method
 !San Joaquin River upstream of Lander Ave.

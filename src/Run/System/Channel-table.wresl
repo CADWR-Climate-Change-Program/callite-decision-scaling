@@ -113,6 +113,6 @@ define C_Alamo {lower 0. upper 3150. kind 'FLOW-CHANNEL' units 'CFS'} !Californi
 define C_OSO {lower 0. upper 3130. kind 'FLOW-CHANNEL' units 'CFS'} !California Aqueduct West Branch downstream Bifuraction Point (890) OSO
 define C_PearBlPP {lower 0. upper 2105. kind 'FLOW-CHANNEL' units 'CFS'} !California Aqueduct East Branch downstream Pearblossom PP (880)
 define C_WarnePP {lower 0. upper 1565. kind 'FLOW-CHANNEL' units 'CFS'} !California Aqueduct West Branch downstream Warne PP (892)
-define D_ClearTu {lower 0. upper 3300. kind 'FLOW-TUNNEL' units 'CFS'} !Clear Creek Turnnel (D100) with a capacity of 3300 cfs and it is split into _import  <trin_imorts2
+define D_ClearTu {lower 0. upper 3500. kind 'FLOW-TUNNEL' units 'CFS'} !Clear Creek Turnnel (D100) with a capacity of 3300 cfs and it is split into _import  <trin_imorts2
 define D_Spring {lower 0. upper 4200. kind 'FLOW-TUNNEL' units 'CFS'} !Spring Creek Tunnel (D3) with a  capacity of 4200 cfs and D3 = D3_m + D3_whlcv + D3_whljp
 

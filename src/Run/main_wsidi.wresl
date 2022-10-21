@@ -269,8 +269,8 @@ MODEL block4 {
     INCLUDE 'Export_Ops\export_ops.wresl'
     INCLUDE 'Wheeling\WheelOpsVarDefines.wresl'
 	if int(PBwheel_ON)==1 {INCLUDE 'Wheeling\WheelD1485.wresl'}
-    INCLUDE 'B2Actions\BaseStudyResults.wresl' 
-    INCLUDE 'B2Actions\B2Action1Repeat.wresl'
+    !INCLUDE 'B2Actions\BaseStudyResults.wresl' 
+    !INCLUDE 'B2Actions\B2Action1Repeat.wresl'
     INCLUDE 'System\Connectivity-table.wresl'
 	
     INCLUDE 'system\weight-table.wresl'

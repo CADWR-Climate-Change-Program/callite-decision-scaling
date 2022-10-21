@@ -9,15 +9,15 @@ Alternate between 1500 and 3000 cfs for hi flow criteria.
 */
 
 !This portion of the code deals with EXPORT restrictions during the pulse period.
-if int(Dynamic_SJR)==1 {define VAMP_reqdv_VAMP {timeseries kind 'flow-requirement' units 'cfs'}}
+if int(Dynamic_SJR)==1 {define VAMP_reqdv_VAMP {value 0.}}
 
 define VAMP_reqdv_VAMP_set {
     case AprMayDynamic {
         condition (month==APR .or. month==MAY) .and. int(Dynamic_SJR)==1
-        value VAMP_reqdv[VAMP_AND_DO] }
+        value 0. }
     case AprMayTimeseries {
         condition (month==APR .or. month==MAY) .and. int(Dynamic_SJR)==0
-        value VAMP_reqdv_VAMP }
+        value 0. }
     case others  {
         condition always
         value 0.0}
@@ -57,9 +57,6 @@ define PulseExpResSV {
     case OCT_MAR {
         condition month>=OCT .and. month<=MAR
         value 0. }
-    case APRNoVAMPpulse {
-        condition month == APR .and. VAMP_reqdv_VAMP_set <.1  !In case user has turned on export cap while pulse is turned off, make sure export cap is not activated.
-        value 99999.0 }
     case APRlo1 {
         condition month == APR .and. abs(VAMP_reqdv_VAMP_set - 5700.0)<.1
         value 2250. }

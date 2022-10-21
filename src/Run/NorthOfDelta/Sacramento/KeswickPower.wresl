@@ -32,5 +32,5 @@ goal set_c_kswck_exc2_penalty {
         lhs>rhs penalty 1266 }
 }
 
-define C_Kswck_POW {lower 0 upper 15000 kind 'FLOW-POWER' units 'CFS'} ! 15000 is Keswick powerplant capacity
+define C_Kswck_POW {lower 0 upper 16000 kind 'FLOW-POWER' units 'CFS'} ! 15000 is Keswick powerplant capacity
 goal C_Kswck_POW_total {C_Kswck_POW=C_Kswck_MIF+C_Kswck_EXC1}

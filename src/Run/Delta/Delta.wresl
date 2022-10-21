@@ -19,7 +19,7 @@ if int(DCC_DLTSW)== 1 .or. int(DCC_DLTSW)==0 .or. int(DCC_DLTSW)==2 {
 Include 'delta-outflow.wresl' 
 ! MRDO
 include 'Delta_ANN.wresl'
-!Include 'final-mrdo.wresl'        
+Include 'final-mrdo.wresl'        
 Include 'riovista.wresl'                 
 Include 'SoDeltaChannels.wresl' 
 Include 'Qwest_constraint.wresl'

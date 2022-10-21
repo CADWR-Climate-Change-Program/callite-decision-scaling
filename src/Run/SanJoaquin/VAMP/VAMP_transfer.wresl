@@ -33,10 +33,10 @@ goal setVAMP_debt {
         rhs VAMP_DEBT(-1) }
     case April {
         condition   month == apr
-        rhs         VAMP_debt(-1) + 16.*C_PEDRO_STAN_VAMP[VAMP_AND_DO]*cfs_taf/30. - D530_VAMP*cfs_taf}
+        rhs         VAMP_debt(-1) + 16.*C_PEDRO_STAN_VAMP[SJR_WQ2]*cfs_taf/30. - D530_VAMP*cfs_taf}
     case May {
         condition   month == may
-        rhs         VAMP_debt(-1) + 15.*C_PEDRO_STAN_VAMP[VAMP_AND_DO]*cfs_taf/31. - D530_VAMP*cfs_taf}
+        rhs         VAMP_debt(-1) + 15.*C_PEDRO_STAN_VAMP[SJR_WQ2]*cfs_taf/31. - D530_VAMP*cfs_taf}
     case otherwise {
         condition   always
         rhs         VAMP_debt(-1) - D530_VAMP*cfs_taf }
@@ -53,11 +53,11 @@ goal limitD530_VAMP1 {
     lhs D530_VAMP 
     case april {
         condition month==apr 
-        rhs     (16.*C_PEDRO_STAN_VAMP[VAMP_AND_DO]*cfs_taf/30. + VAMP_debt(-1))*taf_cfs
+        rhs     (16.*C_PEDRO_STAN_VAMP[SJR_WQ2]*cfs_taf/30. + VAMP_debt(-1))*taf_cfs
         lhs<rhs penalty 0 } 
     case may {
         condition month==may 
-        rhs     (15.*C_PEDRO_STAN_VAMP[VAMP_AND_DO]*cfs_taf/31. + VAMP_debt(-1))*taf_cfs
+        rhs     (15.*C_PEDRO_STAN_VAMP[SJR_WQ2]*cfs_taf/31. + VAMP_debt(-1))*taf_cfs
         lhs<rhs penalty 0 } 
     case otherwise  {
         condition always

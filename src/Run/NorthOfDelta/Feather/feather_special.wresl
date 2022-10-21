@@ -149,7 +149,7 @@ define C_Orovl_IBU {std kind 'flow-channel' units 'cfs'}  !Weight with -3000 to 
 define C_Orovl_EXP {std kind 'flow-channel' units 'cfs'}
 goal split_C_Orovl {C_Orovl = C_Orovl_IBU + C_Orovl_EXP}
 
-define C_Orovl_EXP_max_ {value max(0., I_Orovl + (S_Orovl(-1) - 1000. - DrainTar_buffer)*taf_cfs)}
+define C_Orovl_EXP_max_ {value max(0., I_Orovl + (S_Orovl(-1) - 1600. - DrainTar_buffer)*taf_cfs)}
 
 goal lim_C_Orovl_EXP {C_Orovl_EXP < C_Orovl_EXP_max_}
 
@@ -177,7 +177,7 @@ define C_Orovl_EXP_max {alias C_Orovl_EXP_max_ kind 'upper-bound' units 'cfs'}
 ! can move water @ 1500 cfs (safe capacity).
 ! When S_Orovl <1250 TAF, PP units 2,4,6 are lost and units 1,3,5 + river valve = 8700 max 
 !=========================================================================
-define C_Orovl_valve {upper 1500 kind 'flow-channel' units 'cfs'}
+define C_Orovl_valve {upper 4000 kind 'flow-channel' units 'cfs'}
 define C_Orovl_PP135 {upper 7200 kind 'flow-channel' units 'cfs'}
 define C_Orovl_Rem {std kind 'flow-channel' units 'cfs'}
 goal split_C_Orovl2 {C_Orovl = C_Orovl_valve + C_Orovl_PP135 + C_Orovl_Rem}
@@ -298,3 +298,50 @@ If releases for flood control are made then no minimum flow is applied.
  }
 */
 
+define decomp_allocdv {std kind 'Decomp-Alloc' units 'None'}
+
+define decomp_alloc {
+	case Oro_high {
+		condition dem_D7C_DCMP > 0. .and. S_OROVL(-1) + (I_OROVL*cfs_TAF) - (max(minflow_c_therm, minflow_C_YubFea)*cfs_TAF) > 900.
+			value min ((S_OROVL(-1) - 900. + (I_OROVL*cfs_TAF) - (max(minflow_c_therm, minflow_C_YubFea)*cfs_TAF))/dem_D7C_DCMP, 1.)	}
+	case Oro_cutoff {
+		condition always
+			value 0.0	}
+}
+
+goal setdecomp_alloc {decomp_allocdv = decomp_alloc}
+
+goal set_D7C {D7C < dem_D7C_DCMP*taf_cfs*decomp_alloc}
+
+
+!Deliver rice decomp water.  The percent of decomp water to be delivered is based on end-of-Sept
+!storage in Oroville.  The intent is to avoid drawing Oroville below 850 TAF when release becomes limited to 1500 cfs
+
+
+!define decomp_allocdv {std kind 'Decomp-Alloc' units 'None'}
+
+/*define decomp_alloc {
+	case Oro_high {
+		condition month==OCT .and. S_OROVL(-1) > 1200.
+			value 1.0	}
+	case Oro_1100 {
+		condition month==Oct .and. S_OROVL(-1) > 1100.
+			value 0.75	}
+	case Oro_1000 {
+		condition month==Oct .and. S_OROVL(-1) > 1000.
+			value 0.5	}
+	case Oro_900 {
+		condition month==Oct .and. S_OROVL(-1) > 900.
+			value 0.25	}
+	case Oro_low {
+		condition month==Oct .and. S_OROVL(-1) <= 900.
+			value 0.0	}
+	case other {
+		condition always
+		value decomp_allocdv(-1)	}
+}
+
+goal setdecomp_alloc {decomp_allocdv = decomp_alloc}
+
+goal set_D7C {D7C < dem_D7C_DCMP*taf_cfs*decomp_alloc}
+*/

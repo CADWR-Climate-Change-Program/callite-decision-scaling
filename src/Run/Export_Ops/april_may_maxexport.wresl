@@ -41,7 +41,7 @@ goal compare_sjrflow {!PulseExpCtrl < max(1500.0, AD_SJR_Pulse)}
 goal compare_ratio {PulseExpCtrl < Dinflow*ExpRatio}
 
 ! Limit to pump capacity during the pulse period.
-goal compare_capacity {PulseExpCtrl < ExportCapacity}
+!goal compare_capacity {PulseExpCtrl < ExportCapacity} ! SP MBK Basedon DCR 2019 Rational not sure. 
 
 !############ NON-PULSE PERIOD #############################
 ! For the non pulse periods in April and May, the allowable export is the smaller of
@@ -99,11 +99,11 @@ goal Export_limit_Jones_pulse_mon {
     lhs    AprMayJonesCtrl
         case April {
             condition     month == APR
-            rhs           JonesCapPermit*14.0/daysin + PulseExpCtrl*0.5*16.0/daysin
+            rhs           JonesCapPermit*14.0/daysin + PulseExpCtrl*CVPExpCapShare_Blncd*16.0/daysin
             lhs<rhs       penalty 0 }
         case May {
             condition     month == MAY
-            rhs           JonesCapPermit*16.0/daysin + PulseExpCtrl*0.5*15.0/daysin
+            rhs           JonesCapPermit*16.0/daysin + PulseExpCtrl*CVPExpCapShare_Blncd*15.0/daysin
             lhs<rhs       penalty 0 }
         case otherwise {
 	    condition   always
@@ -117,11 +117,11 @@ goal Export_limit_Banks_pulse_mon {
     lhs    AprMayBanksCtrl
         case April {
             condition     month == APR
-            rhs           BanksMaxAllow*14.0/daysin + PulseExpCtrl*0.5*16.0/daysin
+            rhs           BanksMaxAllow*14.0/daysin + PulseExpCtrl*SWPExpCapShare_Blncd*16.0/daysin
             lhs<rhs       penalty 0 }
         case May {
             condition     month == MAY
-            rhs           BanksMaxAllow*16.0/daysin + PulseExpCtrl*0.5*15.0/daysin
+            rhs           BanksMaxAllow*16.0/daysin + PulseExpCtrl*SWPExpCapShare_Blncd*15.0/daysin
             lhs<rhs       penalty 0 }
         case otherwise {
 	    condition   always
@@ -130,7 +130,7 @@ goal Export_limit_Banks_pulse_mon {
 }
 
 goal Export_limit_D_Jones {  ! Prevents Non-Pulse portion of month from being greater than Physical Capacity
-    lhs    D_Jones_TD /** Need to change to D_Jones_TD for IF implementation **/
+    lhs    D_Jones_EXP1_TD /** Need to change to D_Jones_TD for IF implementation **/
 !        case no_vamp {   !Richard Chen added for VAMP switch
 !                condition     VAMP_DLTSW == 0 .and. range(month,apr,may)
 !                rhs           JonesCapPermit     
@@ -138,11 +138,12 @@ goal Export_limit_D_Jones {  ! Prevents Non-Pulse portion of month from being gr
         case April {
             condition     month == APR .or. month == MAY
             rhs           AprMayJonesCtrl
-            lhs<rhs       penalty 0 }
+            lhs<rhs       penalty 0 
+            lhs>rhs	  penalty 1285}
 }
 
 goal Export_limit_D_Banks {  ! Prevents Non-Pulse portion of month from being greater than Physical Capacity
-    lhs    D_Banks_TD
+    lhs    D_Banks_EXP1_TD
 !        case no_vamp {   !Richard Chen added for VAMP switch
 !                condition     VAMP_DLTSW == 0 .and. range(month,apr,may)
 !                rhs           BanksCapPermit     
@@ -150,6 +151,7 @@ goal Export_limit_D_Banks {  ! Prevents Non-Pulse portion of month from being gr
         case April {
             condition     month == APR .or. month == MAY
             rhs           AprMayBanksCtrl
-            lhs<rhs       penalty 0 }
+            lhs<rhs       penalty 0 
+            lhs>rhs	  penalty 1285}
 }
 

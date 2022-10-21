@@ -29,8 +29,9 @@ goal totalD28_prj { D28_PRJ = D28_PMI + D28_PCO}
 
 define D29_PRJ    {std kind 'FLOW-DELIVERY' units 'CFS' }
 define D29_PMI    {std kind 'FLOW-DELIVERY' units 'CFS' }
+define D29_PIN    {std kind 'FLOW-DELIVERY' units 'CFS' }
 define D29_PCO    {std kind 'FLOW-DELIVERY' units 'CFS' }
-goal totalD29_prj { D29_PRJ = D29_PMI + D29_PCO}
+goal totalD29_prj { D29_PRJ = D29_PMI + D29_PIN  + D29_PCO}
 
 define D403B_PRJ    {std kind 'FLOW-DELIVERY' units 'CFS' }
 define D403B_PMI    {std kind 'FLOW-DELIVERY' units 'CFS' }
@@ -41,13 +42,15 @@ goal totalD403B_PRJ { D403B_PRJ = D403B_PMI + D403B_PLS + D403B_PIN + D403B_PCO}
 
 define D403C_PRJ    {std kind 'FLOW-DELIVERY' units 'CFS' }
 define D403C_PMI    {std kind 'FLOW-DELIVERY' units 'CFS' }
+define D403C_PIN    {std kind 'FLOW-DELIVERY' units 'CFS' }
 define D403C_PCO     {std kind 'FLOW-DELIVERY' units 'CFS' }
-goal totalD403C_PRJ { D403C_PRJ = D403C_PMI + D403C_PCO}
+goal totalD403C_PRJ { D403C_PRJ = D403C_PMI + D403C_PCO + D403C_PIN}
 
 define D802A_PRJ    {std kind 'FLOW-DELIVERY' units 'CFS' }
 define D802A_PAG    {std kind 'FLOW-DELIVERY' units 'CFS' }
 define D802A_PCO    {std kind 'FLOW-DELIVERY' units 'CFS' }
-goal totalD802A_prj { D802A_PRJ = D802A_PAG + D802A_PCO }
+define D802A_PIN    {std kind 'FLOW-DELIVERY' units 'CFS' }
+goal totalD802A_prj { D802A_PRJ = D802A_PAG + D802A_PCO +  D802A_PIN}
 
 define D803_PRJ    {std kind 'FLOW-DELIVERY' units 'CFS' }
 define D803_PLS    {std kind 'FLOW-DELIVERY' units 'CFS' }
@@ -81,8 +84,9 @@ goal totalD846_prj { D846_PRJ = D846_PAG + D846_PIN + D846_PCO}
 
 define D847_PRJ    {std kind 'FLOW-DELIVERY' units 'CFS' }
 define D847_PAG    {std kind 'FLOW-DELIVERY' units 'CFS' }
+define D847_PIN    {std kind 'FLOW-DELIVERY' units 'CFS' }
 define D847_PCO    {std kind 'FLOW-DELIVERY' units 'CFS' }
-goal totalD847_prj { D847_PRJ = D847_PAG + D847_PCO }
+goal totalD847_prj { D847_PRJ = D847_PAG + D847_PCO + D847_PIN   }
 
 define D848_PRJ    {std kind 'FLOW-DELIVERY' units 'CFS'  }
 define D848_PAG    {std kind 'FLOW-DELIVERY' units 'CFS'  }
@@ -109,13 +113,15 @@ goal totalD868_prj { D868_PRJ = D868_PAG + D868_PIN + D868_PCO}
 
 define D869_PRJ    {std kind 'FLOW-DELIVERY' units 'CFS' }
 define D869_PMI    {std kind 'FLOW-DELIVERY' units 'CFS' }
+define D869_PIN    {std kind 'FLOW-DELIVERY' units 'CFS' }
 define D869_PCO    {std kind 'FLOW-DELIVERY' units 'CFS' }
-goal totalD869_prj { D869_PRJ = D869_PMI + D869_PCO}
+goal totalD869_prj { D869_PRJ = D869_PMI + D869_PCO + D869_PIN}
 
 define D870_PRJ    {std kind 'FLOW-DELIVERY' units 'CFS' }
 define D870_PMI    {std kind 'FLOW-DELIVERY' units 'CFS' }
 define D870_PCO    {std kind 'FLOW-DELIVERY' units 'CFS' }
-goal totalD870_prj { D870_PRJ = D870_PMI + D870_PCO}
+define D870_PIN    {std kind 'FLOW-DELIVERY' units 'CFS' }
+goal totalD870_prj { D870_PRJ = D870_PMI + D870_PCO + D870_PIN }
 
 define D851_PRJ    {std kind 'FLOW-DELIVERY' units 'CFS'  }
 define D851_PAG    {std kind 'FLOW-DELIVERY' units 'CFS'  }
@@ -157,7 +163,8 @@ goal totalD877_prj { D877_PRJ = D877_PMI + D877_PIN + D877_PCO}
 define D878_PRJ    {std kind 'FLOW-DELIVERY' units 'CFS' }
 define D878_PMI    {std kind 'FLOW-DELIVERY' units 'CFS' }
 define D878_PCO    {std kind 'FLOW-DELIVERY' units 'CFS' }
-goal totalD878_prj { D878_PRJ = D878_PMI + D878_PCO}
+define D878_PIN    {std kind 'FLOW-DELIVERY' units 'CFS' }
+goal totalD878_prj { D878_PRJ = D878_PMI + D878_PCO +  D878_PIN}
 
 define D879_PRJ    {std kind 'FLOW-DELIVERY' units 'CFS' }
 define D879_PMI    {std kind 'FLOW-DELIVERY' units 'CFS' }
@@ -197,18 +204,21 @@ goal totalD885_prj { D885_PRJ = D885_PMI + D885_PIN + D885_PCO}
 
 define D886_PRJ    {std kind 'FLOW-DELIVERY' units 'CFS' }
 define D886_PMI    {std kind 'FLOW-DELIVERY' units 'CFS' }
+define D886_PIN    {std kind 'FLOW-DELIVERY' units 'CFS' }
 define D886_PCO    {std kind 'FLOW-DELIVERY' units 'CFS' }
-goal totalD886_prj { D886_PRJ = D886_PMI + D886_PCO}
+goal totalD886_prj { D886_PRJ = D886_PMI + D886_PIN + D886_PCO }
 
 define D887_PRJ    {std kind 'FLOW-DELIVERY' units 'CFS' }
 define D887_PMI    {std kind 'FLOW-DELIVERY' units 'CFS' }
+define D887_PIN    {std kind 'FLOW-DELIVERY' units 'CFS' }
 define D887_PCO    {std kind 'FLOW-DELIVERY' units 'CFS' }
-goal totalD887_prj { D887_PRJ = D887_PMI + D887_PCO}
+goal totalD887_prj { D887_PRJ = D887_PMI + D887_PIN +  D887_PCO}
 
 define D888_PRJ    {std kind 'FLOW-DELIVERY' units 'CFS' }
 define D888_PMI    {std kind 'FLOW-DELIVERY' units 'CFS' }
+define D888_PIN    {std kind 'FLOW-DELIVERY' units 'CFS' }
 define D888_PCO    {std kind 'FLOW-DELIVERY' units 'CFS' }
-goal totalD888_prj { D888_PRJ = D888_PMI + D888_PCO}
+goal totalD888_prj { D888_PRJ = D888_PMI +  D888_PIN  + D888_PCO}
 
 define D889_PRJ    {std kind 'FLOW-DELIVERY' units 'CFS' }
 define D889_PLS    {std kind 'FLOW-DELIVERY' units 'CFS' }

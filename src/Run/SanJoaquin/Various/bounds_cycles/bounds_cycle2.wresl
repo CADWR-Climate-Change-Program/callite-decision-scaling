@@ -17,7 +17,7 @@ goal restrC_MDOTABVAMPcycle2 { C_MDOTABVAMP = 0. }
 Add-water releases for cycle 2
 */
 ! New Melones dissolved oxygen release
-goal setC_MELONDOcycle2 { C_MELONDO = 0. }
+!goal setC_MELONDOcycle2 { C_MELONDO = 0. }
 ! New Melones VAMP mainstem release
 goal setC_MELONvamp_mcycle2 { C_MELONvamp_m = 0. }
 ! New Melones own to Don Pedro

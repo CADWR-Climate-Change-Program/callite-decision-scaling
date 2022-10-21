@@ -1,0 +1,127 @@
+define minflow_C_Kswck {timeseries kind 'flow-min-required' units 'CFS'} !As of 12/19/2018 this is always 3250.
+
+define keswick_min1 {lower -999999.0 upper 999999.0 kind 'alias' units 'CFS'}
+define keswick_min2 {lower -999999.0 upper 999999.0 kind 'alias' units 'CFS'}
+
+define tempCtrl_surrogate {value 3250.}
+!define tempCtrl_surrogate {select flow from SAC_TemperatureControl given trigger=KesTrig use linear where month=month}
+
+! set up Spring Pulse Flow release targets
+! first, calculate flood release (this is useful in any month)
+! note that this is not true "spill" - that would need to consider downstream flow excess too
+! this is just to determine what the release from shasta had to be to meet flood control
+! That is what would be considered a pulse release.
+define S_SHSTA_FC_rels {
+    case FC {
+        condition abs(S_SHSTA[UPSTREAM]-S_SHSTAlevel5)<.01
+        value min(c_SHSTA[UPSTREAM], c_KSWCK_exc[UPSTREAM])*cfs_taf}
+    case otherwise {
+        condition always
+        value 0.}
+}
+! determine the amount of flood release that can be credited to a pulse flow of 
+define SacSprPlsVol {std kind 'flow-volume' units 'taf'}
+define SacSprPlsRels {std kind 'flow-release' units 'cfs'}
+define SacSprPlsInc  {std kind 'flow-release' units 'cfs'}
+
+! first, count spill, up to 150 taf 
+define SacSprPls_fromFC {
+    case March {
+        condition month==MAR
+        value min(150., S_SHSTA_FC_rels)}  
+    case April {
+        condition month==APR 
+        value min(150.-SacSprPlsVol(-1), S_SHSTA_FC_rels)} 
+    case otherwise {
+        condition always
+        value 0.}
+}
+
+! March
+! EOFebShasta * .92188  +  Frcst_Sac * .359826 + 212.54294 ~= Projected EOApril storage
+! In March, make an initial release of the pulse flow volume given some
+! assurance that this will not affect the ability to build cold water reserves
+! by the end of April.
+
+! April - complete the pulse volume up to a total of 150 taf, but only if
+! storage can finish the month above 4.1 TAF
+
+define SacSprPlsIncVol {
+	case WYTlmt { !if wyt is BN, D or C skip Spring Pulse
+        condition wyt_SAC > 2.  
+        value 0.}
+    case March { !release up to half the pulse volume if May1 storage forecast > 4.1 maf
+        condition month==MAR .and. frcst_sac*0.359826+S_Shsta(-1)*0.92188+212.54294>4250.
+        value max(0., 75. - SacSprPls_fromFC)}
+    case April {
+        condition month==APR 
+        value min(150.-SacSprPlsVol(-1)-SacSprPls_fromFC, max(0., S_Shsta[upstream]-4100.))} 
+    case otherwise {
+        condition always
+        value 0.}
+}
+goal setSacSprPlsVol  {SacSprPlsVol  = SacSprPls_fromFC + SacSprPlsIncVol}
+goal setSacSprPlsRels {SacSprPlsRels = SacSprPlsVol * taf_cfs}
+goal setSacSprPlsInc  {SacSprPlsInc  = SacSprPlsIncVol * taf_cfs}
+
+! set up Fall Flow Stability release targets
+define C_Kswck_FallStab {
+    case OctFeb {
+        condition month <= FEB
+        select Base from KeswickWinterFlow given EoS=S_Shsta(prevSEP) use linear }
+    Case otherwise {
+        condition always
+        value 0. }
+}                   
+
+
+define C_Kswck_MIF1 {std kind 'FLOW-MIN-INSTREAM' units 'CFS'}
+define C_Kswck_MIF2 {std kind 'FLOW-MIN-INSTREAM' units 'CFS'}
+define C_Kswck_MIF3 {std kind 'FLOW-MIN-INSTREAM' units 'CFS'}
+ goal C_Kswck_MIF_total {C_Kswck_MIF = C_Kswck_MIF1 + C_Kswck_MIF2 + C_Kswck_MIF3} 
+
+!goal C_Kswck_MIF_total {C_Kswck_MIF = C5_MIF_CS2}
+
+define effective_C_Keswick_min1 { value max(minflow_C_Kswck,tempCtrl_surrogate) }
+goal setKeswick_min1 {keswick_min1 = effective_C_Keswick_min1 }
+
+
+goal setC_Kswckmin2 {C_Kswck_MIF2 < max(C_Kswck_FallStab - effective_C_Keswick_min1,0.) }
+goal setC_Kswckmin3 {keswick_min2 = C_Kswck_FallStab}
+
+! Once we have an operation that the pulse is based on, lock that in.
+! We don't want the model swapping some previous excess for the new minimum, 
+! so the b and c goals below ensure that Shasta release increases and maintains
+! the release level in later cycles - note that this will prevent backup of 
+! export reductions due to OMR criteria, but preserves the intent of the pulse flow.
+! CarrPP ops should not change due to a pulse flow action.
+    
+goal setC5min3a {C_KSWCK_MIF3 < SacSprPlsInc }
+goal setC_KSWCKmin3b {
+    lhs C_KSWCK 
+    case SprPls {
+        condition range(month,mar,apr) .and. SacSprPlsIncVol*taf_cfs > 1.
+        rhs SacSprPlsInc + C_KSWCK[UPSTREAM] 
+        lhs>rhs penalty 0.
+        lhs<rhs constrain}
+}
+goal setC5min3c {
+    lhs C_SHSTA
+    case SprPls {
+        condition range(month,mar,apr) .and. SacSprPlsIncVol*taf_cfs > 1.
+        rhs SacSprPlsInc + C_SHSTA[UPSTREAM] 
+        lhs>rhs penalty 0.
+        lhs<rhs constrain}
+}
+define SacSprPls_fromFC_ {alias SacSprPls_fromFC kind 'flow-volume' units 'taf'}
+
+goal HoldCarrPP {
+    lhs D_CLEARTU
+!       case FloodControl{
+!           condition abs(S_SHSTA[monthlyweighted]-S_SHSTAlevel5)<.01
+!           rhs D100[monthlyweighted]}
+        case SacPulse{
+            condition range(month,mar,apr) .and. SacSprPlsIncVol*taf_cfs > 1.
+            rhs D_CLEARTU[UPSTREAM]}
+}
+

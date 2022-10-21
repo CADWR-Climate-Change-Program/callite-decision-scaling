@@ -60,7 +60,7 @@ define JunePumpRest {
 */
 
 !Retrieve June B2 export restrictions from CalSim
-define JunePumpRest_b2 {timeseries kind 'Export-Restriction' units 'cfs'}
+define JunePumpRest_b2 {value 99999.}
 
 define JunePumpRestdv {alias JunePumpRest_b2 kind 'Jun-Export-Restrict' units 'cfs'}
 

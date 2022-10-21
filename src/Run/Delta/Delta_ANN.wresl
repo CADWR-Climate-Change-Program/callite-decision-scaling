@@ -14,7 +14,8 @@ if int(Dynamic_SJR)==0  {INCLUDE 'Ann\AnnSJRTimeseries.wresl'}
 if int(Dynamic_SJR)==1  {INCLUDE 'Ann\AnnSJRDynamic.wresl'}
 
 ! Contains files for implementation of Artifical Neural Network's for salinity control.
-INCLUDE 'Ann\AnnCommon.wresl'
+
+INCLUDE 'Ann\AnnCommon2.wresl'
 
 !These files establish the standards and parameters for each station:
 INCLUDE 'Ann\JerseyPoint_data.wresl'

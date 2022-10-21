@@ -16,7 +16,7 @@ goal fixSwpPumping1 {
   lhs     D_Banks_swp
   case Wheeling {
   condition always !wheeling_ctrl > .1 .and. (CVC_ON + JPOD_ON)>.1
-  rhs     D_Banks_swp[B2_BO]
+  rhs     D_Banks_swp[B2_BO2]
   lhs>rhs penalty 99999
   lhs<rhs penalty 99999}
 }
@@ -24,7 +24,7 @@ goal fixSWPTDPumping {
 	lhs D_Banks_swp_TD
 	case Wheeling {
 		condition always !wheeling_ctrl > 0.1 .and. (CVC_ON + JPOD_ON) > 0.1
-		rhs D_Banks_swp_TD[B2_BO]
+		rhs D_Banks_swp_TD[B2_BO2]
 		lhs>rhs penalty 99999
 		lhs<rhs penalty 99999
 	}
@@ -33,7 +33,7 @@ goal fixSwpPumping2 {
   lhs     D_Banks_EXP1
   case Wheeling {
   condition always !wheeling_ctrl > .1 .and. (CVC_ON + JPOD_ON)>.1
-  rhs     D_Banks_EXP1[B2_BO]
+  rhs     D_Banks_EXP1[B2_BO2]
   lhs>rhs penalty 99999
   lhs<rhs penalty 99999}
 }
@@ -41,7 +41,7 @@ goal fixSwpPumping3 {
   lhs     D_Banks_EXP2
   case Wheeling {
   condition always !wheeling_ctrl > .1 .and. (CVC_ON + JPOD_ON)>.1
-  rhs     D_Banks_EXP2[B2_BO]
+  rhs     D_Banks_EXP2[B2_BO2]
   lhs>rhs penalty 99999
   lhs<rhs penalty 99999}
 }
@@ -49,7 +49,7 @@ goal fixCvpPumping1 {
   lhs     D_Jones
   case Wheeling {
   condition always !wheeling_ctrl > .1 .and. (CVC_ON + JPOD_ON)>.1
-  rhs     D_Jones[B2_BO]
+  rhs     D_Jones[B2_BO2]
   lhs>rhs penalty 99999
   lhs<rhs penalty 99999}
 }
@@ -57,7 +57,7 @@ goal fixCvpPumping2 {
   lhs     D_Jones_EXP1
   case Wheeling {
   condition always !wheeling_ctrl > .1 .and. (CVC_ON + JPOD_ON)>.1
-  rhs     D_Jones_EXP1[B2_BO]
+  rhs     D_Jones_EXP1[B2_BO2]
   lhs>rhs penalty 99999
   lhs<rhs penalty 99999}
 }
@@ -65,7 +65,7 @@ goal fixCvpPumping3 {
   lhs     D_Jones_EXP2
   case Wheeling {
   condition always !wheeling_ctrl > .1 .and. (CVC_ON + JPOD_ON)>.1
-  rhs     D_Jones_EXP2[B2_BO]
+  rhs     D_Jones_EXP2[B2_BO2]
   lhs>rhs penalty 99999
   lhs<rhs penalty 99999}
 }
@@ -73,14 +73,14 @@ goal fixCVP_TD_Pumping {
   lhs     D_Jones_TD
   case Wheeling {
   condition always !wheeling_ctrl > .1 .and. (CVC_ON + JPOD_ON)>.1
-  rhs     D_Jones_TD[B2_BO]
+  rhs     D_Jones_TD[B2_BO2]
   lhs>rhs penalty 99999
   lhs<rhs penalty 99999}
 }
 
 goal fixNBPumping {
   lhs     D_Napa
-  rhs     D_Napa[B2_BO]
+  rhs     D_Napa[B2_BO2]
   lhs>rhs penalty 99999
   lhs<rhs penalty 99999
 }
@@ -89,7 +89,7 @@ goal fixfeatherinflow {
   lhs     c_YubFea
   case Wheeling {
   condition always !wheeling_ctrl > .1 .and. (CVC_ON + JPOD_ON)>.1
-  rhs     c_YubFea[B2_BO]
+  rhs     c_YubFea[B2_BO2]
   lhs>rhs penalty 99999
   lhs<rhs penalty 99999}
 }
@@ -97,7 +97,7 @@ goal fixcvprefuge {
   lhs     D_CVPJUSWP
   case Wheeling {
   condition always !wheeling_ctrl > .1 .and. (CVC_ON + JPOD_ON)>.1
-  rhs     D_CVPJUSWP[B2_BO]
+  rhs     D_CVPJUSWP[B2_BO2]
   lhs>rhs penalty 99999
   lhs<rhs penalty 99999}
 }
@@ -105,7 +105,7 @@ goal fixsouthbay {
   lhs     D_Sbay
   case Wheeling {
   condition always !wheeling_ctrl > .1 .and. (CVC_ON + JPOD_ON)>.1
-  rhs     D_Sbay[B2_BO]
+  rhs     D_Sbay[B2_BO2]
   lhs>rhs penalty 99999
   lhs<rhs penalty 99999}
 }
@@ -114,25 +114,25 @@ goal fixONeillFBSWP {
   lhs     D_ONeillFBSWP
   case Wheeling {
   condition always !wheeling_ctrl > .1 .and. (CVC_ON + JPOD_ON)>.1
-  rhs     D_ONeillFBSWP[B2_BO]
+  rhs     D_ONeillFBSWP[B2_BO2]
   lhs>rhs penalty 99999
   lhs<rhs penalty 99999}
 }
-
+/*
 goal fixSL {
   lhs     S_SLSWP
   case Wheeling {
   condition always !wheeling_ctrl > .1 .and. (CVC_ON + JPOD_ON)>.1
-  rhs     S_SLSWP[B2_BO]
+  rhs     S_SLSWP[B2_BO2]
   lhs>rhs penalty 99999
   lhs<rhs penalty 99999}
 }
-
+*/
 goal fixSLin {
   lhs     D_OFBSWP
   case Wheeling {
   condition always !wheeling_ctrl > .1 .and. (CVC_ON + JPOD_ON)>.1
-  rhs     D_OFBSWP[B2_BO]
+  rhs     D_OFBSWP[B2_BO2]
   lhs>rhs penalty 99999
   lhs<rhs penalty 99999}
 }
@@ -141,7 +141,7 @@ goal fixterminals {
   lhs     C_CVC
   case Wheeling {
   condition always !wheeling_ctrl > .1 .and. (CVC_ON + JPOD_ON)>.1
-  rhs     C_CVC[B2_BO]
+  rhs     C_CVC[B2_BO2]
   lhs>rhs penalty 99999
   lhs<rhs penalty 99999}
 }
@@ -150,7 +150,7 @@ goal fixUNUSEDFS {
   lhs     UNUSED_FS
   case Wheeling {
   condition always !wheeling_ctrl > .1 .and. (CVC_ON + JPOD_ON)>.1
-  rhs     UNUSED_FS[B2_BO]
+  rhs     UNUSED_FS[B2_BO2]
   lhs>rhs penalty 99999
   lhs<rhs penalty 99999}
 }
@@ -158,7 +158,7 @@ goal fixUNUSEDSS {
   lhs     UNUSED_SS
   case Wheeling {
   condition always !wheeling_ctrl > .1 .and. (CVC_ON + JPOD_ON)>.1
-  rhs     UNUSED_SS[B2_BO]
+  rhs     UNUSED_SS[B2_BO2]
   lhs>rhs penalty 99999
   lhs<rhs penalty 99999}
 }
@@ -166,7 +166,7 @@ goal fixSWPDS {
   lhs     SWPDS
   case Wheeling {
   condition always !wheeling_ctrl > .1 .and. (CVC_ON + JPOD_ON)>.1
-  rhs     SWPDS[B2_BO]
+  rhs     SWPDS[B2_BO2]
   lhs>rhs penalty 99999
   lhs<rhs penalty 99999}
 }
@@ -174,7 +174,7 @@ goal fixSHADS {
   lhs     SHADS
   case Wheeling {
   condition always !wheeling_ctrl > .1 .and. (CVC_ON + JPOD_ON)>.1
-  rhs     SHADS[B2_BO]
+  rhs     SHADS[B2_BO2]
   lhs>rhs penalty 99999
   lhs<rhs penalty 99999}
 }
@@ -182,7 +182,7 @@ goal fixFOLDS {
   lhs     FOLDS
   case Wheeling {
   condition always !wheeling_ctrl > .1 .and. (CVC_ON + JPOD_ON)>.1
-  rhs     FOLDS[B2_BO]
+  rhs     FOLDS[B2_BO2]
   lhs>rhs penalty 99999
   lhs<rhs penalty 99999}
 }
@@ -190,7 +190,7 @@ goal fixWHSSW {
   lhs     WHSSW
   case Wheeling {
   condition always !wheeling_ctrl > .1 .and. (CVC_ON + JPOD_ON)>.1
-  rhs     WHSSW[B2_BO]
+  rhs     WHSSW[B2_BO2]
   lhs>rhs penalty 99999
   lhs<rhs penalty 99999}
 }
@@ -199,7 +199,7 @@ goal fixUWFE {
   lhs     UWFE
   case Wheeling {
   condition always !wheeling_ctrl > .1 .and. (CVC_ON + JPOD_ON)>.1
-  rhs     UWFE[B2_BO]
+  rhs     UWFE[B2_BO2]
   lhs>rhs penalty 99999
   lhs<rhs penalty 99999}
 }
@@ -208,7 +208,7 @@ goal fixIBU {
   lhs     IBU
   case Wheeling {
   condition always !wheeling_ctrl > .1 .and. (CVC_ON + JPOD_ON)>.1
-  rhs     IBU[B2_BO]
+  rhs     IBU[B2_BO2]
   lhs>rhs penalty 99999
   lhs<rhs penalty 99999}
 }
@@ -217,7 +217,7 @@ goal fixSurplus {
   lhs     C_Delta_SWP + C_Delta_CVP + Surp1Terms + Surp2Terms
   case Wheeling {
   condition always !wheeling_ctrl > .1 .and. (CVC_ON + JPOD_ON)>.1
-  rhs     C_Delta_SWP[B2_BO] + C_Delta_CVP[B2_BO]
+  rhs     C_Delta_SWP[B2_BO2] + C_Delta_CVP[B2_BO2]
   lhs>rhs penalty 99999
   lhs<rhs penalty 99999}
 }

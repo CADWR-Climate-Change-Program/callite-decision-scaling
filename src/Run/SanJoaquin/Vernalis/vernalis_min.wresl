@@ -100,14 +100,14 @@ define VernMin_def1 {
     case April {
         condition month==APR
         value max(0., max(NOAAVernMin_req, X2VernMin_req) - C_SJRVER[SJR_WQ1])*14/30.   ! non-pulse
-              + max(0., NOAAVernMin_req - C_SJRVER[VAMP_AND_DO])*16./30.}               ! pulse
+              + max(0., NOAAVernMin_req - C_SJRVER[SJR_WQ2])*16./30.}               ! pulse
     case May {
         condition month==MAY
         value max(0., max(NOAAVernMin_req, X2VernMin_req) - C_SJRVER[SJR_WQ1])*16/31.   ! non-pulse
-              + max(0., NOAAVernMin_req - C_SJRVER[VAMP_AND_DO])*15./31.}               ! pulse
+              + max(0., NOAAVernMin_req - C_SJRVER[SJR_WQ2])*15./31.}               ! pulse
     case otherwise {
         condition always
-        value max (0., VernMin_req - C_SJRVER[SJR_WQ1] - C_MELONDO[VAMP_AND_DO]) }
+        value max (0., VernMin_req - C_SJRVER[SJR_WQ1] - C_MELONDO[SJR_WQ2]) }
 }
 
 define VernMin_def_np {
@@ -117,14 +117,14 @@ define VernMin_def_np {
     }
     case otherwise {
         condition   always
-        value       max (0., VernMin_req - C_SJRVER[SJR_WQ1] - C_MELONDO[VAMP_AND_DO])
+        value       max (0., VernMin_req - C_SJRVER[SJR_WQ1] - C_MELONDO[SJR_WQ2])
     }
 }
 
 define VernMin_def_p {
     case AprilorMay {
         condition   range(month,apr,may)
-        value       max(0., NOAAVernMin_req - C_SJRVER[VAMP_AND_DO])
+        value       max(0., NOAAVernMin_req - C_SJRVER[SJR_WQ2])
     }
     case otherwise {
         condition   always
@@ -211,14 +211,14 @@ define VernMinRemGoodRipon1 {
      case April {
           condition month == apr
           value     max(0.,maxGoodwin - C_STANGDWN[SJR_WQ1] + C_STANGDWNF[SJR_WQ1])*14./30.
-                  + max(0.,maxGoodwin - C_STANGDWN[VAMP_AND_DO] + C_STANGDWNF[VAMP_AND_DO])*16./30.}
+                  + max(0.,maxGoodwin - C_STANGDWN[SJR_WQ2] + C_STANGDWNF[SJR_WQ2])*16./30.}
      case MayOnly {
           condition month == may
           value     max(0.,maxGoodwin - C_STANGDWN[SJR_WQ1] + C_STANGDWNF[SJR_WQ1])*16./31.
-                  + max(0.,maxGoodwin - C_STANGDWN[VAMP_AND_DO] + C_STANGDWNF[VAMP_AND_DO])*15./31.}
+                  + max(0.,maxGoodwin - C_STANGDWN[SJR_WQ2] + C_STANGDWNF[SJR_WQ2])*15./31.}
      case JunethruSep {
           condition month >= jun .and. month <= sep
-          value max(0.,maxGoodwin - C_STANGDWN[VAMP_AND_DO] + C_STANGDWNF[VAMP_AND_DO]) }
+          value max(0.,maxGoodwin - C_STANGDWN[SJR_WQ2] + C_STANGDWNF[SJR_WQ2]) }
      case otherwise {
           condition always
           value  max(0., maxGoodwin - C_STANGDWN[SJR_WQ1] + C_STANGDWNF[SJR_WQ1]) }
@@ -232,13 +232,13 @@ define VernMinRemGood_np {
     }
     case otherwise {
         condition   always
-        value       max(0.,maxGoodwin - C_STANGDWN[VAMP_AND_DO] + C_STANGDWNF[VAMP_AND_DO])
+        value       max(0.,maxGoodwin - C_STANGDWN[SJR_WQ2] + C_STANGDWNF[SJR_WQ2])
     }
 }
 define VernMinRemGood_p {
     case AprilMay {
         condition   range(month,apr,may)
-        value       max(0.,maxGoodwin - C_STANGDWN[VAMP_AND_DO] + C_STANGDWNF[VAMP_AND_DO])
+        value       max(0.,maxGoodwin - C_STANGDWN[SJR_WQ2] + C_STANGDWNF[SJR_WQ2])
     }
     case otherwise {
         condition   always

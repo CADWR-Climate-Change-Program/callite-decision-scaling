@@ -30,7 +30,7 @@
 define MercedRelease_Oct { 
      case October {
           condition month == oct
-          value     max (0.,min (S_MCLRE[VAMP_AND_DO] - S_MCLRElevel1, 12.5)) }
+          value     max (0.,min (S_MCLRE[SJR_WQ2] - S_MCLRElevel1, 12.5)) }
      case otherwise {
           condition always
           value     0. }

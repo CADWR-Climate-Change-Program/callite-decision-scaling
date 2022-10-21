@@ -1,4 +1,3 @@
-/*1/25/2011: Added code for user-defined demands -Tom FitzHugh BOR */
 !____________________________________________________________________________________________
 
 !Determine Table A to be delivered this year (per contractor)
@@ -7,7 +6,7 @@
 define deltar_a_1  {value max(0.0, (allocate_1  - carryover_final_1 ))} !ALAMEDA COUNTY FC&WCD-ZONE 7
 define deltar_a_2  {value max(0.0, (allocate_2  - carryover_final_2 ))} !ALAMEDA COUNTY WD
 define deltar_a_3  {value max(0.0, (allocate_3  - carryover_final_3 ))} !ANTELOPE VALLEY-EAST KERN WA
-define deltar_a_4  {value max(0.0, (allocate_4  - carryover_final_4 ))} !CASTAIC LAKE WA
+define deltar_a_4  {value max(0.0, (allocate_4  - carryover_final_4 ))} !Santa Clarita Valley Water Agency
 define deltar_a_5  {value max(0.0, (allocate_5  - carryover_final_5 ))} !CITY OF YUBA CITY
 define deltar_a_6  {value max(0.0, (allocate_6  - carryover_final_6 ))} !COACHELLA VALLEY WD
 define deltar_a_7  {value max(0.0, (allocate_7  - carryover_final_7 ))} !COUNTY OF BUTTE
@@ -33,12 +32,12 @@ define deltar_a_26 {value max(0.0, (allocate_26 - carryover_final_26))} !SOLANO 
 define deltar_a_27 {value max(0.0, (allocate_27 - carryover_final_27))} !TULARE LAKE BASIN WSD
 define deltar_a_28 {value max(0.0, (allocate_28 - carryover_final_28))} !VENTURA COUNTY WPD
 define deltar_a_29 {value max(0.0, (allocate_29 - carryover_final_29))} !KERN COUNTY WA - MI
-define deltar_a_30 {value max(0.0, (allocate_30 - carryover_final_30))} !CASTAIC LAKE WA - MI
+define deltar_a_30 {value max(0.0, (allocate_30 - carryover_final_30))} !Santa Clarita Valley Water Agency - MI
 
 define deltar_a_dv_1  {alias deltar_a_1  kind 'swp-output' units 'taf'} !ALAMEDA COUNTY FC&WCD-ZONE 7
 define deltar_a_dv_2  {alias deltar_a_2  kind 'swp-output' units 'taf'} !ALAMEDA COUNTY WD
 define deltar_a_dv_3  {alias deltar_a_3  kind 'swp-output' units 'taf'} !ANTELOPE VALLEY-EAST KERN WA
-define deltar_a_dv_4  {alias deltar_a_4  kind 'swp-output' units 'taf'} !CASTAIC LAKE WA
+define deltar_a_dv_4  {alias deltar_a_4  kind 'swp-output' units 'taf'} !Santa Clarita Valley Water Agency
 define deltar_a_dv_5  {alias deltar_a_5  kind 'swp-output' units 'taf'} !CITY OF YUBA CITY
 define deltar_a_dv_6  {alias deltar_a_6  kind 'swp-output' units 'taf'} !COACHELLA VALLEY WD
 define deltar_a_dv_7  {alias deltar_a_7  kind 'swp-output' units 'taf'} !COUNTY OF BUTTE
@@ -64,7 +63,7 @@ define deltar_a_dv_26 {alias deltar_a_26 kind 'swp-output' units 'taf'} !SOLANO 
 define deltar_a_dv_27 {alias deltar_a_27 kind 'swp-output' units 'taf'} !TULARE LAKE BASIN WSD
 define deltar_a_dv_28 {alias deltar_a_28 kind 'swp-output' units 'taf'} !VENTURA COUNTY WPD
 define deltar_a_dv_29 {alias deltar_a_29 kind 'swp-output' units 'taf'} !KERN COUNTY WA - MI
-define deltar_a_dv_30 {alias deltar_a_30 kind 'swp-output' units 'taf'} !CASTAIC LAKE WA - MI
+define deltar_a_dv_30 {alias deltar_a_30 kind 'swp-output' units 'taf'} !Santa Clarita Valley Water Agency - MI
 
 define deltar_a_total {value
  deltar_a_1  +
@@ -103,7 +102,7 @@ define deltar_a_dv  {alias deltar_a_total  kind 'swp-output' units 'taf'}
 define var_deltar_1  {value perdel_oth*tableA_1 } !ALAMEDA COUNTY FC&WCD-ZONE 7
 define var_deltar_2  {value perdel_oth*tableA_2 } !ALAMEDA COUNTY WD
 define var_deltar_3  {value perdel_oth*tableA_3 } !ANTELOPE VALLEY-EAST KERN WA
-define var_deltar_4  {value perdel_ag *tableA_4 } !CASTAIC LAKE WA
+define var_deltar_4  {value perdel_ag *tableA_4 } !Santa Clarita Valley Water Agency
 define var_deltar_5  {value perdel_oth*tableA_5 } !CITY OF YUBA CITY
 define var_deltar_6  {value perdel_oth*tableA_6 } !COACHELLA VALLEY WD
 define var_deltar_7  {value perdel_oth*tableA_7 } !COUNTY OF BUTTE
@@ -129,12 +128,12 @@ define var_deltar_26 {value perdel_oth*tableA_26} !SOLANO COUNTY WA
 define var_deltar_27 {value perdel_ag *tableA_27} !TULARE LAKE BASIN WSD
 define var_deltar_28 {value perdel_oth*tableA_28} !VENTURA COUNTY WPD
 define var_deltar_29 {value perdel_oth*tableA_29} !KERN COUNTY WA - MI
-define var_deltar_30 {value perdel_oth*tableA_30} !CASTAIC LAKE WA - MI
+define var_deltar_30 {value perdel_oth*tableA_30} !Santa Clarita Valley Water Agency - MI
 
 define var_deltardv_1  {alias var_deltar_1  kind 'swp-output' units 'taf'} !ALAMEDA COUNTY FC&WCD-ZONE 7
 define var_deltardv_2  {alias var_deltar_2  kind 'swp-output' units 'taf'} !ALAMEDA COUNTY WD
 define var_deltardv_3  {alias var_deltar_3  kind 'swp-output' units 'taf'} !ANTELOPE VALLEY-EAST KERN WA
-define var_deltardv_4  {alias var_deltar_4  kind 'swp-output' units 'taf'} !CASTAIC LAKE WA
+define var_deltardv_4  {alias var_deltar_4  kind 'swp-output' units 'taf'} !Santa Clarita Valley Water Agency
 define var_deltardv_5  {alias var_deltar_5  kind 'swp-output' units 'taf'} !CITY OF YUBA CITY
 define var_deltardv_6  {alias var_deltar_6  kind 'swp-output' units 'taf'} !COACHELLA VALLEY WD
 define var_deltardv_7  {alias var_deltar_7  kind 'swp-output' units 'taf'} !COUNTY OF BUTTE
@@ -160,7 +159,7 @@ define var_deltardv_26 {alias var_deltar_26 kind 'swp-output' units 'taf'} !SOLA
 define var_deltardv_27 {alias var_deltar_27 kind 'swp-output' units 'taf'} !TULARE LAKE BASIN WSD
 define var_deltardv_28 {alias var_deltar_28 kind 'swp-output' units 'taf'} !VENTURA COUNTY WPD
 define var_deltardv_29 {alias var_deltar_29 kind 'swp-output' units 'taf'} !KERN COUNTY WA - MI
-define var_deltardv_30 {alias var_deltar_30 kind 'swp-output' units 'taf'} !CASTAIC LAKE WA - MI
+define var_deltardv_30 {alias var_deltar_30 kind 'swp-output' units 'taf'} !Santa Clarita Valley Water Agency - MI
 
 define var_deltar_total {value
  var_deltar_1  +
@@ -199,7 +198,7 @@ define vardeltardv  {alias var_deltar_total  kind 'swp-output' units 'taf'}
 define co_est_1  {value co_current_1  + swpdel_PCO810 + swpdel_PCO813} !ALAMEDA COUNTY FC&WCD-ZONE 7
 define co_est_2  {value co_current_2  + swpdel_PCO814} !ALAMEDA COUNTY WD
 define co_est_3  {value co_current_3  + swpdel_PCO877} !ANTELOPE VALLEY-EAST KERN WA
-define co_est_4  {value co_current_4  + swpdel_PCO868} !CASTAIC LAKE WA
+define co_est_4  {value co_current_4  + swpdel_PCO868} !Santa Clarita Valley Water Agency
 define co_est_5  {value co_current_5  } !CITY OF YUBA CITY
 define co_est_6  {value co_current_6  + swpdel_PCO883} !COACHELLA VALLEY WD
 define co_est_7  {value co_current_7  } !COUNTY OF BUTTE
@@ -225,12 +224,12 @@ define co_est_26 {value co_current_26 + swpdel_PCO403C} !SOLANO COUNTY WA
 define co_est_27 {value co_current_27 + swpdel_PCO848} !TULARE LAKE BASIN WSD
 define co_est_28 {value co_current_28 + swpdel_PCO28 + swpdel_PCO29} !VENTURA COUNTY WPD
 define co_est_29 {value co_current_29 + 0.} !KERN COUNTY WA - MI
-define co_est_30 {value co_current_30 + swpdel_PCO896} !CASTAIC LAKE WA - MI
+define co_est_30 {value co_current_30 + swpdel_PCO896} !Santa Clarita Valley Water Agency - MI
 
 define co_estdv_1  {alias co_est_1  kind 'swp-output' units 'taf'} !ALAMEDA COUNTY FC&WCD-ZONE 7
 define co_estdv_2  {alias co_est_2  kind 'swp-output' units 'taf'} !ALAMEDA COUNTY WD
 define co_estdv_3  {alias co_est_3  kind 'swp-output' units 'taf'} !ANTELOPE VALLEY-EAST KERN WA
-define co_estdv_4  {alias co_est_4  kind 'swp-output' units 'taf'} !CASTAIC LAKE WA
+define co_estdv_4  {alias co_est_4  kind 'swp-output' units 'taf'} !Santa Clarita Valley Water Agency
 define co_estdv_5  {alias co_est_5  kind 'swp-output' units 'taf'} !CITY OF YUBA CITY
 define co_estdv_6  {alias co_est_6  kind 'swp-output' units 'taf'} !COACHELLA VALLEY WD
 define co_estdv_7  {alias co_est_7  kind 'swp-output' units 'taf'} !COUNTY OF BUTTE
@@ -256,7 +255,7 @@ define co_estdv_26 {alias co_est_26 kind 'swp-output' units 'taf'} !SOLANO COUNT
 define co_estdv_27 {alias co_est_27 kind 'swp-output' units 'taf'} !TULARE LAKE BASIN WSD
 define co_estdv_28 {alias co_est_28 kind 'swp-output' units 'taf'} !VENTURA COUNTY WPD
 define co_estdv_29 {alias co_est_29 kind 'swp-output' units 'taf'} !KERN COUNTY WA - MI
-define co_estdv_30 {alias co_est_30 kind 'swp-output' units 'taf'} !CASTAIC LAKE WA - MI
+define co_estdv_30 {alias co_est_30 kind 'swp-output' units 'taf'} !Santa Clarita Valley Water Agency - MI
 
 define co_est_total {value
  co_est_1  +
@@ -296,7 +295,7 @@ define co_est_dv  {alias co_est_total  kind 'swp-output' units 'taf'}
 define deltar_1  {case a{condition deltar_a_1  + co_est_1  >= var_deltar_1  value var_deltar_1  - co_est_1 } case b{condition always value min(var_deltar_1 ,deltar_a_1 )}} !ALAMEDA COUNTY FC&WCD-ZONE 7
 define deltar_2  {case a{condition deltar_a_2  + co_est_2  >= var_deltar_2  value var_deltar_2  - co_est_2 } case b{condition always value min(var_deltar_2 ,deltar_a_2 )}} !ALAMEDA COUNTY WD
 define deltar_3  {case a{condition deltar_a_3  + co_est_3  >= var_deltar_3  value var_deltar_3  - co_est_3 } case b{condition always value min(var_deltar_3 ,deltar_a_3 )}} !ANTELOPE VALLEY-EAST KERN WA
-define deltar_4  {case a{condition deltar_a_4  + co_est_4  >= var_deltar_4  value var_deltar_4  - co_est_4 } case b{condition always value min(var_deltar_4 ,deltar_a_4 )}} !CASTAIC LAKE WA
+define deltar_4  {case a{condition deltar_a_4  + co_est_4  >= var_deltar_4  value var_deltar_4  - co_est_4 } case b{condition always value min(var_deltar_4 ,deltar_a_4 )}} !Santa Clarita Valley Water Agency
 define deltar_5  {case a{condition deltar_a_5  + co_est_5  >= var_deltar_5  value var_deltar_5  - co_est_5 } case b{condition always value min(var_deltar_5 ,deltar_a_5 )}} !CITY OF YUBA CITY
 define deltar_6  {case a{condition deltar_a_6  + co_est_6  >= var_deltar_6  value var_deltar_6  - co_est_6 } case b{condition always value min(var_deltar_6 ,deltar_a_6 )}} !COACHELLA VALLEY WD
 define deltar_7  {case a{condition deltar_a_7  + co_est_7  >= var_deltar_7  value var_deltar_7  - co_est_7 } case b{condition always value min(var_deltar_7 ,deltar_a_7 )}} !COUNTY OF BUTTE
@@ -322,12 +321,12 @@ define deltar_26 {case a{condition deltar_a_26 + co_est_26 >= var_deltar_26 valu
 define deltar_27 {case a{condition deltar_a_27 + co_est_27 >= var_deltar_27 value var_deltar_27 - co_est_27} case b{condition always value min(var_deltar_27,deltar_a_27)}} !TULARE LAKE BASIN WSD
 define deltar_28 {case a{condition deltar_a_28 + co_est_28 >= var_deltar_28 value var_deltar_28 - co_est_28} case b{condition always value min(var_deltar_28,deltar_a_28)}} !VENTURA COUNTY WPD
 define deltar_29 {case a{condition deltar_a_29 + co_est_29 >= var_deltar_29 value var_deltar_29 - co_est_29} case b{condition always value min(var_deltar_29,deltar_a_29)}} !KERN COUNTY WA - MI
-define deltar_30 {case a{condition deltar_a_30 + co_est_30 >= var_deltar_30 value var_deltar_30 - co_est_30} case b{condition always value min(var_deltar_30,deltar_a_30)}} !CASTAIC LAKE WA - MI
+define deltar_30 {case a{condition deltar_a_30 + co_est_30 >= var_deltar_30 value var_deltar_30 - co_est_30} case b{condition always value min(var_deltar_30,deltar_a_30)}} !Santa Clarita Valley Water Agency - MI
 
 define deltar_dv_1  {alias deltar_1  kind 'swp-output' units 'taf'} !ALAMEDA COUNTY FC&WCD-ZONE 7
 define deltar_dv_2  {alias deltar_2  kind 'swp-output' units 'taf'} !ALAMEDA COUNTY WD
 define deltar_dv_3  {alias deltar_3  kind 'swp-output' units 'taf'} !ANTELOPE VALLEY-EAST KERN WA
-define deltar_dv_4  {alias deltar_4  kind 'swp-output' units 'taf'} !CASTAIC LAKE WA
+define deltar_dv_4  {alias deltar_4  kind 'swp-output' units 'taf'} !Santa Clarita Valley Water Agency
 define deltar_dv_5  {alias deltar_5  kind 'swp-output' units 'taf'} !CITY OF YUBA CITY
 define deltar_dv_6  {alias deltar_6  kind 'swp-output' units 'taf'} !COACHELLA VALLEY WD
 define deltar_dv_7  {alias deltar_7  kind 'swp-output' units 'taf'} !COUNTY OF BUTTE
@@ -353,7 +352,7 @@ define deltar_dv_26 {alias deltar_26 kind 'swp-output' units 'taf'} !SOLANO COUN
 define deltar_dv_27 {alias deltar_27 kind 'swp-output' units 'taf'} !TULARE LAKE BASIN WSD
 define deltar_dv_28 {alias deltar_28 kind 'swp-output' units 'taf'} !VENTURA COUNTY WPD
 define deltar_dv_29 {alias deltar_29 kind 'swp-output' units 'taf'} !KERN COUNTY WA - MI
-define deltar_dv_30 {alias deltar_30 kind 'swp-output' units 'taf'} !CASTAIC LAKE WA - MI
+define deltar_dv_30 {alias deltar_30 kind 'swp-output' units 'taf'} !Santa Clarita Valley Water Agency - MI
 
 define deltar_total {value
  deltar_1  +
@@ -395,7 +394,7 @@ define deltardv_total  {alias deltar_total  kind 'swp-output' units 'taf'}
 define unused_1  {value max(0.0, (allocate_1  - carryover_final_1  - deltar_1 ))} !perdel_oth*tableA_1 ))} !ALAMEDA COUNTY FC&WCD-ZONE 7
 define unused_2  {value max(0.0, (allocate_2  - carryover_final_2  - deltar_2 ))} !perdel_oth*tableA_2 ))} !ALAMEDA COUNTY WD
 define unused_3  {value max(0.0, (allocate_3  - carryover_final_3  - deltar_3 ))} !perdel_oth*tableA_3 ))} !ANTELOPE VALLEY-EAST KERN WA
-define unused_4  {value max(0.0, (allocate_4  - carryover_final_4  - deltar_4 ))} !perdel_ag *tableA_4 ))} !CASTAIC LAKE WA
+define unused_4  {value max(0.0, (allocate_4  - carryover_final_4  - deltar_4 ))} !perdel_ag *tableA_4 ))} !Santa Clarita Valley Water Agency
 define unused_5  {value max(0.0, (allocate_5  - carryover_final_5  - deltar_5 ))} !perdel_oth*tableA_5 ))} !CITY OF YUBA CITY
 define unused_6  {value max(0.0, (allocate_6  - carryover_final_6  - deltar_6 ))} !perdel_oth*tableA_6 ))} !COACHELLA VALLEY WD
 define unused_7  {value max(0.0, (allocate_7  - carryover_final_7  - deltar_7 ))} !perdel_oth*tableA_7 ))} !COUNTY OF BUTTE
@@ -421,12 +420,12 @@ define unused_26 {value max(0.0, (allocate_26 - carryover_final_26 - deltar_26))
 define unused_27 {value max(0.0, (allocate_27 - carryover_final_27 - deltar_27))} !perdel_ag *tableA_27))} !TULARE LAKE BASIN WSD
 define unused_28 {value max(0.0, (allocate_28 - carryover_final_28 - deltar_28))} !perdel_oth*tableA_28))} !VENTURA COUNTY WPD
 define unused_29 {value max(0.0, (allocate_29 - carryover_final_29 - deltar_29))} !perdel_oth*tableA_29))} !KERN COUNTY WA - MI
-define unused_30 {value max(0.0, (allocate_30 - carryover_final_30 - deltar_30))} !perdel_oth*tableA_30))} !CASTAIC LAKE WA - MI
+define unused_30 {value max(0.0, (allocate_30 - carryover_final_30 - deltar_30))} !perdel_oth*tableA_30))} !Santa Clarita Valley Water Agency - MI
 
 define unuseddv_1  {alias unused_1  kind 'swp-output' units 'taf'} !ALAMEDA COUNTY FC&WCD-ZONE 7
 define unuseddv_2  {alias unused_2  kind 'swp-output' units 'taf'} !ALAMEDA COUNTY WD
 define unuseddv_3  {alias unused_3  kind 'swp-output' units 'taf'} !ANTELOPE VALLEY-EAST KERN WA
-define unuseddv_4  {alias unused_4  kind 'swp-output' units 'taf'} !CASTAIC LAKE WA
+define unuseddv_4  {alias unused_4  kind 'swp-output' units 'taf'} !Santa Clarita Valley Water Agency
 define unuseddv_5  {alias unused_5  kind 'swp-output' units 'taf'} !CITY OF YUBA CITY
 define unuseddv_6  {alias unused_6  kind 'swp-output' units 'taf'} !COACHELLA VALLEY WD
 define unuseddv_7  {alias unused_7  kind 'swp-output' units 'taf'} !COUNTY OF BUTTE
@@ -452,7 +451,7 @@ define unuseddv_26 {alias unused_26 kind 'swp-output' units 'taf'} !SOLANO COUNT
 define unuseddv_27 {alias unused_27 kind 'swp-output' units 'taf'} !TULARE LAKE BASIN WSD
 define unuseddv_28 {alias unused_28 kind 'swp-output' units 'taf'} !VENTURA COUNTY WPD
 define unuseddv_29 {alias unused_29 kind 'swp-output' units 'taf'} !KERN COUNTY WA - MI
-define unuseddv_30 {alias unused_30 kind 'swp-output' units 'taf'} !CASTAIC LAKE WA - MI
+define unuseddv_30 {alias unused_30 kind 'swp-output' units 'taf'} !Santa Clarita Valley Water Agency - MI
 
 define unused_total {value
  unused_1  +
@@ -494,8 +493,8 @@ define dem_deltar_1  {value deltar_1 *dem_tableA_1 /(dem_tableA_1  + dem_tableA_
 define dem_deltar_2  {value deltar_1 *dem_tableA_2 /(dem_tableA_1  + dem_tableA_2)} !ALAMEDA COUNTY FC&WCD-ZONE 7
 define dem_deltar_3  {value deltar_2 *dem_tableA_3 /(dem_tableA_3 )} !ALAMEDA COUNTY WD
 define dem_deltar_4  {value deltar_3 *dem_tableA_4 /(dem_tableA_4 )} !ANTELOPE VALLEY-EAST KERN WA
-define dem_deltar_5  {value deltar_4 *dem_tableA_5 /(dem_tableA_5 )} !CASTAIC LAKE WA - AG
-define dem_deltar_6  {value deltar_30*dem_tableA_6 /(dem_tableA_6 )} !CASTAIC LAKE WA - MI
+define dem_deltar_5  {value deltar_4 *dem_tableA_5 /(dem_tableA_5 )} !Santa Clarita Valley Water Agency
+define dem_deltar_6  {value deltar_30*dem_tableA_6 /(dem_tableA_6 )} !Santa Clarita Valley Water Agency - MI
 define dem_deltar_7  {value deltar_5 *dem_tableA_7 /(dem_tableA_7 )} !CITY OF YUBA CITY
 define dem_deltar_8  {value deltar_6 *dem_tableA_8 /(dem_tableA_8 )} !COACHELLA VALLEY WD
 define dem_deltar_9  {value deltar_7 *dem_tableA_9 /(dem_tableA_9 )} !COUNTY OF BUTTE
@@ -534,8 +533,8 @@ define dem_deltardv_1  {alias dem_deltar_1  kind 'swp-output' units 'taf'}  !ALA
 define dem_deltardv_2  {alias dem_deltar_2  kind 'swp-output' units 'taf'}  !ALAMEDA COUNTY FC&WCD-ZONE 7
 define dem_deltardv_3  {alias dem_deltar_3  kind 'swp-output' units 'taf'}  !ALAMEDA COUNTY WD
 define dem_deltardv_4  {alias dem_deltar_4  kind 'swp-output' units 'taf'}  !ANTELOPE VALLEY-EAST KERN WA
-define dem_deltardv_5  {alias dem_deltar_5  kind 'swp-output' units 'taf'}  !CASTAIC LAKE WA
-define dem_deltardv_6  {alias dem_deltar_6  kind 'swp-output' units 'taf'}  !CASTAIC LAKE WA
+define dem_deltardv_5  {alias dem_deltar_5  kind 'swp-output' units 'taf'}  !Santa Clarita Valley Water Agency
+define dem_deltardv_6  {alias dem_deltar_6  kind 'swp-output' units 'taf'}  !Santa Clarita Valley Water Agency
 define dem_deltardv_7  {alias dem_deltar_7  kind 'swp-output' units 'taf'}  !CITY OF YUBA CITY
 define dem_deltardv_8  {alias dem_deltar_8  kind 'swp-output' units 'taf'}  !COACHELLA VALLEY WD
 define dem_deltardv_9  {alias dem_deltar_9  kind 'swp-output' units 'taf'}  !COUNTY OF BUTTE
@@ -577,8 +576,8 @@ define dem_percent_1  {value dem_deltar_1  / dem_tableA_1 }  !ALAMEDA COUNTY FC&
 define dem_percent_2  {value dem_deltar_2  / dem_tableA_2 }  !ALAMEDA COUNTY FC&WCD-ZONE 7
 define dem_percent_3  {value dem_deltar_3  / dem_tableA_3 }  !ALAMEDA COUNTY WD
 define dem_percent_4  {value dem_deltar_4  / dem_tableA_4 }  !ANTELOPE VALLEY-EAST KERN WA
-define dem_percent_5  {value dem_deltar_5  / dem_tableA_5 }  !CASTAIC LAKE WA
-define dem_percent_6  {value dem_deltar_6  / dem_tableA_6 }  !CASTAIC LAKE WA
+define dem_percent_5  {value dem_deltar_5  / dem_tableA_5 }  !Santa Clarita Valley Water Agency
+define dem_percent_6  {value dem_deltar_6  / dem_tableA_6 }  !Santa Clarita Valley Water Agency
 define dem_percent_7  {value dem_deltar_7  / dem_tableA_7 }  !CITY OF YUBA CITY
 define dem_percent_8  {value dem_deltar_8  / dem_tableA_8 }  !COACHELLA VALLEY WD
 define dem_percent_9  {value dem_deltar_9  / dem_tableA_9 }  !COUNTY OF BUTTE
@@ -620,11 +619,11 @@ define remainTA_1  {select remainDemand from swp_3pattern_demands where contract
 define remainTA_2  {select remainDemand from swp_3pattern_demands where contractor=2 ,month=month,percent=swp_demprofile} !ALAMEDA COUNTY FC&WCD-ZONE 7
 define remainTA_3  {select remainDemand from swp_3pattern_demands where contractor=3 ,month=month,percent=swp_demprofile} !ALAMEDA COUNTY WD
 define remainTA_4  {select remainDemand from swp_3pattern_demands where contractor=4 ,month=month,percent=swp_demprofile} !ANTELOPE VALLEY-EAST KERN WA
-define remainTA_5  {select remainDemand from swp_3pattern_demands where contractor=5 ,month=month,percent=swp_demprofile} !CASTAIC LAKE WA
-define remainTA_6  {select remainDemand from swp_3pattern_demands where contractor=6 ,month=month,percent=swp_demprofile} !CASTAIC LAKE WA
-define remainTA_7  {select remainDemand from swp_3pattern_demands where contractor=7 ,month=month,percent=swp_demprofile} !CITY OF YUBA CITY
+define remainTA_5  {select remainDemand from swp_3pattern_demands where contractor=5 ,month=month,percent=swp_demprofile} !Santa Clarita Valley Water Agency
+define remainTA_6  {select remainDemand from swp_3pattern_demands where contractor=6 ,month=month,percent=swp_demprofile} !Santa Clarita Valley Water Agency
+define remainTA_7  {select remainDemand from swp_3pattern_demands where contractor=7 ,month=month,percent=YUBA_DEMPROFILE} !CITY OF YUBA CITY
 define remainTA_8  {select remainDemand from swp_3pattern_demands where contractor=8 ,month=month,percent=swp_demprofile} !COACHELLA VALLEY WD
-define remainTA_9  {select remainDemand from swp_3pattern_demands where contractor=9 ,month=month,percent=swp_demprofile} !COUNTY OF BUTTE
+define remainTA_9  {select remainDemand from swp_3pattern_demands where contractor=9 ,month=month,percent=BUTT_DEMPROFILE} !COUNTY OF BUTTE
 define remainTA_10 {select remainDemand from swp_3pattern_demands where contractor=10,month=month,percent=swp_demprofile} !COUNTY OF KINGS
 define remainTA_11 {select remainDemand from swp_3pattern_demands where contractor=11,month=month,percent=swp_demprofile} !CRESTLINE-LAKE ARROWHEAD WA
 define remainTA_12 {select remainDemand from swp_3pattern_demands where contractor=12,month=month,percent=swp_demprofile} !DESERT WA
@@ -642,7 +641,7 @@ define remainTA_23 {select remainDemand from swp_3pattern_demands where contract
 define remainTA_24 {select remainDemand from swp_3pattern_demands where contractor=24,month=month,percent=swp_demprofile} !METROPOLITAN WDSC
 define remainTA_25 {select remainDemand from swp_3pattern_demands where contractor=25,month=month,percent=swp_demprofile} !METROPOLITAN WDSC
 define remainTA_26 {select remainDemand from swp_3pattern_demands where contractor=26,month=month,percent=swp_demprofile} !MOJAVE WA
-define remainTA_27 {select remainDemand from swp_3pattern_demands where contractor=27,month=month,percent=swp_demprofile} !NAPA COUNTY FC&WCD
+define remainTA_27 {select remainDemand from swp_3pattern_demands where contractor=27,month=month,percent=napa_demprofile} !NAPA COUNTY FC&WCD
 define remainTA_28 {select remainDemand from swp_3pattern_demands where contractor=28,month=month,percent=swp_demprofile} !OAK FLAT WD
 define remainTA_29 {select remainDemand from swp_3pattern_demands where contractor=29,month=month,percent=swp_demprofile} !PALMDALE WD
 define remainTA_30 {select remainDemand from swp_3pattern_demands where contractor=30,month=month,percent=swp_demprofile} !SAN BERNARDINO VALLEY MWD
@@ -651,99 +650,58 @@ define remainTA_32 {select remainDemand from swp_3pattern_demands where contract
 define remainTA_33 {select remainDemand from swp_3pattern_demands where contractor=33,month=month,percent=swp_demprofile} !SAN LUIS OBISPO COUNTY FC&WCD
 define remainTA_34 {select remainDemand from swp_3pattern_demands where contractor=34,month=month,percent=swp_demprofile} !SANTA BARBARA COUNTY FC&WCD
 define remainTA_35 {select remainDemand from swp_3pattern_demands where contractor=35,month=month,percent=swp_demprofile} !SANTA CLARA VALLEY WD
-define remainTA_36 {select remainDemand from swp_3pattern_demands where contractor=36,month=month,percent=swp_demprofile} !SOLANO COUNTY WA
+define remainTA_36 {select remainDemand from swp_3pattern_demands where contractor=36,month=month,percent=solano_demprofile} !SOLANO COUNTY WA
 define remainTA_37 {select remainDemand from swp_3pattern_demands where contractor=37,month=month,percent=swp_demprofile} !TULARE LAKE BASIN WSD
 define remainTA_38 {select remainDemand from swp_3pattern_demands where contractor=38,month=month,percent=swp_demprofile} !VENTURA COUNTY WPD
 define remainTA_39 {select remainDemand from swp_3pattern_demands where contractor=39,month=month,percent=swp_demprofile} !VENTURA COUNTY WPD
 */
 !**LINEARIZED** remaining Table A demand for this year (per contractor demand):
-define remainTA_1_orig  {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=1 ,month=month} !ALAMEDA COUNTY FC&WCD-ZONE 7
-define remainTA_2_orig  {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=2 ,month=month} !ALAMEDA COUNTY FC&WCD-ZONE 7
-define remainTA_3_orig  {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=3 ,month=month} !ALAMEDA COUNTY WD
-define remainTA_4_orig  {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=4 ,month=month} !ANTELOPE VALLEY-EAST KERN WA
-define remainTA_5_orig  {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=5 ,month=month} !CASTAIC LAKE WA
-define remainTA_6_orig  {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=6 ,month=month} !CASTAIC LAKE WA
-define remainTA_7_orig  {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=7 ,month=month} !CITY OF YUBA CITY
-define remainTA_8_orig  {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=8 ,month=month} !COACHELLA VALLEY WD
-define remainTA_9_orig  {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=9 ,month=month} !COUNTY OF BUTTE
-define remainTA_10_orig {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=10,month=month} !COUNTY OF KINGS
-define remainTA_11_orig {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=11,month=month} !CRESTLINE-LAKE ARROWHEAD WA
-define remainTA_12_orig {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=12,month=month} !DESERT WA
-define remainTA_13_orig {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=13,month=month} !DUDLEY RIDGE WD
-define remainTA_14_orig {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=14,month=month} !EMPIRE WEST SIDE ID
-define remainTA_15_orig {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=15,month=month} !KERN COUNTY WA
-define remainTA_16_orig {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=16,month=month} !KERN COUNTY WA
-define remainTA_17_orig {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=17,month=month} !KERN COUNTY WA
-define remainTA_18_orig {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=18,month=month} !KERN COUNTY WA
-define remainTA_19_orig {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=19,month=month} !KERN COUNTY WA
-define remainTA_20_orig {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=20,month=month} !LITTLEROCK CREEK ID
-define remainTA_21_orig {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=21,month=month} !METROPOLITAN WDSC
-define remainTA_22_orig {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=22,month=month} !METROPOLITAN WDSC
-define remainTA_23_orig {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=23,month=month} !METROPOLITAN WDSC
-define remainTA_24_orig {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=24,month=month} !METROPOLITAN WDSC
-define remainTA_25_orig {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=25,month=month} !METROPOLITAN WDSC
-define remainTA_26_orig {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=26,month=month} !MOJAVE WA
-define remainTA_27_orig {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=27,month=month} !NAPA COUNTY FC&WCD
-define remainTA_28_orig {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=28,month=month} !OAK FLAT WD
-define remainTA_29_orig {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=29,month=month} !PALMDALE WD
-define remainTA_30_orig {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=30,month=month} !SAN BERNARDINO VALLEY MWD
-define remainTA_31_orig {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=31,month=month} !SAN GABRIEL VALLEY MWD
-define remainTA_32_orig {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=32,month=month} !SAN GORGONIO PASS WA
-define remainTA_33_orig {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=33,month=month} !SAN LUIS OBISPO COUNTY FC&WCD
-define remainTA_34_orig {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=34,month=month} !SANTA BARBARA COUNTY FC&WCD
-define remainTA_35_orig {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=35,month=month} !SANTA CLARA VALLEY WD
-define remainTA_36_orig {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=36,month=month} !SOLANO COUNTY WA
-define remainTA_37_orig {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=37,month=month} !TULARE LAKE BASIN WSD
-define remainTA_38_orig {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=38,month=month} !VENTURA COUNTY WPD
-define remainTA_39_orig {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=39,month=month} !VENTURA COUNTY WPD
-
-!adjust amounts by appropriate ratio for user-defined demands (ratio will be 1 for non-user-defined)
-define remainTA_1  {value remainTA_1_orig * SWP_oth_ratio}  !ALAMEDA COUNTY FC&WCD-ZONE 7
-define remainTA_2  {value remainTA_2_orig * SWP_oth_ratio}  !ALAMEDA COUNTY FC&WCD-ZONE 7
-define remainTA_3  {value remainTA_3_orig * SWP_oth_ratio}  !ALAMEDA COUNTY WD
-define remainTA_4  {value remainTA_4_orig * SWP_oth_ratio}  !ANTELOPE VALLEY-EAST KERN WA
-define remainTA_5  {value remainTA_5_orig * SWP_ag_ratio}   !CASTAIC LAKE WA
-define remainTA_6  {value remainTA_6_orig * SWP_oth_ratio}  !CASTAIC LAKE WA
-define remainTA_7  {value remainTA_7_orig}                  !CITY OF YUBA CITY
-define remainTA_8  {value remainTA_8_orig * SWP_oth_ratio}  !COACHELLA VALLEY WD
-define remainTA_9  {value remainTA_9_orig}                  !COUNTY OF BUTTE
-define remainTA_10 {value remainTA_10_orig * SWP_ag_ratio}  !COUNTY OF KINGS
-define remainTA_11 {value remainTA_11_orig * SWP_oth_ratio} !CRESTLINE-LAKE ARROWHEAD WA
-define remainTA_12 {value remainTA_12_orig * SWP_oth_ratio} !DESERT WA
-define remainTA_13 {value remainTA_13_orig * SWP_ag_ratio}  !DUDLEY RIDGE WD
-define remainTA_14 {value remainTA_14_orig * SWP_ag_ratio}  !EMPIRE WEST SIDE ID
-define remainTA_15 {value remainTA_15_orig * SWP_oth_ratio} !KERN COUNTY WA
-define remainTA_16 {value remainTA_16_orig * SWP_ag_ratio}  !KERN COUNTY WA
-define remainTA_17 {value remainTA_17_orig * SWP_ag_ratio}  !KERN COUNTY WA
-define remainTA_18 {value remainTA_18_orig * SWP_ag_ratio}  !KERN COUNTY WA
-define remainTA_19 {value remainTA_19_orig * SWP_ag_ratio}  !KERN COUNTY WA
-define remainTA_20 {value remainTA_20_orig * SWP_oth_ratio} !LITTLEROCK CREEK ID
-define remainTA_21 {value remainTA_21_orig * SWP_mwd_ratio} !METROPOLITAN WDSC
-define remainTA_22 {value remainTA_22_orig * SWP_mwd_ratio} !METROPOLITAN WDSC
-define remainTA_23 {value remainTA_23_orig * SWP_mwd_ratio} !METROPOLITAN WDSC
-define remainTA_24 {value remainTA_24_orig * SWP_mwd_ratio} !METROPOLITAN WDSC
-define remainTA_25 {value remainTA_25_orig * SWP_mwd_ratio} !METROPOLITAN WDSC
-define remainTA_26 {value remainTA_26_orig * SWP_oth_ratio} !MOJAVE WA
-define remainTA_27 {value remainTA_27_orig * SWP_oth_ratio} !NAPA COUNTY FC&WCD
-define remainTA_28 {value remainTA_28_orig * SWP_ag_ratio}  !OAK FLAT WD
-define remainTA_29 {value remainTA_29_orig * SWP_oth_ratio} !PALMDALE WD
-define remainTA_30 {value remainTA_30_orig * SWP_oth_ratio} !SAN BERNARDINO VALLEY MWD
-define remainTA_31 {value remainTA_31_orig * SWP_oth_ratio} !SAN GABRIEL VALLEY MWD
-define remainTA_32 {value remainTA_32_orig * SWP_oth_ratio} !SAN GORGONIO PASS WA
-define remainTA_33 {value remainTA_33_orig * SWP_oth_ratio} !SAN LUIS OBISPO COUNTY FC&WCD
-define remainTA_34 {value remainTA_34_orig * SWP_oth_ratio} !SANTA BARBARA COUNTY FC&WCD
-define remainTA_35 {value remainTA_35_orig * SWP_oth_ratio} !SANTA CLARA VALLEY WD
-define remainTA_36 {value remainTA_36_orig * SWP_oth_ratio} !SOLANO COUNTY WA
-define remainTA_37 {value remainTA_37_orig * SWP_ag_ratio} !TULARE LAKE BASIN WSD
-define remainTA_38 {value remainTA_38_orig * SWP_oth_ratio} !VENTURA COUNTY WPD
-define remainTA_39 {value remainTA_39_orig * SWP_oth_ratio} !VENTURA COUNTY WPD
+define remainTA_1  {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=1 ,month=month} !ALAMEDA COUNTY FC&WCD-ZONE 7
+define remainTA_2  {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=2 ,month=month} !ALAMEDA COUNTY FC&WCD-ZONE 7
+define remainTA_3  {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=3 ,month=month} !ALAMEDA COUNTY WD
+define remainTA_4  {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=4 ,month=month} !ANTELOPE VALLEY-EAST KERN WA
+define remainTA_5  {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=5 ,month=month} !Santa Clarita Valley Water Agency
+define remainTA_6  {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=6 ,month=month} !Santa Clarita Valley Water Agency
+define remainTA_7  {select remainDemand from swp_3pattern_demands given percent=yuba_demprofile use linear where contractor=7 ,month=month} !CITY OF YUBA CITY
+define remainTA_8  {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=8 ,month=month} !COACHELLA VALLEY WD
+define remainTA_9  {select remainDemand from swp_3pattern_demands given percent=butt_demprofile use linear where contractor=9 ,month=month} !COUNTY OF BUTTE
+define remainTA_10 {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=10,month=month} !COUNTY OF KINGS
+define remainTA_11 {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=11,month=month} !CRESTLINE-LAKE ARROWHEAD WA
+define remainTA_12 {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=12,month=month} !DESERT WA
+define remainTA_13 {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=13,month=month} !DUDLEY RIDGE WD
+define remainTA_14 {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=14,month=month} !EMPIRE WEST SIDE ID
+define remainTA_15 {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=15,month=month} !KERN COUNTY WA
+define remainTA_16 {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=16,month=month} !KERN COUNTY WA
+define remainTA_17 {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=17,month=month} !KERN COUNTY WA
+define remainTA_18 {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=18,month=month} !KERN COUNTY WA
+define remainTA_19 {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=19,month=month} !KERN COUNTY WA
+define remainTA_20 {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=20,month=month} !LITTLEROCK CREEK ID
+define remainTA_21 {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=21,month=month} !METROPOLITAN WDSC
+define remainTA_22 {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=22,month=month} !METROPOLITAN WDSC
+define remainTA_23 {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=23,month=month} !METROPOLITAN WDSC
+define remainTA_24 {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=24,month=month} !METROPOLITAN WDSC
+define remainTA_25 {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=25,month=month} !METROPOLITAN WDSC
+define remainTA_26 {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=26,month=month} !MOJAVE WA
+define remainTA_27 {select remainDemand from swp_3pattern_demands given percent=napa_demprofile use linear where contractor=27,month=month} !NAPA COUNTY FC&WCD
+define remainTA_28 {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=28,month=month} !OAK FLAT WD
+define remainTA_29 {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=29,month=month} !PALMDALE WD
+define remainTA_30 {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=30,month=month} !SAN BERNARDINO VALLEY MWD
+define remainTA_31 {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=31,month=month} !SAN GABRIEL VALLEY MWD
+define remainTA_32 {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=32,month=month} !SAN GORGONIO PASS WA
+define remainTA_33 {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=33,month=month} !SAN LUIS OBISPO COUNTY FC&WCD
+define remainTA_34 {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=34,month=month} !SANTA BARBARA COUNTY FC&WCD
+define remainTA_35 {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=35,month=month} !SANTA CLARA VALLEY WD
+define remainTA_36 {select remainDemand from swp_3pattern_demands given percent=solano_demprofile use linear where contractor=36,month=month} !SOLANO COUNTY WA
+define remainTA_37 {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=37,month=month} !TULARE LAKE BASIN WSD
+define remainTA_38 {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=38,month=month} !VENTURA COUNTY WPD
+define remainTA_39 {select remainDemand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=39,month=month} !VENTURA COUNTY WPD
 
 define remainTAdv_1  {alias remainTA_1  kind 'swp-output' units 'taf'}  !ALAMEDA COUNTY FC&WCD-ZONE 7
 define remainTAdv_2  {alias remainTA_2  kind 'swp-output' units 'taf'}  !ALAMEDA COUNTY FC&WCD-ZONE 7
 define remainTAdv_3  {alias remainTA_3  kind 'swp-output' units 'taf'}  !ALAMEDA COUNTY WD
 define remainTAdv_4  {alias remainTA_4  kind 'swp-output' units 'taf'}  !ANTELOPE VALLEY-EAST KERN WA
-define remainTAdv_5  {alias remainTA_5  kind 'swp-output' units 'taf'}  !CASTAIC LAKE WA
-define remainTAdv_6  {alias remainTA_6  kind 'swp-output' units 'taf'}  !CASTAIC LAKE WA
+define remainTAdv_5  {alias remainTA_5  kind 'swp-output' units 'taf'}  !Santa Clarita Valley Water Agency
+define remainTAdv_6  {alias remainTA_6  kind 'swp-output' units 'taf'}  !Santa Clarita Valley Water Agency
 define remainTAdv_7  {alias remainTA_7  kind 'swp-output' units 'taf'}  !CITY OF YUBA CITY
 define remainTAdv_8  {alias remainTA_8  kind 'swp-output' units 'taf'}  !COACHELLA VALLEY WD
 define remainTAdv_9  {alias remainTA_9  kind 'swp-output' units 'taf'}  !COUNTY OF BUTTE
@@ -787,9 +745,9 @@ define remainDemand_1  {value max(0.0, (dem_deltar_1  - swpdel_PMI810 )) }    !A
 define remainDemand_2  {value max(0.0, (dem_deltar_2  - swpdel_PMI813 )) }    !ALAMEDA COUNTY FC&WCD-ZONE 7
 define remainDemand_3  {value max(0.0, (dem_deltar_3  - swpdel_PMI814 )) }    !ALAMEDA COUNTY WD
 define remainDemand_4  {value max(0.0, (dem_deltar_4  - swpdel_PMI877 )) }    !ANTELOPE VALLEY-EAST KERN WA
-define remainDemand_5  {value max(0.0, (dem_deltar_5  - swpdel_PAG868 )) }    !CASTAIC LAKE WA
-define remainDemand_6  {value max(0.0, (dem_deltar_6  - swpdel_PMI896 )) }    !CASTAIC LAKE WA
-!define remainDemand_7 {value max(0.0, (dem_deltar_7  - swpdel_PMI204 )) }  !CITY OF YUBA CITY
+define remainDemand_5  {value max(0.0, (dem_deltar_5  - swpdel_PAG868 )) }    !Santa Clarita Valley Water Agency
+define remainDemand_6  {value max(0.0, (dem_deltar_6  - swpdel_PMI896 )) }    !Santa Clarita Valley Water Agency
+define remainDemand_7 {value max(0.0, (dem_deltar_7  - swpdel_PMI204 )) }  !CITY OF YUBA CITY
 define remainDemand_8  {value max(0.0, (dem_deltar_8  - swpdel_PMI883 )) }    !COACHELLA VALLEY WD
 !define remainDemand_9 {value max(0.0, (dem_deltar_9  - swpdel_PMI201 )) }  !COUNTY OF BUTTE
 define remainDemand_10 {value max(0.0, (dem_deltar_10 - swpdel_PAG847 )) }    !COUNTY OF KINGS
@@ -837,9 +795,9 @@ define remainDemdv_1  {alias remainDemand_1  kind 'swp-output' units 'taf'}     
 define remainDemdv_2  {alias remainDemand_2  kind 'swp-output' units 'taf'}       !ALAMEDA COUNTY FC&WCD-ZONE 7
 define remainDemdv_3  {alias remainDemand_3  kind 'swp-output' units 'taf'}       !ALAMEDA COUNTY WD
 define remainDemdv_4  {alias remainDemand_4  kind 'swp-output' units 'taf'}       !ANTELOPE VALLEY-EAST KERN WA
-define remainDemdv_5  {alias remainDemand_5  kind 'swp-output' units 'taf'}       !CASTAIC LAKE WA
-define remainDemdv_6  {alias remainDemand_6  kind 'swp-output' units 'taf'}       !CASTAIC LAKE WA
-!define remainDemdv_7  {alias remainDemand_7  kind 'swp-output' units 'taf'}      !CITY OF YUBA CITY
+define remainDemdv_5  {alias remainDemand_5  kind 'swp-output' units 'taf'}       !Santa Clarita Valley Water Agency
+define remainDemdv_6  {alias remainDemand_6  kind 'swp-output' units 'taf'}       !Santa Clarita Valley Water Agency
+define remainDemdv_7  {alias remainDemand_7  kind 'swp-output' units 'taf'}      !CITY OF YUBA CITY
 define remainDemdv_8  {alias remainDemand_8  kind 'swp-output' units 'taf'}       !COACHELLA VALLEY WD
 !define remainDemdv_9  {alias remainDemand_9  kind 'swp-output' units 'taf'}      !COUNTY OF BUTTE
 define remainDemdv_10 {alias remainDemand_10 kind 'swp-output' units 'taf'}       !COUNTY OF KINGS
@@ -882,7 +840,7 @@ define perdel_3  {case firstyear {condition month>=OCT .and. month<=DEC .and. wa
 define perdel_4  {case firstyear {condition month>=OCT .and. month<=DEC .and. wateryear==1922 value 1.0} case zero {condition remainTA_4 ==0 value 0.0} case normal {condition always value remainDemand_4 /remainTA_4 }}
 define perdel_5  {case firstyear {condition month>=OCT .and. month<=DEC .and. wateryear==1922 value 1.0} case zero {condition remainTA_5 ==0 value 0.0} case normal {condition always value remainDemand_5 /remainTA_5 }}
 define perdel_6  {case firstyear {condition month>=OCT .and. month<=DEC .and. wateryear==1922 value 1.0} case zero {condition remainTA_6 ==0 value 0.0} case normal {condition always value remainDemand_6 /remainTA_6 }}
-!define perdel_7  {case firstyear {condition month>=OCT .and. month<=DEC .and. wateryear==1922 value 1.0} case zero {condition remainTA_7 ==0 value 0.0} case normal {condition always value remainDemand_7 /remainTA_7 }}
+define perdel_7  {case firstyear {condition month>=OCT .and. month<=DEC .and. wateryear==1922 value 1.0} case zero {condition remainTA_7 ==0 value 0.0} case normal {condition always value remainDemand_7 /remainTA_7 }}
 define perdel_8  {case firstyear {condition month>=OCT .and. month<=DEC .and. wateryear==1922 value 1.0} case zero {condition remainTA_8 ==0 value 0.0} case normal {condition always value remainDemand_8 /remainTA_8 }}
 !define perdel_9  {case firstyear {condition month>=OCT .and. month<=DEC .and. wateryear==1922 value 1.0} case zero {condition remainTA_9 ==0 value 0.0} case normal {condition always value remainDemand_9 /remainTA_9 }}
 define perdel_10 {case firstyear {condition month>=OCT .and. month<=DEC .and. wateryear==1922 value 1.0} case zero {condition remainTA_10==0 value 0.0} case normal {condition always value remainDemand_10/remainTA_10}}
@@ -921,9 +879,9 @@ define perdv_swp_1  {alias perdel_1  kind 'swp-output' units 'percent'}   !ALAME
 define perdv_swp_2  {alias perdel_2  kind 'swp-output' units 'percent'}   !ALAMEDA COUNTY FC&WCD-ZONE 7
 define perdv_swp_3  {alias perdel_3  kind 'swp-output' units 'percent'}   !ALAMEDA COUNTY WD
 define perdv_swp_4  {alias perdel_4  kind 'swp-output' units 'percent'}   !ANTELOPE VALLEY-EAST KERN WA
-define perdv_swp_5  {alias perdel_5  kind 'swp-output' units 'percent'}   !CASTAIC LAKE WA
-define perdv_swp_6  {alias perdel_6  kind 'swp-output' units 'percent'}   !CASTAIC LAKE WA
-!define perdv_swp_7  {alias perdel_7  kind 'swp-output' units 'percent'}  !CITY OF YUBA CITY
+define perdv_swp_5  {alias perdel_5  kind 'swp-output' units 'percent'}   !Santa Clarita Valley Water Agency
+define perdv_swp_6  {alias perdel_6  kind 'swp-output' units 'percent'}   !Santa Clarita Valley Water Agency
+define perdv_swp_7  {alias perdel_7  kind 'swp-output' units 'percent'}  !CITY OF YUBA CITY
 define perdv_swp_8  {alias perdel_8  kind 'swp-output' units 'percent'}   !COACHELLA VALLEY WD
 !define perdv_swp_9  {alias perdel_9  kind 'swp-output' units 'percent'}  !COUNTY OF BUTTE
 define perdv_swp_10 {alias perdel_10 kind 'swp-output' units 'percent'}   !COUNTY OF KINGS

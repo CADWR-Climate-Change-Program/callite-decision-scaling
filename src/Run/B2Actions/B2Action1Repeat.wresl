@@ -88,7 +88,7 @@ goal b2action1Whi_1 {
 ! (Per D. Hilts and P. Fujitani 10/16/09) Conserve Shasta storage for NMFS RPAs in Fall (Oct - Dec)
 ! Turn this on only when Fall X2 RPA is active
 !define FallX2 {select Option from options where Index=1}
-define minflow_C_Kswck_adj {
+/*define minflow_C_Kswck_adj {
     case OctDec {
         condition month < 4 .and. C_Kswck_MIF_b2 >= 4500.0 .and. FallX2 == 1
             value 4000.0
@@ -107,7 +107,7 @@ goal b2action1Sha_2 {
     rhs       minflow_C_Kswck_adj
     lhs>rhs   constrain
     lhs<rhs   penalty 99 } 
- 
+ */ ! SP MBK Turned off B2 To chck
 
 ! B2 Action 1: Upstream AFRP Actions continued
 goal b2action1Fol_3 {

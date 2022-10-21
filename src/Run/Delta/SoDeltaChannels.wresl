@@ -125,9 +125,9 @@ define PerOpen_HORB {
 define PerOpen_HORBdv {alias PerOpen_HORB kind 'DEBUG' units 'FRACTION'}
 
 ! PP_ELT Refinement Scenario 4c and 4d assumptions
-define coefA{ value coefA_init * PerOpen_HORB + coefA_HORB * (1-PerOpen_HORB)}
-define coefB{ value coefB_init * PerOpen_HORB + coefB_HORB * (1-PerOpen_HORB)}
-define coefC{ value coefC_init * PerOpen_HORB + coefC_HORB * (1-PerOpen_HORB)}
+define coefA{ value coefA_init }! * PerOpen_HORB + coefA_HORB * (1-PerOpen_HORB)}
+define coefB{ value coefB_init }! * PerOpen_HORB + coefB_HORB * (1-PerOpen_HORB)}
+define coefC{ value coefC_init }! * PerOpen_HORB + coefC_HORB * (1-PerOpen_HORB)}
 
 define coefAdv {alias coefA kind 'DEBUG' units 'NONE'}
 define coefBdv {alias coefB kind 'DEBUG' units 'NONE'}

@@ -32,6 +32,7 @@ GOAL   split_d7a_prj {d7a_prj = d7a_pag + d7a_pwr + d7a_prf}
 
 !Split Demand arc d7b
 define D7B {std kind 'FLOW-DELIVERY' units 'CFS'} !Joint Canal
+define D7C {std kind 'FLOW-DELIVERY' units 'CFS'} !Western Canal and Joint WD rice straw decomp diversions ! SP MBK
 define d7b_pag     {STD KIND 'FLOW-DELIVERY' UNITS 'CFS' }
 define d7b_pwr     {STD KIND 'FLOW-DELIVERY' UNITS 'CFS' }
 define d7b_prj     {STD KIND 'FLOW-DELIVERY' UNITS 'CFS' }
@@ -63,9 +64,11 @@ define d204_pmi     {STD KIND 'FLOW-DELIVERY' UNITS 'CFS' }
 define d204_prj     {STD KIND 'FLOW-DELIVERY' UNITS 'CFS' }
 define d204_pimi   {STD KIND 'FLOW-DELIVERY' UNITS 'CFS' }
 define d204_pomi   {STD KIND 'FLOW-DELIVERY' UNITS 'CFS' }
+define d204_pco   {STD KIND 'FLOW-DELIVERY' UNITS 'CFS' }
+define d204_pin   {STD KIND 'FLOW-DELIVERY' UNITS 'CFS' }
 goal split_204_pmi {d204_pmi = d204_pimi + d204_pomi}
 goal split_d204     {d204 = d204_prj}  ! Yuba City
-goal split_d204_prj {d204_prj = d204_pmi}
+goal split_d204_prj {d204_prj = d204_pmi + d204_pco  + d204_pin }
 
 !Split Demand arc d206a
 define D206A {std kind 'FLOW-DELIVERY' units 'CFS'} !Feather Water District
@@ -136,7 +139,7 @@ goal setD_YubFea_NP{D_YubFea_NP=D207A}
 
 
 ! Constrain flow in C209_pimi
-goal set_C209_pimi  {C209_pimi = D201_pimi + D204_pimi}
+goal set_C209_pimi  {C209_pimi = D201_pimi + D204_pimi + d204_pco}
 
 ! define minimum monthly groundwater pumping (using minimum value from  1980-1993 Historical Level CVGSM run)
 ! minimum pumping cannot be more than the diversion requirement
@@ -144,3 +147,35 @@ define minpump_69_prj {VALUE min(mingw_69*perc_dr69,prj_dr69)  }       ! (UNITS 
 define minpump_69_np  {VALUE min(mingw_69*(1.0-perc_dr69),np_dr69)  }  ! (UNITS = TAF)
 goal set_gp65_prj   {c209_pgw > minpump_69_prj*taf_cfs  }
 goal set_gp65_np    {c209_gw > minpump_69_np*taf_cfs  }
+
+!Deliver rice decomp water.  The percent of decomp water to be delivered is based on end-of-Sept
+!storage in Oroville.  The intent is to avoid drawing Oroville below 850 TAF when release becomes limited to 1500 cfs
+
+
+!define decomp_allocdv {std kind 'Decomp-Alloc' units 'None'}
+
+/*define decomp_alloc {
+	case Oro_high {
+		condition month==OCT .and. S_OROVL(-1) > 1200.
+			value 1.0	}
+	case Oro_1100 {
+		condition month==Oct .and. S_OROVL(-1) > 1100.
+			value 0.75	}
+	case Oro_1000 {
+		condition month==Oct .and. S_OROVL(-1) > 1000.
+			value 0.5	}
+	case Oro_900 {
+		condition month==Oct .and. S_OROVL(-1) > 900.
+			value 0.25	}
+	case Oro_low {
+		condition month==Oct .and. S_OROVL(-1) <= 900.
+			value 0.0	}
+	case other {
+		condition always
+		value decomp_allocdv(-1)	}
+}
+
+goal setdecomp_alloc {decomp_allocdv = decomp_alloc}
+
+goal set_D7C {D7C < dem_D7C_DCMP*taf_cfs*decomp_alloc}
+*/

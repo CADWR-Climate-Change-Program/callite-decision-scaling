@@ -100,8 +100,10 @@ define D78_SEEP {std kind 'FLOW-DELIVERY' units 'CFS'} !Seepage from Modesto Res
 define D78A {std kind 'FLOW-DELIVERY' units 'CFS'} !Modesto Area MI Demand
 define D79 {std kind 'FLOW-DELIVERY' units 'CFS'} !Turlock Res Release for ID
 define D79_SEEP {std kind 'FLOW-DELIVERY' units 'CFS'} !Seepage from Turlock Res
-
-
+define D639A {std kind 'FLOW-DELIVERY' units 'CFS'} !Recapture of SRRP flows - Banta Carbona ID
+define D639B {std kind 'FLOW-DELIVERY' units 'CFS'} !Remainder of SRRP flows (after recapture)
+define D620D {std kind 'FLOW-DELIVERY' units 'CFS'} !Recapture of SRRP flows - Patterson ID
+define D630C {std kind 'FLOW-DELIVERY' units 'CFS'} !Recapture of SRRP flows - West Stanislaus ID 
 !for schematic purposes
 define  D_SJRMER {std kind 'flow-delivery' units 'cfs'}
 goal setDVNSJRMER { D_SJRMER = D_SJRMERA + D_SJRMERB + D_SJRMERC }
