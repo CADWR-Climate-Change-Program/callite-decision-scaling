@@ -32,7 +32,7 @@ calliteV3 <- "C:\\CalLite_v3_64bit"
 simulatedMonthlyDir <- ""
 
 # Location of daily baseline gridded data
-climData <- file.path("")
+climData <- file.path("C:\\Users\\warnold\\California Department of Water Resources\\DWR-EXT-PROJ-SJ Basinwide Study - General\\06_Models\\00_WeatherGenerator\\WG Template Data - Livneh 1950-2013")
 
 # Set directory for default tables
 defaultInputDir <- file.path(runDir,'Default')
@@ -40,10 +40,9 @@ defTableDir <- file.path(defaultInputDir,"Default_Tables")
 defDSSDir <- file.path(defaultInputDir,"Default_DSS")
 
 # DB connection
-con <- dbConnect(MySQL(), host='127.0.0.1', port=,
-                 user= "", password="",
-                 dbname="callite-ds")
-
+con <- dbConnect(MySQL(), host='127.0.0.1', port=888,
+                 user= "admin", password="climatehawk",
+                 dbname="sjv-studies")
 # Set location for CalLite Inputs (output from this script)
 calliteRuns <- file.path(runDir)
 
@@ -54,12 +53,12 @@ javaPy <- file.path('..','src','python')
 ### Simulation Config
 ```{r}
 ################################################################################################################
-runName <- "pSacTmonoNoAdap"  # descriptive (unique) name for runs under consistent assumptions and hydrology
+runName <- "obs_livneh_wg_template"  # descriptive (unique) name for runs under consistent assumptions and hydrology
 perturbY <- "T_lev"             # currently always "T_lev"
 perturbX <- "P_lev"            # "P_lev" or "SD_lev" (set perturbation framework)
 calLiteInputDir <- file.path(calliteRuns,runName)
 wytAdap <- F
-hydrology <- "pSacTmonoNoAdap"
+hydrology <- "obs_livneh_wg_template"
 ################################################################################################################
 ANNset <- "x64"         # "x32" (15 and 45 cm ANNs) or "x64" (15,30,45, and 60cm ANNs)
 SLRType <- "BaseCase"   # Select from "0SLR", "15SLR", "30SLR", "45SLR", "60SLR" or "BaseCase"
@@ -67,8 +66,8 @@ SLRType <- "BaseCase"   # Select from "0SLR", "15SLR", "30SLR", "45SLR", "60SLR"
 warmingType <- 'Mono'   # "Dist" or "Mono"
 forecastCase <- 'base'  # "max" or "base"
 sacTempTrigger <-  12   # air temp trigger in degree C, 12 C in default run
-calLiteRunCount <- 22   # number of individual CalLite model runs per perturbation
-modelYears <- 50        # number of years for each individual CalLite model
+calLiteRunCount <- 1   # number of individual CalLite model runs per perturbation
+modelYears <- 63        # number of years for each individual CalLite model
 writeForecastToDB <- F  # whether to output forecast lookup tables to db
 ################################################################################################################
 ```

@@ -13,7 +13,7 @@ source(file.path('..','src','func_quantile_mapping.R'))
 ### Sacramento Temperature Operations (Table 10)
 ```{r sacAirportTemp, paged.print=TRUE, warning=FALSE}
 sacAirpTempHist <-
-  read.table(file = file.path(climData,'data_38.6875_-121.5625'),
+  read.table(file = file.path(climData,'meteo_38.65625_-121.53125'),
              col.names = c("YEAR", "MONTH", "DAY", "PRCP", "TAVG")) %>%
   filter(MONTH %in% c(12, 1, 2, 3, 4, 5)) %>%
   mutate(., YEAR = ifelse(MONTH ==12, YEAR+1,YEAR)) %>%
@@ -120,8 +120,8 @@ if(writeForecastToDB == T) {
 ```
 
 ```{r message=FALSE, warning=FALSE}
-for (p in c(2:7)) {
-  for (t in c(1:9)) {
+for (p in c(4:4)) {
+  for (t in c(1:1)) {
     #Set run directory
     pChangeVal = pChangeList[[p]]; pChangeName = names(pChangeList)[p]
     tChangeVal = tChangeList[[t]]; tChangeName = names(tChangeList)[t]
