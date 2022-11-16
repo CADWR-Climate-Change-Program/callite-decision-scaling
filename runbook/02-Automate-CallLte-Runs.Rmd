@@ -39,21 +39,22 @@ file.copy(file.path('..','src','runConfig_ds.bat'),
           overwrite=T)
 ```
 
-## Set Alternative WRESL files
-Possible sets: 
-   - 64 bit ANNs
-   - ...
-```{r}
-if (ANNset=='x64') {
-  file.copy(file.path('..','src','Run-Alternatives','main_ANNx64.wresl'),
-            file.path(calLiteInputDir,'Run','main.wresl'),
-            overwrite=T)
-} else if  (ANNset=='x32') {
-  file.copy(file.path('..','src','Run-Alternatives','main_ANNx32.wresl'),
-          file.path(calLiteInputDir,'Run','main.wresl'),
-          overwrite=T)
-}
-```
+# ASSUME x64bit ANNs!
+<!-- ## Set Alternative WRESL files -->
+<!-- Possible sets:  -->
+<!--    - 64 bit ANNs -->
+<!--    - ... -->
+<!-- ```{r} -->
+<!-- if (ANNset=='x64') { -->
+<!--   file.copy(file.path('..','src','Run-Alternatives','main_ANNx64.wresl'), -->
+<!--             file.path(calLiteInputDir,'Run','main.wresl'), -->
+<!--             overwrite=T) -->
+<!-- } else if  (ANNset=='x32') { -->
+<!--   file.copy(file.path('..','src','Run-Alternatives','main_ANNx32.wresl'), -->
+<!--           file.path(calLiteInputDir,'Run','main.wresl'), -->
+<!--           overwrite=T) -->
+<!-- } -->
+<!-- ``` -->
 
 
 ## CalLite Run Loop

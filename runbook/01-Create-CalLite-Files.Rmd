@@ -60,7 +60,8 @@ wytStationsHist <- dbReadTable(con,'ref_11stations_historical')
 # Keep in mind that the add_stations have a longer period 
 # of record than the rim inflow stations from the dssIn
 mainNodesHist <- cbind(dbReadTable(con,'ref_9stations_historical')[-(985:1068),], 
-                         dbReadTable(con,'ref_12stations_historical_callite')[,-(1:2)])
+                       dbReadTable(con,'ref_12stations_historical_callite')[,-(1:2)], 
+                       dbReadTable(con,'ref_11stations_historical')[-(985:1116),-(1:2)])
 #mainNodesHist
 ```
 
@@ -101,6 +102,10 @@ table10 <- read.table(file.path(defTableDir,"FWS_BO_A3_Temp.table"),header = T,s
 table11 <- read.table(file.path(defTableDir,"american_runoff_forecast.table"),header = T,skip = 3)
 table12 <- read.table(file.path(defTableDir,"feather_runoff_forecast.table"),header = T,skip = 2)
 table13 <- read.table(file.path(defTableDir,"sacramento_runoff_forecast.table"),header = T,skip = 3)
+table14 <- read.table(file.path(defTableDir,"UIFR.table"),header = T,skip = 4)
+table15 <- read.table(file.path(defTableDir,"AR_B120.table"),header = T,skip = 3)
+table16 <- read.table(file.path(defTableDir,"WIIN_wetness.table"),header = T,skip = 4)
+
 ```
 
 ### Pathnames for Writing CalLite DSS
@@ -136,7 +141,7 @@ for (p in c(4:4)) {
                                  calLiteRunCount,modelYears,
                                  paste0('sim_obs11stations_',hydrology,'_maf'), 
                                  paste("Year,","Month,","AMF,","BLB,","BND,","FTO,",
-                                       "MRC,","SIS,","SJF,","SNS,","TLG,","TNL,","YRS"),TRUE)
+                                       "MRC,","SIS,","SJF,","SNS,","TLG,","TNL,","YRS,","PNF"),TRUE)
     
     add9stations <- stationRead(pChangeVal,tChangeVal,con,
                                 calLiteRunCount,modelYears,
@@ -160,8 +165,8 @@ for (p in c(4:4)) {
                      con,calLiteRunCount,runName,modelYears,obs11stations,dbWrite=TRUE)
 
     # Quantile Mapping
-    dssInQmapped <- suppressWarnings(qMapping(calLiteRunCount,inputsCorr,dssIn,
-                              add9stations,rim12stations, mainNodesHist))
+    dssInQmapped <- qMapping(calLiteRunCount,inputsCorr,dssIn,
+                              add9stations, obs11stations, rim12stations, mainNodesHist)
 
     # WYT
     dssInWYTyped <- wytMapping(inputsWYTSac,inputsWYTSJ,pChangeVal,tChangeVal,
@@ -188,8 +193,11 @@ for (p in c(4:4)) {
                             table11,obs11stations,wytStationsHist,randForecast,forecastCase)
     table12new <- table12create(con,calLiteRunCount,modelYears,
                             table12,obs11stations,wytStationsHist,randForecast,forecastCase)
-    table13new <- table11create(con,calLiteRunCount,modelYears,
+    table13new <- table13create(con,calLiteRunCount,modelYears,
                             table13,obs11stations,wytStationsHist,randForecast,forecastCase)
+    table14new <- table14create(calLiteRunCount,modelYears,table14,wytResults)
+    table15new <- table15create(calLiteRunCount,modelYears,table15,wytResults)
+    
     # Lookup Tables
     writeTable(calLiteRunCount,file.path(calLiteInputDir,ptRunFolder,"Lookup_Tables"),
                "x2days",table1new,file.path(defTableDir,"x2days.table"),3)
@@ -211,6 +219,10 @@ for (p in c(4:4)) {
                "wytypeTRIN",table9new,file.path(defTableDir,"wytypeTRIN.table"),1)
     writeTable(calLiteRunCount,file.path(calLiteInputDir,ptRunFolder,"Lookup_Tables"),
                "FWS_BO_A3_Temp",table10new,file.path(defTableDir,"FWS_BO_A3_Temp.table"),8)
+    writeTable(calLiteRunCount,file.path(calLiteInputDir,ptRunFolder,"Lookup_Tables"),
+               "UIFR",table14new,file.path(defTableDir,"UIFR.table"),4)
+    writeTable(calLiteRunCount,file.path(calLiteInputDir,ptRunFolder,"Lookup_Tables"),
+               "AR_B120",table14new,file.path(defTableDir,"AR_B120.table"),3)
 
     # Forecast Tables
     writeTable(calLiteRunCount,file.path(calLiteInputDir,ptRunFolder,"New_ForecastTables"),

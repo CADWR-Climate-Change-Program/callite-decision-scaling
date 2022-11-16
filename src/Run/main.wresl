@@ -236,14 +236,16 @@ MODEL block2 {
 MODEL block3 {
     define getFinalMrdo {EXTERNAL f90}  ! OBJ code file must be located in run\external directory for compilation
 
-    if banksifswitch > 0.5 .or. jonesifswitch > 0.5 {
-		INCLUDE  'Delta\DeltaExtFuncs_7inpANN_roa25_slr0.wresl'}
-	elseif int(SLR_DLTSW)==0{
-		INCLUDE  'Delta\DeltaExtFuncs_7inpANN_roa0_slr0.wresl'}
+    if int(SLR_DLTSW)==0{
+		INCLUDE  'Delta\DeltaExtFuncs_7inpANNslr0_x64.wresl'}
 	elseif int(SLR_DLTSW) == 1{
-    	INCLUDE  'Delta\DeltaExtFuncs_7inpANNslr15cm.wresl'}
+    	INCLUDE  'Delta\DeltaExtFuncs_7inpANNslr15cm_x64.wresl'}
     elseif int(SLR_DLTSW) == 2{
-    	INCLUDE  'Delta\DeltaExtFuncs_7inpANNslr45cm.wresl'}
+    	INCLUDE  'Delta\DeltaExtFuncs_7inpANNslr30cm_x64.wresl'}
+    elseif int(SLR_DLTSW) == 3{
+        INCLUDE  'Delta\DeltaExtFuncs_7inpANNslr45cm_x64.wresl'}
+    elseif int(SLR_DLTSW) == 4{
+        INCLUDE  'Delta\DeltaExtFuncs_7inpANNslr60cm_x64.wresl'}
 
     INCLUDE  'swp_dellogic\allocation\co_extfcn.wresl'
 

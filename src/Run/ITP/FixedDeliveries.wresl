@@ -124,7 +124,9 @@ goal fixD608C_PRF {D608C_PRF = D608C_PRF[Wheeling]}
 !California Aqueduct
 !! South Bay Aqueduct
 !goal fixD801 {D801 = D801[Wheeling]}
-goal fixD810_PMI {D810_PMI = D810_PMI[Wheeling]}
+!goal fixD810_PMI {D810_PMI = D810_PMI[Wheeling]}
+goal fixD810_PMI  {lhs D810_PMI  rhs D810_PMI[Wheeling] lhs>rhs penalty 99999 lhs<rhs penalty 99999} !-WA, softly fixed
+
 goal fixD810_PCO {D810_PCO = D810_PCO[Wheeling]}
 !goal fixD810_LV {D810_LV = D810_LV[Wheeling]}
 !goal fixD811 {D811 = D811[Wheeling]}
@@ -134,7 +136,9 @@ goal fixD813_PCO {D813_PCO = D813_PCO[Wheeling]}
 goal fixD814_PMI {D814_PMI = D814_PMI[Wheeling]}
 goal fixD814_PCO {D814_PCO = D814_PCO[Wheeling]}
 !goal fixD814_LV {D814_LV = D814_LV[Wheeling]}
-goal fixD815_PMI {D815_PMI = D815_PMI[Wheeling]}
+!goal fixD815_PMI {D815_PMI = D815_PMI[Wheeling]}
+goal fixD815_PMI  {lhs D815_PMI  rhs D815_PMI[Wheeling] lhs>rhs penalty 99999 lhs<rhs penalty 99999} !-WA, softly fixed
+
 goal fixD815_PCO {D815_PCO = D815_PCO[Wheeling]}
 !goal fixD815_WTS {D815_WTS = D815_WTS[Wheeling]}	!-KS, fixed in TransfersFixOps.wresl
 !goal fixD815_LV {D815_LV = D815_LV[Wheeling]}

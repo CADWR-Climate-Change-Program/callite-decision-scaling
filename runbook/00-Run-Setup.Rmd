@@ -20,7 +20,12 @@ library(cowplot)
 
 ### Directories
 ```{r sourceCode}
+# Set working directory
+setwd("C:/Users/warnold/Local/repos/callite-decision-scaling/runbook")
+
+# load callite input source code
 source(file.path('..','src','func_callite_input.R'))
+
 # Set run directory
 runDir <- file.path('..','Run')
 
@@ -33,11 +38,6 @@ simulatedMonthlyDir <- ""
 
 # Location of daily baseline gridded data
 climData <- file.path("C:\\Users\\warnold\\California Department of Water Resources\\DWR-EXT-PROJ-SJ Basinwide Study - General\\06_Models\\00_WeatherGenerator\\WG Template Data - Livneh 1950-2013")
-
-# Set directory for default tables
-defaultInputDir <- file.path(runDir,'Default')
-defTableDir <- file.path(defaultInputDir,"Default_Tables")
-defDSSDir <- file.path(defaultInputDir,"Default_DSS")
 
 # DB connection
 con <- dbConnect(MySQL(), host='127.0.0.1', port=888,
@@ -53,12 +53,15 @@ javaPy <- file.path('..','src','python')
 ### Simulation Config
 ```{r}
 ################################################################################################################
-runName <- "obs_livneh_wg_template"  # descriptive (unique) name for runs under consistent assumptions and hydrology
+runName <- "ref_sjv_ann_input_gen"  # descriptive (unique) name for runs under consistent assumptions and hydrology
 perturbY <- "T_lev"             # currently always "T_lev"
 perturbX <- "P_lev"            # "P_lev" or "SD_lev" (set perturbation framework)
 calLiteInputDir <- file.path(calliteRuns,runName)
+defaultInputDir <- file.path(calLiteInputDir,'Default')
+defTableDir <- file.path(defaultInputDir,"Default_Tables")
+defDSSDir <- file.path(defaultInputDir,"Default_DSS")
 wytAdap <- F
-hydrology <- "obs_livneh_wg_template"
+hydrology <- "obs_ref"
 ################################################################################################################
 ANNset <- "x64"         # "x32" (15 and 45 cm ANNs) or "x64" (15,30,45, and 60cm ANNs)
 SLRType <- "BaseCase"   # Select from "0SLR", "15SLR", "30SLR", "45SLR", "60SLR" or "BaseCase"
@@ -67,7 +70,7 @@ warmingType <- 'Mono'   # "Dist" or "Mono"
 forecastCase <- 'base'  # "max" or "base"
 sacTempTrigger <-  12   # air temp trigger in degree C, 12 C in default run
 calLiteRunCount <- 1   # number of individual CalLite model runs per perturbation
-modelYears <- 63        # number of years for each individual CalLite model
+modelYears <- 82        # number of years for each individual CalLite model
 writeForecastToDB <- F  # whether to output forecast lookup tables to db
 ################################################################################################################
 ```
@@ -125,7 +128,7 @@ YOU ONLY NEED TO RUN THIS ONCE PER NEW PROJECT / RUN DIRECTORY
 ```{r runDirectorySetup, message=FALSE, warning=FALSE}
 # Extract default model tables to run directory
 unzip(file.path('..','Default.zip'),
-      exdir=file.path(runDir))
+      exdir=file.path(runDir,runName,"Default"))
 ```
 
 ### Load Simulated Hydrology (SAC-SMA-DS) to Database
@@ -134,8 +137,9 @@ If you are adding a different inflow set to the database, rename the older table
 The 01-Create-CalLite-Runs script will use the default naming (e.g. "sim_add9stations") so make sure to use the correct set that is consistent with the run you are doing.
 ```{r loadsimhydro, message=FALSE, warning=FALSE}
 perturbDIR <- list.dirs(simulatedMonthlyDir)
-stationsToDatabase(perturbDIR, con, tChangeList,
+stationsToDatabase(perturbDIR[2:2], con, tChangeList,
   pChangeList, "sim_add9stations", "sim_obs11stations", "sim_rim12stations",
-  'SACSMA_Inflow_CalLite_9.txt', 'SACSMA_Inflow_CalLite_11.txt', 'SACSMA_Inflow_CalLite_12.txt')
+  'SACSMA_Inflow_CalLite_9.txt', 'SACSMA_Inflow_CalLite_11.txt', 'SACSMA_Inflow_CalLite_12.txt', 
+  hydrology)
 ```
 

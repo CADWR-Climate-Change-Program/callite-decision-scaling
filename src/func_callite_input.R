@@ -1,19 +1,23 @@
 stationsToDatabase <- function(station_perturb_dir, callite_db, t_change_list,
   p_change_list, add_9_db_tbl_name, obs_11_db_tbl_name, rim_12_db_tbl_name,
-  add_9_txt_file_name, obs_11_txt_file_name, rim_12_txt_file_name) {
+  add_9_txt_file_name, obs_11_txt_file_name, rim_12_txt_file_name, hydrology) {
   
-  dbExecute(con,paste('DROP TABLE IF EXISTS',paste0(add_9_db_tbl_name),'CASCADE'))
-  dbExecute(con,paste('DROP TABLE IF EXISTS',paste0(obs_11_db_tbl_name),'CASCADE'))
-  dbExecute(con,paste('DROP TABLE IF EXISTS',paste0(rim_12_db_tbl_name),'CASCADE'))
-
-  for (perturb in station_perturb_dir[2:64]) {
+  add_9_db_tbl_name = paste0(add_9_db_tbl_name,'_',hydrology)
+  obs_11_db_tbl_name = paste0(obs_11_db_tbl_name,'_',hydrology)
+  rim_12_db_tbl_name= paste0(rim_12_db_tbl_name,'_',hydrology)
+  
+  dbExecute(con,paste('DROP TABLE IF EXISTS',add_9_db_tbl_name,'CASCADE'))
+  dbExecute(con,paste('DROP TABLE IF EXISTS',obs_11_db_tbl_name,'CASCADE'))
+  dbExecute(con,paste('DROP TABLE IF EXISTS',rim_12_db_tbl_name,'CASCADE'))
+  
+  for (perturb in station_perturb_dir) {
     # parse t and p from folder name of format "0_7DP1_0DT"
     t = substr(basename(perturb),6,8) # 0_7DP>>1_0<<DT
     p = substr(basename(perturb),1,3) # >>0_7<<DP1_0DT
 
     #### 9 Addt'l Stations ####
     tbl = read.table(file.path(perturb, add_9_txt_file_name),
-                     header = T, sep = ',')
+                     skip=1, header = F, sep = ',')
     colnames(tbl) <- c("Year", "Month", "BearRiver", "CacheCreek", "CalaverasRiver",
                        "ChowchillaRiver", "CosumnesRiver", "FresnoRiver",
                        "MokelumneRiver", "PutahCreek", "StonyCreek")
@@ -25,20 +29,20 @@ stationsToDatabase <- function(station_perturb_dir, callite_db, t_change_list,
     dbWriteTable(callite_db, add_9_db_tbl_name, tbl, append = T, row.names=FALSE)
 
     tbl = read.table(file.path(perturb, obs_11_txt_file_name),
-                     header = T, sep = ',')
+                     skip=1, header = F, sep = ',')
     colnames(tbl) <- c("Year", "Month", "AMF", "BLB", "BND", "FTO", "MRC",
-                       "SIS", "SJF", "SNS", "TLG", "TNL", "YRS")
+                       "SIS", "SJF", "SNS", "TLG", "TNL", "YRS","PNF")
 
     tbl$dt <- round(as.numeric(t_change_list[[t]]) *1.0,1)
     tbl$dp <- round(as.numeric(p_change_list[[p]]) *1.0,1)
     dbWriteTable(callite_db, obs_11_db_tbl_name, tbl, append = T, row.names=FALSE)
 
     tbl = read.table(file.path(perturb, rim_12_txt_file_name),
-                     skip=3, header = F, sep = ',')
-    colnames(tbl) <- c("I_FOLSM", "I_MCLRE", "I_MELON", "I_MLRTN",
+                     skip=1, header = F, sep = ',')
+    colnames(tbl) <- c("Year", "Month", "I_FOLSM", "I_MCLRE", "I_MELON", "I_MLRTN",
                        "I_MOKELUMNE", "I_NHGAN", "I_OROVL", "I_PEDRO",
                        "I_SHSTA", "I_TRNTY", "I_YUBA", "I_WKYTN")
-    tbl <- cbind(Year,Month,tbl)
+    # tbl <- cbind(Year,Month,tbl)
 
     tbl$dt <- round(as.numeric(t_change_list[[t]]) *1.0,1)
     tbl$dp <- round(as.numeric(p_change_list[[p]]) *1.0,1)
@@ -50,7 +54,9 @@ stationsToDatabase <- function(station_perturb_dir, callite_db, t_change_list,
   # The 12 rim flows are output from SAC-SMA-DS as volume
   # so there is no need to convert them.
   # 11 observed (mm to m to ft to ac-ft)
-  view_SQL = paste('CREATE VIEW', paste0(obs_11_db_tbl_name, '_maf'),
+  dbExecute(con,paste('DROP TABLE IF EXISTS',paste0(obs_11_db_tbl_name, '_maf'),'CASCADE'))
+  dbExecute(con,paste('DROP TABLE IF EXISTS',paste0(add_9_db_tbl_name, '_taf'),'CASCADE'))
+  view_SQL = paste('CREATE TABLE', paste0(obs_11_db_tbl_name, '_maf'),
                   'AS SELECT dt, dp, Year, Month,',
                   'AMF * 0.001 * 3.28084 * 1192084.247 / 1e6 AS AMF,',
                   'BLB * 0.001 * 3.28084 * 476088.972 / 1e6 AS BLB,',
@@ -62,11 +68,12 @@ stationsToDatabase <- function(station_perturb_dir, callite_db, t_change_list,
                   'SNS * 0.001 * 3.28084 * 627490.889 / 1e6 AS SNS,',
                   'TLG * 0.001 * 3.28084 * 983437.363 / 1e6 AS TLG,',
                   'TNL * 0.001 * 3.28084 * 459906.679 / 1e6 AS TNL,',
-                  'YRS * 0.001 * 3.28084 * 710451.826 / 1e6 AS YRS',
+                  'YRS * 0.001 * 3.28084 * 710451.826 / 1e6 AS YRS,',
+                  'PNF * 0.001 * 3.28084 * 990775.000 / 1e6 AS PNF',
                   'FROM',paste0(obs_11_db_tbl_name))
   dbExecute(callite_db,view_SQL)
   # 9 additional (mm to m to m3 to af)
-  view_SQL = paste('CREATE VIEW', paste0(add_9_db_tbl_name, '_taf'),
+  view_SQL = paste('CREATE TABLE', paste0(add_9_db_tbl_name, '_taf'),
                   'AS SELECT dt, dp, Year, Month,',
                   'BearRiver * 0.001 * 730771760 * 0.000810714 / 1e3 AS BearRiver,',
                   'CacheCreek * 0.001 * 2455821437 * 0.000810714/ 1e3 AS CacheCreek,',
@@ -125,6 +132,8 @@ wyTyping <- function(p_change_val,t_change_val,
   Apr_May_8Sta = lapply(flowAgg, function(x) x$Apr_May_8Sta)
   ShaIndex = lapply(flowAgg, function(x) shastaIndex(x$Oct_Sep_Sha,model_years))
   Apr_Sep_Am = lapply(flowAgg, function(x) x$Apr_Sep_Am)
+  Mar_Nov_Am = lapply(flowAgg, function(x) x$Mar_Nov_Am)
+  Oct_Sep_Am = lapply(flowAgg, function(x) x$Oct_Sep_Am)
   FeaIndex = lapply(flowAgg, function(x) featherIndex(x$Apr_Jul_Fea,x$Oct_Sep_Fea,model_years))
   Oct_Sep_Tr = lapply(flowAgg, function(x) x$Oct_Sep_Tr)
   TrinWYT = lapply(flowAgg, function(x) trinWYT(x$Oct_Sep_Tr, model_years))
@@ -147,6 +156,8 @@ wyTyping <- function(p_change_val,t_change_val,
           Apr_May_8Sta = Apr_May_8Sta[[run]],
           ShaIndex = as.numeric(ShaIndex[[run]]),
           Apr_Sep_Am = Apr_Sep_Am[[run]],
+          Mar_Nov_Am = Mar_Nov_Am[[run]],
+          Oct_Sep_Am = Oct_Sep_Am[[run]],
           FeaIndex = as.numeric(FeaIndex[[run]]),
           Oct_Sep_Tr = Oct_Sep_Tr[[run]],
           TrinWYT = as.numeric(TrinWYT[[run]])
@@ -163,22 +174,24 @@ wyTyping <- function(p_change_val,t_change_val,
   return(wyTypingResults)
 }
 
+
 qMapping <- function(calLite_run_count, correlations, dss_in,
-  add_9_stations, rim_12_stations, add_9_rim_12_historical) {
+                     add_9_stations, obs_11_stations, rim_12_stations, main_nodes_hist) {
 
   # list of correlated simulated flows
   active_mainnodes <- as.character(unique(correlations[, 3]))
 
   # Merge simulated 9 add and 12 rim flow callite run lists
   flow_sacsma_node <- vector("list", length = calLite_run_count)
-  flow_sacsma_node <- mapply(function(x,y) cbind(x[, 1:2],
-                        x[, which(colnames(x) %in% active_mainnodes)],
-                        y[, which(colnames(y) %in% active_mainnodes)]),
-                        add_9_stations, rim_12_stations, SIMPLIFY = FALSE)
+  flow_sacsma_node <- mapply(function(x,y,z) cbind(x[, 1:2],
+                                                   x[, which(colnames(x) %in% active_mainnodes)],
+                                                   y[, which(colnames(y) %in% active_mainnodes)],
+                                                   z[, (13:14)]),
+                             add_9_stations, rim_12_stations, obs_11_stations, SIMPLIFY = FALSE)
 
   # limit main_nodes_hist to those not correlated to any particular callite input (sub_nodes),
   # in this case only MokelumneRiver
-  flow_hist_mainnode <- add_9_rim_12_historical[, c(1:2, which(colnames(add_9_rim_12_historical)
+  flow_hist_mainnode <- main_nodes_hist[, c(1:2, which(colnames(main_nodes_hist)
                                                        %in% active_mainnodes))]
   # callite default input observations for sub nodes
   flow_callite_subnode <- cbind(dss_in[, 1:2],
@@ -193,9 +206,9 @@ qMapping <- function(calLite_run_count, correlations, dss_in,
 
   # run the quantile mapping
   dss_in_qmapped <- qMapCalLite(flow_sacsma_node,
-                               flow_hist_mainnode,
-                               flow_callite_subnode,
-                               main_nodes,sub_nodes)
+                                flow_hist_mainnode,
+                                flow_callite_subnode,
+                                main_nodes,sub_nodes)
 
   # ANY NAN'S IN DSSIN_QMAPPED DATA?
   dss_in_qmapped <- lapply(dss_in_qmapped, function(x) {
@@ -266,9 +279,9 @@ dssNew <- function(calLite_run_count,dss_in,dss_WYT,dss_Qmap) {
         #AD_WILKNS
         z["AD_WILKNS.FLOW.ACCRDEPL"] <-
           if (z["I_SHSTA.FLOW.INFLOW"] <= 13300) {
-            -1262 + 0.43 * z["I_SHSTA.FLOW.INFLOW"]
+            -1435.5 + 0.444 * z["I_SHSTA.FLOW.INFLOW"]
           } else {
-            28262 - 1.7 * z["I_SHSTA.FLOW.INFLOW"]
+            29065 - 1.7375 * z["I_SHSTA.FLOW.INFLOW"]
           }
         #DEMAND_DAGUER - can't be greater than I_YUBA; if it is, replace it with I_YUBA
         dauger <- z["DEMAND_D_DAGUER_NP.DEMAND"] 
@@ -783,6 +796,28 @@ table13create <- function(callite_db,calLite_run_count,model_years,
       }
     x
     }, table_13_new, obs_11_stations, random_forecast, SIMPLIFY = F)
+}
+
+table14create <- function(calLite_run_count,model_years,tbl14,WYT_results) {
+  table_14_new <- vector("list",length=calLite_run_count)
+  table_14_new <- lapply(table_14_new, function(x) x <- tbl14)
+  table_14_new <- mapply(function(x,y) {
+    for (j in 2:(2 + model_years - 1)) {
+      x[j, 2] <- y$Mar_Nov_Am[j - 1] * 1000
+    }
+    x
+  }, table_14_new, WYT_results, SIMPLIFY = F)
+}
+
+table15create <- function(calLite_run_count,model_years,tbl15,WYT_results) {
+  table_15_new <- vector("list",length=calLite_run_count)
+  table_15_new <- lapply(table_15_new, function(x) x <- tbl15)
+  table_15_new <- mapply(function(x,y) {
+    for (j in 2:(2 + model_years - 1)) {
+      x[j, 2] <- y$Oct_Sep_Am[j - 1] * 1000
+    }
+    x
+  }, table_15_new, WYT_results, SIMPLIFY = F)
 }
 
 writeDB <- function(p_change_val,t_change_val,callite_db,calLite_run_count,model_years,

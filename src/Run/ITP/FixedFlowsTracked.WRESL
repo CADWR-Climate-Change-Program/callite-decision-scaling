@@ -28,7 +28,7 @@ goal fixC3 {C_WKYTN = C_WKYTN[Wheeling]}
 
 goal fixC166 {lhs C_SACFEA rhs C_SACFEA[Wheeling]
 			  lhs>rhs penalty 0
-			  lhs<rhs constrain
+			  lhs<rhs penalty 99999
 }/*
 goal fixC169 {lhs C169 rhs C169[Wheeling] + release_SWPITP_Carryover + SMSCG_Oro_Rel_for_DO - SWPITP_ExpCut_Carryover + remain_ITP_Carryover_Oro_rel*taf_cfs
 			  lhs>rhs penalty 0

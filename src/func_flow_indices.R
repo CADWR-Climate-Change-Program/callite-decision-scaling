@@ -8,7 +8,7 @@ flowAggregator <- function(stations) {
     filter(Month %in% c(10, 11, 12, 1, 2, 3)) %>%
     summarise_all(funs(sum))
 
-  Oct_Sep <- group_by(stations, Year) %>%
+  Oct_Sep <- group_by(stations, Year) %>% # nolint
     summarise_all(funs(sum))
 
   Jan_May <- group_by(stations, Year) %>%
@@ -21,6 +21,10 @@ flowAggregator <- function(stations) {
 
   Apr_Sep <- group_by(stations, Year) %>%
     filter(Month %in% 4:9) %>%
+    summarise_all(funs(sum))
+  
+  Mar_Nov <- group_by(stations, Year) %>%
+    filter(Month %in% c(3, 4, 5, 6, 7, 8, 9, 10, 11)) %>%
     summarise_all(funs(sum))
 
   #SacFlows
@@ -46,6 +50,8 @@ flowAggregator <- function(stations) {
 
   #American River
   Apr_Sep_Am <- Apr_Sep$AMF
+  Mar_Nov_Am <- Mar_Nov$AMF
+  Oct_Sep_Am <- Oct_Sep$AMF
 
   #Trinity River
   Oct_Sep_Tr <- Oct_Sep$TNL
@@ -57,7 +63,8 @@ flowAggregator <- function(stations) {
     "Apr_Jul_SJ" = Apr_Jul_SJ, "Oct_Mar_SJ" = Oct_Mar_SJ, "Oct_Sep_SJ" = Oct_Sep_SJ,
     "Jan_May_8Sta" = Jan_May_8Sta, "Apr_May_8Sta" = Apr_May_8Sta,
     "Oct_Sep_Sha" = Oct_Sep_Sha, "Apr_Jul_Fea" = Apr_Jul_Fea, "Oct_Sep_Fea" = Oct_Sep_Fea,
-    "Apr_Sep_Am" = Apr_Sep_Am, "Oct_Sep_Tr" = Oct_Sep_Tr
+    "Apr_Sep_Am" = Apr_Sep_Am, "Mar_Nov_Am" = Mar_Nov_Am, "Oct_Sep_Am" = Oct_Sep_Am, 
+    "Oct_Sep_Tr" = Oct_Sep_Tr
     ))
 }
 

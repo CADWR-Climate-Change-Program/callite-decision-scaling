@@ -29,9 +29,9 @@ define perdem_70SCWC   {timeseries kind 'DELIVERY-PATTERN' units 'NONE'} !MI mon
 define perdem_70SCWA   {timeseries kind 'DELIVERY-PATTERN' units 'NONE'} !MI monthly distribution--Sac County WA
 
 !The following are monthly demands and include Water Forum reductions
-define dem_D162a_psc   {timeseries kind 'DEMAND-CVP-SC' units 'TAF' convert 'CFS'} !Settlement contract demand--Settlement Contracts
-define dem_D162b_psc   {timeseries kind 'DEMAND-CVP-SC' units 'TAF' convert 'CFS'} !Settlement contract demand--Natomas Central MWC
-define dem_D162c_psc   {timeseries kind 'DEMAND-CVP-SC' units 'TAF' convert 'CFS'} !Settlement contract demand--Pleasant Grove-Verona MWC
+define dem_D162a_psc   {timeseries kind 'DEMAND-CVP-SC' units 'CFS'} !Settlement contract demand--Settlement Contracts
+define dem_D162b_psc   {timeseries kind 'DEMAND-CVP-SC' units 'CFS'} !Settlement contract demand--Natomas Central MWC
+define dem_D162c_psc   {timeseries kind 'DEMAND-CVP-SC' units 'CFS'} !Settlement contract demand--Pleasant Grove-Verona MWC
 define dem_D162a_wr_ann  {timeseries kind 'DEMAND-NP-MI'  units 'TAF'}  !Annual water right demand--NRWD (Sac)
 define dem_D162b_wr_ann  {timeseries kind 'DEMAND-NP-MI'  units 'TAF'}  !Annual water right demand--PCWA (Sac)
 define dem_D162d_wr_ann{timeseries kind 'DEMAND-NP-MI' units 'TAF'} !PCWA water right
