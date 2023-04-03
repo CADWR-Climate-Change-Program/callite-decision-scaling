@@ -44,7 +44,10 @@ define D403C_PRJ    {std kind 'FLOW-DELIVERY' units 'CFS' }
 define D403C_PMI    {std kind 'FLOW-DELIVERY' units 'CFS' }
 define D403C_PIN    {std kind 'FLOW-DELIVERY' units 'CFS' }
 define D403C_PCO     {std kind 'FLOW-DELIVERY' units 'CFS' }
-goal totalD403C_PRJ { D403C_PRJ = D403C_PMI + D403C_PCO + D403C_PIN}
+!goal totalD403C_PRJ { D403C_PRJ = D403C_PMI + D403C_PCO + D403C_PIN}
+goal totalD403C_PRJ {lhs D403C_PRJ rhs D403C_PMI + D403C_PCO + D403C_PIN lhs>rhs penalty 99999 lhs<rhs penalty 99999}
+define totalD403C_check {lower unbounded upper unbounded kind 'FLOW-DELIVERY' units 'cfs'}
+goal settotalD403C_check {totalD403C_check = D403C_PRJ - D403C_PMI - D403C_PCO - D403C_PIN}
 
 define D802A_PRJ    {std kind 'FLOW-DELIVERY' units 'CFS' }
 define D802A_PAG    {std kind 'FLOW-DELIVERY' units 'CFS' }

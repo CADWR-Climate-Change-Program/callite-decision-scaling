@@ -133,7 +133,7 @@ public class Functionshortwarning extends ExternalFunction{
 
 			out.close();
 
-			if (wYears.size()>0) Desktop.getDesktop().open(new File(warningFileFullPath));
+			// if (wYears.size()>0) Desktop.getDesktop().open(new File(warningFileFullPath));
 
 		} catch (IOException e){
 			e.printStackTrace();

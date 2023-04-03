@@ -28,7 +28,11 @@ define AD_SJRSTAN {std kind 'FLOW-ACCRDEPL' units 'CFS'}
 goal setADSJRSTAN { AD_SJRSTAN = R_SJRSTANA + R_SJRSTANB + R_SJRSTANC + R_SJRSTAND }
 
 define AD_SJRVER {std kind 'FLOW-ACCRDEPL' units 'CFS'}
-goal setADSJRVER { AD_SJRVER = R_SJRVERA + R_SJRVERWEST }
+!goal setADSJRVER { AD_SJRVER = R_SJRVERA + R_SJRVERWEST }
+goal setADSJRVER {lhs AD_SJRVER  rhs R_SJRVERA + R_SJRVERWEST lhs>rhs penalty 999999 lhs<rhs penalty 999999}
+define AD_SJRVER_check {lower unbounded upper unbounded kind 'FLOW-ACCRDEPL' units 'CFS'}
+goal setAD_SJRVER_check {AD_SJRVER_check = AD_SJRVER - R_SJRVERA - R_SJRVERWEST}
+
 
 define AD_CALAV {upper unbounded lower unbounded kind 'FLOW-ACCRDEPL' units 'CFS'}
 goal setADCALAV { AD_CALAV = R_CALAV - L_CALAVA - L_CALAVB }

@@ -14,8 +14,10 @@ goal setRS_EC_MON {RS_EC_Month = RS_EC_Month_sv}
 
 define RS_CL_Month {std kind 'SALINITY' units 'MG/L'}
 define RS_CL_Month_sv {value RS_CL_Month[BASE]}
-goal setRS_CL_Month {RS_CL_Month = RS_CL_Month_sv}
-
+!goal setRS_CL_Month {RS_CL_Month = RS_CL_Month_sv}
+goal setRS_CL_Month {lhs RS_CL_Month  rhs RS_CL_Month_sv lhs>rhs penalty 99999 lhs<rhs penalty 99999} !-WA, softly fixed
+define RS_CL_Month_check {lower unbounded upper unbounded kind 'SALINITY' units 'MG/L'}
+goal setRS_CL_Month_check {RS_CL_Month_check = RS_CL_Month - RS_CL_Month_sv}
 
 !****************************************************************************************
 

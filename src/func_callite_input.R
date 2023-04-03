@@ -1,5 +1,5 @@
-stationsToDatabase <- function(station_perturb_dir, callite_db, t_change_list,
-  p_change_list, add_9_db_tbl_name, obs_11_db_tbl_name, rim_12_db_tbl_name,
+stationsToDatabase <- function(station_perturb_dir, callite_db, 
+  add_9_db_tbl_name, obs_11_db_tbl_name, rim_12_db_tbl_name,
   add_9_txt_file_name, obs_11_txt_file_name, rim_12_txt_file_name, hydrology) {
   
   add_9_db_tbl_name = paste0(add_9_db_tbl_name,'_',hydrology)
@@ -11,9 +11,7 @@ stationsToDatabase <- function(station_perturb_dir, callite_db, t_change_list,
   dbExecute(con,paste('DROP TABLE IF EXISTS',rim_12_db_tbl_name,'CASCADE'))
   
   for (perturb in station_perturb_dir) {
-    # parse t and p from folder name of format "0_7DP1_0DT"
-    t = substr(basename(perturb),6,8) # 0_7DP>>1_0<<DT
-    p = substr(basename(perturb),1,3) # >>0_7<<DP1_0DT
+    cc_idx = as.numeric(basename(perturb))
 
     #### 9 Addt'l Stations ####
     tbl = read.table(file.path(perturb, add_9_txt_file_name),
@@ -22,8 +20,7 @@ stationsToDatabase <- function(station_perturb_dir, callite_db, t_change_list,
                        "ChowchillaRiver", "CosumnesRiver", "FresnoRiver",
                        "MokelumneRiver", "PutahCreek", "StonyCreek")
 
-    tbl$dt <- round(as.numeric(t_change_list[[t]]) *1.0,1)
-    tbl$dp <- round(as.numeric(p_change_list[[p]]) *1.0,1)
+    tbl$cc_idx <- cc_idx
     Year <- tbl$Year
     Month <- tbl$Month
     dbWriteTable(callite_db, add_9_db_tbl_name, tbl, append = T, row.names=FALSE)
@@ -31,10 +28,9 @@ stationsToDatabase <- function(station_perturb_dir, callite_db, t_change_list,
     tbl = read.table(file.path(perturb, obs_11_txt_file_name),
                      skip=1, header = F, sep = ',')
     colnames(tbl) <- c("Year", "Month", "AMF", "BLB", "BND", "FTO", "MRC",
-                       "SIS", "SJF", "SNS", "TLG", "TNL", "YRS","PNF")
+                       "SIS", "SJF", "SNS", "TLG", "TNL", "YRS")#,"PNF")
 
-    tbl$dt <- round(as.numeric(t_change_list[[t]]) *1.0,1)
-    tbl$dp <- round(as.numeric(p_change_list[[p]]) *1.0,1)
+    tbl$cc_idx <- cc_idx
     dbWriteTable(callite_db, obs_11_db_tbl_name, tbl, append = T, row.names=FALSE)
 
     tbl = read.table(file.path(perturb, rim_12_txt_file_name),
@@ -44,8 +40,7 @@ stationsToDatabase <- function(station_perturb_dir, callite_db, t_change_list,
                        "I_SHSTA", "I_TRNTY", "I_YUBA", "I_WKYTN")
     # tbl <- cbind(Year,Month,tbl)
 
-    tbl$dt <- round(as.numeric(t_change_list[[t]]) *1.0,1)
-    tbl$dp <- round(as.numeric(p_change_list[[p]]) *1.0,1)
+    tbl$cc_idx <- cc_idx
     dbWriteTable(callite_db, rim_12_db_tbl_name, tbl, append = T, row.names=FALSE)
   }
 
@@ -57,7 +52,7 @@ stationsToDatabase <- function(station_perturb_dir, callite_db, t_change_list,
   dbExecute(con,paste('DROP TABLE IF EXISTS',paste0(obs_11_db_tbl_name, '_maf'),'CASCADE'))
   dbExecute(con,paste('DROP TABLE IF EXISTS',paste0(add_9_db_tbl_name, '_taf'),'CASCADE'))
   view_SQL = paste('CREATE TABLE', paste0(obs_11_db_tbl_name, '_maf'),
-                  'AS SELECT dt, dp, Year, Month,',
+                  'AS SELECT cc_idx, Year, Month,',
                   'AMF * 0.001 * 3.28084 * 1192084.247 / 1e6 AS AMF,',
                   'BLB * 0.001 * 3.28084 * 476088.972 / 1e6 AS BLB,',
                   'BND * 0.001 * 3.28084 * 6386051.927 / 1e6 AS BND,',
@@ -68,13 +63,13 @@ stationsToDatabase <- function(station_perturb_dir, callite_db, t_change_list,
                   'SNS * 0.001 * 3.28084 * 627490.889 / 1e6 AS SNS,',
                   'TLG * 0.001 * 3.28084 * 983437.363 / 1e6 AS TLG,',
                   'TNL * 0.001 * 3.28084 * 459906.679 / 1e6 AS TNL,',
-                  'YRS * 0.001 * 3.28084 * 710451.826 / 1e6 AS YRS,',
-                  'PNF * 0.001 * 3.28084 * 990775.000 / 1e6 AS PNF',
+                  'YRS * 0.001 * 3.28084 * 710451.826 / 1e6 AS YRS',
+                  # 'PNF * 0.001 * 3.28084 * 990775.000 / 1e6 AS PNF',
                   'FROM',paste0(obs_11_db_tbl_name))
   dbExecute(callite_db,view_SQL)
   # 9 additional (mm to m to m3 to af)
   view_SQL = paste('CREATE TABLE', paste0(add_9_db_tbl_name, '_taf'),
-                  'AS SELECT dt, dp, Year, Month,',
+                  'AS SELECT cc_idx, Year, Month,',
                   'BearRiver * 0.001 * 730771760 * 0.000810714 / 1e3 AS BearRiver,',
                   'CacheCreek * 0.001 * 2455821437 * 0.000810714/ 1e3 AS CacheCreek,',
                   'CalaverasRiver * 0.001 * 927537363 * 0.000810714 / 1e3 AS CalaverasRiver,',
@@ -88,12 +83,12 @@ stationsToDatabase <- function(station_perturb_dir, callite_db, t_change_list,
   dbExecute(callite_db,view_SQL)
 }
 
-stationRead <- function(p_change_val,t_change_val,callite_db,calLite_run_count,model_years,
+stationRead <- function(cc_idx,callite_db,calLite_run_count,model_years,
   sim_hydro_name,fields,generic_yr_check) {
   stations <- vector("list", length = calLite_run_count)
   for (run in 1:calLite_run_count) {
     stations[[run]] <- dbGetQuery(callite_db,paste('SELECT',fields,'FROM',sim_hydro_name,
-                                                  'WHERE dt =',t_change_val,'AND dp =',p_change_val,
+                                                  'WHERE cc_idx =',cc_idx,
                                                   'ORDER BY Year',
                                                   'LIMIT',model_years * 12,
                                                   'OFFSET',(run - 1) * model_years * 12))
@@ -105,7 +100,7 @@ stationRead <- function(p_change_val,t_change_val,callite_db,calLite_run_count,m
   return(stations)
 }
 
-wyTyping <- function(p_change_val,t_change_val,
+wyTyping <- function(cc_idx,
                      sac_aji,sac_omi,sac_c,sac_d,sac_bn,sac_an,sac_w,
                      sj_aji,sj_omi,sj_c,sj_d,sj_bn,sj_an,sj_w,
                      callite_db,calLite_run_count,run_name,
@@ -164,8 +159,7 @@ wyTyping <- function(p_change_val,t_change_val,
         )
     wyTypingForDB = wyTypingResults[[run]]
     wyTypingForDB$Year = seq((run*50) + 850,(run*50) + 849 + model_years)
-    wyTypingForDB$dp = round(as.numeric(p_change_val) *1.0,1)
-    wyTypingForDB$dt = round(as.numeric(t_change_val) *1.0,1)
+    wyTypingForDB$cc_idx = cc_idx
     if (dbWrite == TRUE) {
       dbWriteTable(callite_db,paste0('sim_wyTyping_',run_name),
                    wyTypingForDB,append = TRUE,row.names=FALSE)
@@ -186,7 +180,7 @@ qMapping <- function(calLite_run_count, correlations, dss_in,
   flow_sacsma_node <- mapply(function(x,y,z) cbind(x[, 1:2],
                                                    x[, which(colnames(x) %in% active_mainnodes)],
                                                    y[, which(colnames(y) %in% active_mainnodes)],
-                                                   z[, (13:14)]),
+                                                   z[, which(colnames(z) %in% active_mainnodes)]),
                              add_9_stations, rim_12_stations, obs_11_stations, SIMPLIFY = FALSE)
 
   # limit main_nodes_hist to those not correlated to any particular callite input (sub_nodes),
@@ -227,13 +221,13 @@ qMapping <- function(calLite_run_count, correlations, dss_in,
   return(dss_in_qmapped)
 }
 
-wytMapping <- function(inputs_wyt_sac,inputs_wyt_sj,p_change_val,t_change_val,
+wytMapping <- function(inputs_wyt_sac,inputs_wyt_sj,cc_idx,
   callite_db,calLite_run_count,model_years,run_name) {
   sql = paste("SELECT Year, MONTH,",inputs_wyt_sac,
             "FROM ref_SAC_WYTM_calc a",
             "INNER JOIN", paste0("sim_wyTyping_", run_name),
             "b ON a.SAC_WYT = b.SacWYT",
-            "WHERE b.dt =",t_change_val,"AND b.dp =",p_change_val,
+            "WHERE b.cc_idx =",cc_idx,
             "ORDER BY Year, wy_order, MONTH")
   sacWYtype <- dbGetQuery(callite_db,sql)
 
@@ -241,7 +235,7 @@ wytMapping <- function(inputs_wyt_sac,inputs_wyt_sj,p_change_val,t_change_val,
             "FROM ref_SJR_WYTM_calc  a",
             "INNER JOIN", paste0("sim_wyTyping_", run_name),
             "b ON a.SJR_WYT = b.SJWYT",
-            "WHERE b.dt =",t_change_val,"AND b.dp =",p_change_val,
+            "WHERE b.cc_idx =",cc_idx,
             "ORDER BY Year, wy_order, MONTH;")
   sjWYtype <- dbGetQuery(callite_db,sql)
 
@@ -257,11 +251,14 @@ wytMapping <- function(inputs_wyt_sac,inputs_wyt_sj,p_change_val,t_change_val,
 }
 
 dssNew <- function(calLite_run_count,dss_in,dss_WYT,dss_Qmap) {
+  
+  dss_in_ <- dss_in[, -which(names(dss_in) %in% c(names(dss_Qmap[[1]]),names(dss_WYT[[1]])))]
 
   dss_in_qMapWYT_cbind <- vector("list",length=calLite_run_count)
-  dss_in_qMapWYT_cbind <- mapply(function(x,y) cbind(x,y[,-(1:2)]),
+  dss_in_qMapWYT_cbind <- mapply(function(x,y) cbind(x,y[,-(1:2)],dss_in_[,-(1:2)]),
                                 dss_Qmap, dss_WYT, SIMPLIFY = F)
-
+                               
+  
   dss_in_new <- vector("list",length=calLite_run_count)
   dss_in_new <- mapply(function(x,y) {
     x <- dss_in[1:dim(y)[1],]
@@ -276,13 +273,23 @@ dssNew <- function(calLite_run_count,dss_in,dss_WYT,dss_Qmap) {
   #AD_WILKNS
   dss_in_new <- lapply(dss_in_new, function(x) {
       x <- apply(x, 1, function(z) {
+        #AD_TERM Summation
+        z["AD_REDBLF.FLOW.ACCRDEPL"] <- z["AD_REDBLF_Local.FLOW.ACCRDEPL"] +  z["AD_REDBLF_Return.FLOW.ACCRDEPL"] + z["AD_REDBLF_Acc.FLOW.ACCRDEPL"] +  z["AD_REDBLF_Dep.FLOW.ACCRDEPL"] + z["AD_REDBLF_Div.FLOW.ACCRDEPL"] +  z["AD_REDBLF_Weir.FLOW.ACCRDEPL"] + z["AD_REDBLF_Bypass.FLOW.ACCRDEPL"]
+        z["AD_WILKNS.FLOW.ACCRDEPL"] <- z["AD_WILKNS_Local.FLOW.ACCRDEPL"] +  z["AD_WILKNS_Return.FLOW.ACCRDEPL"] + z["AD_WILKNS_Acc.FLOW.ACCRDEPL"] +  z["AD_WILKNS_Dep.FLOW.ACCRDEPL"] + z["AD_WILKNS_Div.FLOW.ACCRDEPL"] +  z["AD_WILKNS_Weir.FLOW.ACCRDEPL"] + z["AD_WILKNS_Bypass.FLOW.ACCRDEPL"]
+        z["AD_SACFEA.FLOW.ACCRDEPL"] <- z["AD_SACFEA_Local.FLOW.ACCRDEPL"] +  z["AD_SACFEA_Return.FLOW.ACCRDEPL"] + z["AD_SACFEA_Acc.FLOW.ACCRDEPL"] +  z["AD_SACFEA_Dep.FLOW.ACCRDEPL"] + z["AD_SACFEA_Div.FLOW.ACCRDEPL"] +  z["AD_SACFEA_Weir.FLOW.ACCRDEPL"] + z["AD_SACFEA_Bypass.FLOW.ACCRDEPL"]
+        z["AD_YUBFEA.FLOW.ACCRDEPL"] <- z["AD_YUBFEA_Local.FLOW.ACCRDEPL"] +  z["AD_YUBFEA_Return.FLOW.ACCRDEPL"] + z["AD_YUBFEA_Acc.FLOW.ACCRDEPL"] +  z["AD_YUBFEA_Dep.FLOW.ACCRDEPL"] + z["AD_YUBFEA_Div.FLOW.ACCRDEPL"] +  z["AD_YUBFEA_Weir.FLOW.ACCRDEPL"] + z["AD_YUBFEA_Bypass.FLOW.ACCRDEPL"]
+        z["AD_SACAME.FLOW.ACCRDEPL"] <- z["AD_SACAME_Local.FLOW.ACCRDEPL"] +  z["AD_SACAME_Return.FLOW.ACCRDEPL"] + z["AD_SACAME_Acc.FLOW.ACCRDEPL"] +  z["AD_SACAME_Dep.FLOW.ACCRDEPL"] + z["AD_SACAME_Div.FLOW.ACCRDEPL"] +  z["AD_SACAME_Weir.FLOW.ACCRDEPL"] + z["AD_SACAME_Bypass.FLOW.ACCRDEPL"]
+        z["AD_THERM.FLOW.ACCRDEPL"] <- z["AD_THERM_Local.FLOW.ACCRDEPL"] +  z["AD_THERM_Return.FLOW.ACCRDEPL"] + z["AD_THERM_Acc.FLOW.ACCRDEPL"] +  z["AD_THERM_Dep.FLOW.ACCRDEPL"] + z["AD_THERM_Div.FLOW.ACCRDEPL"] +  z["AD_THERM_Weir.FLOW.ACCRDEPL"] + z["AD_THERM_Bypass.FLOW.ACCRDEPL"]
+        z["AD_HST.FLOW.ACCRDEPL"] <- z["AD_HST_Local.FLOW.ACCRDEPL"] +  z["AD_HST_Return.FLOW.ACCRDEPL"] + z["AD_HST_Acc.FLOW.ACCRDEPL"] +  z["AD_HST_Dep.FLOW.ACCRDEPL"] + z["AD_HST_Div.FLOW.ACCRDEPL"] +  z["AD_HST_Weir.FLOW.ACCRDEPL"] + z["AD_HST_Bypass.FLOW.ACCRDEPL"]
+
         #AD_WILKNS
-        z["AD_WILKNS.FLOW.ACCRDEPL"] <-
-          if (z["I_SHSTA.FLOW.INFLOW"] <= 13300) {
-            -1435.5 + 0.444 * z["I_SHSTA.FLOW.INFLOW"]
-          } else {
-            29065 - 1.7375 * z["I_SHSTA.FLOW.INFLOW"]
-          }
+        # z["AD_WILKNS.FLOW.ACCRDEPL"] <-
+        #   if (z["I_SHSTA.FLOW.INFLOW"] <= 13300) {
+        #     -1435.5 + 0.444 * z["I_SHSTA.FLOW.INFLOW"]
+        #   } else {
+        #     29065 - 1.7375 * z["I_SHSTA.FLOW.INFLOW"]
+        #   }
+
         #DEMAND_DAGUER - can't be greater than I_YUBA; if it is, replace it with I_YUBA
         dauger <- z["DEMAND_D_DAGUER_NP.DEMAND"] 
         yuba <- z["I_YUBA.FLOW.INFLOW"]
@@ -312,7 +319,7 @@ dssNew <- function(calLite_run_count,dss_in,dss_WYT,dss_Qmap) {
 
 writeDSS <- function(path_names,out_dir,dss_in_new,calLite_run_count) {
   for (j in 1:calLite_run_count) {
-    cols_txtfiles <- c(100, 100, 100, 100, 100, 100, 100, 96)
+    cols_txtfiles <- c(100, 100, 100, 100, 100, 100, 82)
     counter <- 0
 
     for (itxtfile in 1:length(cols_txtfiles)) {
@@ -568,7 +575,7 @@ table10create <- function(calLite_run_count,model_years,tbl10,sac_air_temp,sac_t
     month <- array(NA, model_years)
     day <- array(NA, model_years)
     for (j in 1:model_years) {
-      sample <- sac_air_tempPerturbSet[which(sac_air_tempPerturbSet[, 1] == 899 + j +
+      sample <- sac_air_tempPerturbSet[which(sac_air_tempPerturbSet[, 1] == 1918 + j +
                                            (calLiteRun - 1) * model_years), ]$TAVG
       index1 <- which(sample < sac_temp_trigger)
       if ((length(index1) > 0) & (index1[1] != length(sample))) {
@@ -953,20 +960,20 @@ dssCreate <- function(def_DSS_dir) {
   dss_in_501_600 <- cbind(years, months, dss_in_501_600)
   dss_in_601_700 <-
     read.table(
-      file.path(def_DSS_dir,"dssin_601-700.txt"),
+      file.path(def_DSS_dir,"dssin_601-682.txt"),
       header = TRUE,
       sep = ","
     )
   dss_in_601_700 <- dss_in_601_700[, -1]
   dss_in_601_700 <- cbind(years, months, dss_in_601_700)
-  dss_in_701_796 <-
-    read.table(
-      file.path(def_DSS_dir,"dssin_701-796.txt"),
-      header = TRUE,
-      sep = ","
-    )
-  dss_in_701_796 <- dss_in_701_796[, -1]
-  dss_in_701_796 <- cbind(years, months, dss_in_701_796)
+  # dss_in_701_796 <-
+  #   read.table(
+  #     file.path(def_DSS_dir,"dssin_701-796.txt"),
+  #     header = TRUE,
+  #     sep = ","
+  #   )
+  # dss_in_701_796 <- dss_in_701_796[, -1]
+  # dss_in_701_796 <- cbind(years, months, dss_in_701_796)
 
   dss_input <-
     cbind(
@@ -976,8 +983,8 @@ dssCreate <- function(def_DSS_dir) {
       dss_in_301_400[, -(1:2)],
       dss_in_401_500[, -(1:2)],
       dss_in_501_600[, -(1:2)],
-      dss_in_601_700[, -(1:2)],
-      dss_in_701_796[, -(1:2)]
+      dss_in_601_700[, -(1:2)]
+      # dss_in_701_796[, -(1:2)]
     )
   dss_in_colnames <- colnames(dss_input)
   dss_in_colnames_short <-

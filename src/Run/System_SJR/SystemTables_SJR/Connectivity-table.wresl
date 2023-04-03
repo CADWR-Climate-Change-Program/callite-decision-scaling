@@ -57,7 +57,11 @@ goal continuity550 {R550A+R550B+D_SJRMERA+GP550-C550=0} !Supply to Lands West of
 goal continuity551 {C550-D551-R_SJRTUOLK=0} !Delivs to Lands West of Turlock
 goal continuity20 {I_MCLRE-C_MCLRE-F20-E_MCLRE=S_MCLRE*taf_cfs-S_MCLRE(-1)*taf_cfs} !Lake McClure
 
-goal continuityMERCED1 {I_MERCED1C+I_MERCED1B+C_MCLRE-D_MERCED1C-D_MERCED1B-C_MERCED1=0} !Merced River Calsim nodes 561 and 562 combined
+!goal continuityMERCED1 {I_MERCED1C+I_MERCED1B+C_MCLRE-D_MERCED1C-D_MERCED1B-C_MERCED1=0} !Merced River Calsim nodes 561 and 562 combined
+goal continuityMERCED1 {lhs I_MERCED1C+I_MERCED1B+C_MCLRE-D_MERCED1C-D_MERCED1B-C_MERCED1 rhs 0 lhs<rhs penalty 999999 lhs>rhs penalty 999999}
+define continuityMERCED1_check {lower unbounded upper unbounded kind 'FLOW-CHANNEL' units 'cfs'}
+goal setcontinuityMERCED1_check {continuityMERCED1_check = I_MERCED1C+I_MERCED1B+C_MCLRE-D_MERCED1C-D_MERCED1B-C_MERCED1}
+
 goal continuity562A {D_MERCED1B-D_MERCED1A_riv-R_MERCED2A=0} !
 goal continuityMERCED2 {I_MERCED2+C_MERCED1-C_MERCED2-D_MERCED2+AD_MERCED2=0.} !Merced River Calsim nodes 564 and 566 combined
 

@@ -116,7 +116,7 @@ calliteINITwriteDSS <- function(run, default_input_dir, dir_callite_SV, java_py_
       temptxt[4] <- sub("value,", x = temptxt[2], "")
       temptxt[2] <- sub("pathname,", x = temptxt[1], "")
       temptxt[2] <- gsub("2020D09E", x = temptxt[2], "INITIAL")
-      temptxt[1] <- paste((rep("30SEP1921 2400,", 55)), collapse = " ")
+      temptxt[1] <- paste((rep("30SEP1921 2400,", 66)), collapse = " ")
       # temptxt[3] <- paste(c(rep("CFS", 4), "DAYS", "None", rep("CFS", 5),
       #                       "TAF", rep("CFS", 3), rep("TAF", 3),"CFS", rep("TAF", 5),
       #                       "CFS", rep("TAF", 4), rep("CFS", 2), rep("NONE", 2),
