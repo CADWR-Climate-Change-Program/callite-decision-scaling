@@ -29,11 +29,11 @@ source(file.path('..','src','func_callite_input.R'))
 runDir <- file.path('..','Run')
 
 # Set CalLite program path (must be full path)
-calliteV3 <- "C:\\CalLite_v3"
+calliteV3 <- "C:\\CalLite_v3_64bit"
 
 # Location of monthly 9 addt'l, 11 observed, and 12 rim stations
 # simulated by SAC-SMA-DS
-simulatedMonthlyDir <- "C:\\Users\\warnold\\California Department of Water Resources\\DWR-EXT-PROJ-SJ Basinwide Study - General\\06_Models\\01_CalLite-WS\\01_DS_CalLiteRunDevelopment\\callite-inputs\\inflow_prep\\climate-change-sim"
+simulatedMonthlyDir <- "C:\\Users\\warnold\\California Department of Water Resources\\DWR-EXT-PROJ-SJ Basinwide Study - General\\06_Models\\01_CalLite-WS\\99a_DS_CalLite_Pre-Processing\\climate-change-sim"
 
 # Location of daily baseline gridded data
 climData <- file.path("C:\\Users\\warnold\\California Department of Water Resources\\DWR-EXT-PROJ-SJ Basinwide Study - General\\06_Models\\00_WeatherGenerator\\01_Baseline_and_Perturbations\\1")
@@ -55,7 +55,7 @@ my_dss_vue <- file.path("C:\\Users\\warnold\\AppData\\Local\\Programs\\HEC-DSSVu
 ### Simulation Config
 ```{r}
 ################################################################################################################
-runName <- "sjv_base"  # descriptive (unique) name for runs under consistent assumptions and hydrology
+runName <- "sjv_base_fixed_fmsjsim"  # descriptive (unique) name for runs under consistent assumptions and hydrology
 perturbY <- "T_lev"             # currently always "T_lev"
 perturbX <- "P_lev"            # "P_lev" or "SD_lev" (set perturbation framework)
 calLiteInputDir <- file.path(calliteRuns,runName)
@@ -65,7 +65,6 @@ defDSSDir <- file.path(defaultInputDir,"Default_DSS")
 wytAdap <- F
 hydrology <- "sjv_base"
 ################################################################################################################
-ANNset <- "x32"         # "x32" (15 and 45 cm ANNs) or "x64" (15,30,45, and 60cm ANNs)
 SLRType <- "BaseCase"   # Select from "0SLR", "15SLR", "30SLR", "45SLR", "60SLR" or "BaseCase"
 ################################################################################################################
 warmingType <- 'Mono'   # "Dist" or "Mono"
@@ -80,8 +79,7 @@ writeForecastToDB <- F  # whether to output forecast lookup tables to db
 ### Perturbation List
 ```{r}
 # Create incremental perturbation lookup list
-cc<-c(1:24)
-
+cc<-c(1,6:20)~~~~
 ```
 
 

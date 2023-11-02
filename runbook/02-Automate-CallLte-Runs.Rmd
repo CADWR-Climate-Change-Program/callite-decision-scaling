@@ -64,9 +64,9 @@ for (cc_idx in cc) {
 ## CalLite Run Loop
 ```{r warning=FALSE}
 stop = FALSE
-for (cc_idx in c(15:24)) {
+for (cc_idx in cc) { #c(1,6:20)
   for (run in 1:calLiteRunCount) {
-
+    
     #Set run directory
     ptRunFolder <- paste0(cc_idx)
     print(ptRunFolder)
