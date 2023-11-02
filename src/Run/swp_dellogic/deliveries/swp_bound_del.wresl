@@ -17,12 +17,12 @@ define ad_d7a_pwr   {value dem_d7a_pwr*taf_cfs}
 define ad_d7a_pag   {value perdel_swp_fsc*dem_d7a_pag*taf_cfs}
 !(DJE) d7a_prf supplements water to Butte Sink DC (C221) and is subject to SWP allocation schedule.
 !define ad_d7a_prf   {value perdel_swp_ag1*dem_C221_prf*taf_cfs}
-define ad_d7a_prf   {value swp_perdel*dem_C221_prf*taf_cfs}
+define ad_d7a_prf   {value swp_perdel_butt*dem_C221_prf*taf_cfs}
 define ad_d7b_pwr   {value dem_d7b_pwr*taf_cfs}
 define ad_d7b_pag   {value perdel_swp_fsc*dem_d7b_pag*taf_cfs}
 !(DJE) d7b_prf provides water to Gray Lodge Refuge (C216b) and is subject to SWP allocation schedule.
 !define ad_d7b_prf   {value perdel_swp_ag1*dem_C216b_prf*taf_cfs}
-define ad_d7b_prf   {value swp_perdel*dem_C216b_prf*taf_cfs}
+define ad_d7b_prf   {value swp_perdel_butt*dem_C216b_prf*taf_cfs}
 define ad_d206a_pag {value perdel_swp_fsc*dem_d206a_pag*taf_cfs}
 define ad_d206b_pwr {value dem_d206b_pwr*taf_cfs}
 define ad_d206b_pag {value perdel_swp_fsc*dem_d206b_pag*taf_cfs}
@@ -35,10 +35,10 @@ define ad_d202_pwr  {value dem_d202_pwr*taf_cfs}
 !define ad_d201_pomi  {value perdel_swp_oth1*dem_d201_pomi*taf_cfs}
 !define ad_d204_pimi  {value perdel_swp_oth1*dem_d204_pimi*taf_cfs}
 !define ad_d204_pomi  {value perdel_swp_oth1*dem_d204_pomi*taf_cfs}
-define ad_d201_pimi  {value swp_perdel*dem_d201_pimi*taf_cfs}
-define ad_d201_pomi  {value swp_perdel*dem_d201_pomi*taf_cfs}
-define ad_d204_pimi  {value swp_perdel*dem_d204_pimi*taf_cfs}
-define ad_d204_pomi  {value swp_perdel*dem_d204_pomi*taf_cfs}
+define ad_d201_pimi  {value swp_perdel_butt*dem_d201_pimi*taf_cfs}
+define ad_d201_pomi  {value swp_perdel_butt*dem_d201_pomi*taf_cfs}
+define ad_d204_pimi  {value swp_perdel_yuba*dem_d204_pimi*taf_cfs}
+define ad_d204_pomi  {value swp_perdel_yuba*dem_d204_pomi*taf_cfs}
 !Limit all the Project Water Rights arcs to their contract minus any extra for the arc (NOD only).
 ! *** For the North of Delta *****************************************************************
 
@@ -118,10 +118,12 @@ define target_d202_pwr {value min(ad_d202_pwr, demand_prj_69*con_d202_pwr/con_69
 goal limit_d202_pwr {d202_pwr < target_d202_pwr}
 
 define target_d204_pimi {value ad_d204_pimi}
-goal limit_d204_pimi {d204_pimi < target_d204_pimi}
+!goal limit_d204_pimi {d204_pimi < target_d204_pimi}
+goal limit_d204_pimi {D204_PIMI < dem_D204_PMI*taf_cfs*perdel_7*frac_dem_d204_PIMI}
 
 define target_d204_pomi {value ad_d204_pomi}
-goal limit_d204_pomi {d204_pomi < target_d204_pomi}
+!goal limit_d204_pomi {d204_pomi < target_d204_pomi}
+goal limit_d204_pomi {D204_POMI < dem_D204_PMI*taf_cfs*perdel_7*frac_dem_d204_POMI}
 
 
 !*** For the South of Delta *************************************************************
@@ -148,7 +150,9 @@ goal maxD868PAGdeliv  {D868_PAG  < dem_D868_PAG*SWP_ag_ratio*taf_cfs*perdel_5 }
 !non-mwd mi contractor demands
 goal maxD25PMIdeliv   {D25_PMI   < dem_d25_PMI*SWP_oth_ratio*taf_cfs*perdel_11}
 goal maxD28PMIdeliv   {D28_PMI   < dem_D28_PMI*SWP_oth_ratio*taf_cfs*perdel_38}
-goal maxD29PMIdeliv   {D29_PMI   < dem_D29_PMI*SWP_oth_ratio*taf_cfs*perdel_39}
+goal maxD29PMIdeliv   {D29_PMI   < dem_D29_PMI  *taf_cfs*perdel_39}
+!goal maxD204PMIdeliv  {D_WTPCYC_16_PU_SWP_PMI   < CL1mon_WTPCYC_16_PU  *taf_cfs*perdel_7} 
+goal maxD204PMIdeliv {D204_PMI < dem_D204_PMI*taf_cfs*perdel_7}
 goal maxD403BPMIdeliv {D403B_PMI < dem_D403B_PMI*SWP_oth_ratio*taf_cfs*perdel_27}
 goal maxD403CPMIdeliv {D403C_PMI < dem_D403C_PMI*SWP_oth_ratio*taf_cfs*perdel_36}
 goal maxD810PMIdeliv  {D810_PMI  < dem_D810_PMI*SWP_oth_ratio*taf_cfs*perdel_1 }
@@ -170,22 +174,37 @@ goal maxD888PMIdeliv  {D888_PMI  < dem_D888_PMI*SWP_oth_ratio*taf_cfs*perdel_32}
 goal maxD896PMIdeliv  {D896_PMI  < dem_D896_PMI*SWP_oth_ratio*taf_cfs*perdel_6 }
 
 !interruptible demands
-goal maxD27PINdeliv   {D27_PIN  < dem_d27_PIN_cfs*perdel_swp_int}
-goal maxD403BPINdeliv {D403B_PIN < dem_D403B_PIN_cfs*perdel_swp_int}
-goal maxD846PINdeliv  {D846_PIN < dem_D846_PIN_cfs*perdel_swp_int}
-goal maxD848PINdeliv  {D848_PIN < dem_D848_PIN_cfs*perdel_swp_int}
-goal maxD849PINdeliv  {D849_PIN < dem_D849_PIN_cfs*perdel_swp_int}
-goal maxD868PINdeliv  {D868_PIN < dem_D868_PIN_cfs*perdel_swp_int}
-goal maxD859PINdeliv  {D859_PIN < dem_D859_PIN_cfs*perdel_swp_int}
-goal maxD877PINdeliv  {D877_PIN < dem_D877_PIN_cfs*perdel_swp_int}
-goal maxD883PINdeliv  {D883_PIN < dem_D883_PIN_cfs*perdel_swp_int}
-goal maxD884PINdeliv  {D884_PIN < dem_D884_PIN_cfs*perdel_swp_int}
-goal maxD885PINdeliv  {D885_PIN < dem_D885_PIN_cfs*perdel_swp_int}
-goal maxD899PINdeliv  {D899_PIN < dem_D899_PIN_cfs*perdel_swp_int}
-goal maxD895PINdeliv  {D895_PIN < dem_D895_PIN_cfs*perdel_swp_int}
-goal maxD810PINdeliv  {D810_PIN < dem_D810_PIN_cfs*perdel_swp_int}
-goal maxD814PINdeliv  {D814_PIN < dem_D814_PIN_cfs*perdel_swp_int}
-goal maxD815PINdeliv  {D815_PIN < dem_D815_PIN_cfs*perdel_swp_int}
+goal tempfix {D204_PIN =0.} ! Temporary fix to match DCR2019.
+goal maxD204PINdeliv  {D204_PIN  < min(dem_D204_PIN_CFS, limit_D204_PIN_ANNUAL) *perdel_swp_int} ! New Article 21 demands. 07/2020
+goal maxD27PINdeliv  {D27_PIN  < min(dem_D27_PIN_CFS, limit_D27_PIN_ANNUAL) *perdel_swp_int}
+goal maxD29PINdeliv  {D29_PIN  < min(dem_D29_PIN_CFS, limit_D29_PIN_ANNUAL) *perdel_swp_int} ! New Article 21 demands. 1/2/2020
+goal maxD403BPINdeliv {D403B_PIN < min(dem_D403B_PIN_CFS, limit_D403B_PIN_ANNUAL) *perdel_swp_int}
+goal maxD403CPINdeliv {D403C_PIN < min(dem_D403C_PIN_CFS, limit_D403C_PIN_ANNUAL) *perdel_swp_int} ! New Article 21 demands. 1/2/2020
+goal maxD802APINdeliv  {D802A_PIN  < min(dem_D802A_PIN_CFS, limit_D802A_PIN_ANNUAL) *perdel_swp_int} ! New Article 21 demands. 07/2020
+goal maxD846PINdeliv {D846_PIN < min(dem_D846_PIN_CFS, limit_D846_PIN_ANNUAL) *perdel_swp_int}
+goal maxD847PINdeliv {D847_PIN < min(dem_D847_PIN_CFS, limit_D847_PIN_ANNUAL) *perdel_swp_int} ! New Article 21 demands. 1/2/2020
+goal maxD849PINdeliv {D849_PIN < min(dem_D849_PIN_CFS, limit_D849_PIN_ANNUAL) *perdel_swp_int}
+goal maxD868PINdeliv {D868_PIN < min(dem_D868_PIN_CFS, limit_D868_PIN_ANNUAL) *perdel_swp_int}
+goal maxD870PINdeliv {D870_PIN < min(dem_D870_PIN_CFS, limit_D870_PIN_ANNUAL) *perdel_swp_int} ! New Article 21 demands. 1/2/2020
+goal maxD878PINdeliv  {D878_PIN  < min(dem_D878_PIN_CFS, limit_D878_PIN_ANNUAL) *perdel_swp_int} ! New Article 21 demands. 07/2020
+goal maxD848PINdeliv {D848_PIN < min(dem_D848_PIN_CFS, limit_D848_PIN_ANNUAL) *perdel_swp_int}
+goal maxD859PINdeliv {D859_PIN < min(dem_D859_PIN_CFS, limit_D859_PIN_ANNUAL) *perdel_swp_int}
+goal maxD869PINdeliv  {D869_PIN  < min(dem_D869_PIN_CFS, limit_D869_PIN_ANNUAL) *perdel_swp_int} ! New Article 21 demands. 07/2020
+goal maxD877PINdeliv {D877_PIN < min(dem_D877_PIN_CFS, limit_D877_PIN_ANNUAL) *perdel_swp_int}
+goal maxD883PINdeliv {D883_PIN < min(dem_D883_PIN_CFS, limit_D883_PIN_ANNUAL) *perdel_swp_int}
+goal maxD884PINdeliv {D884_PIN < min(dem_D884_PIN_CFS, limit_D884_PIN_ANNUAL) *perdel_swp_int}
+goal maxD885PINdeliv {D885_PIN < min(dem_D885_PIN_CFS, limit_D885_PIN_ANNUAL) *perdel_swp_int}
+goal maxD886PINdeliv  {D886_PIN  < min(dem_D886_PIN_CFS, limit_D886_PIN_ANNUAL) *perdel_swp_int} ! New Article 21 demands. 07/2020
+goal maxD887PINdeliv {D887_PIN < min(dem_D887_PIN_CFS, limit_D887_PIN_ANNUAL) *perdel_swp_int} ! New Article 21 demands. 1/2/2020
+goal maxD888PINdeliv  {D888_PIN  < min(dem_D888_PIN_CFS, limit_D888_PIN_ANNUAL) *perdel_swp_int} ! New Article 21 demands. 07/2020
+goal maxD899PINdeliv {D899_PIN < min(dem_D899_PIN_CFS, limit_D899_PIN_ANNUAL) *perdel_swp_int}
+goal maxD895PINdeliv {D895_PIN < min(dem_D895_PIN_CFS, limit_D895_PIN_ANNUAL) *perdel_swp_int}
+goal maxD810PINdeliv {D810_PIN < min(dem_D810_PIN_CFS, limit_D810_PIN_ANNUAL) *perdel_swp_int}
+goal maxD814PINdeliv {D814_PIN < min(dem_D814_PIN_CFS, limit_D814_PIN_ANNUAL) *perdel_swp_int}
+goal maxD815PINdeliv {D815_PIN < min(dem_D815_PIN_CFS, limit_D815_PIN_ANNUAL) *perdel_swp_int}
+!Ensure North Bay Article 21 is limited to surplus conditions.
+goal constrain_North_Bay_A21 {D403B_PIN + D403C_PIN < C_delta_SWP + c_delta_CVP}
+
 
 
 !balance KCWA and MWD Art 21 deliveries
@@ -223,7 +242,7 @@ goal maxdelD814_PCO  { D814_PCO  < co_dem_3 }
 goal maxdelD877_PCO  { D877_PCO  < co_dem_4 }
 goal maxdelD868_PCO  { D868_PCO  < co_dem_5 }
 goal maxdelD896_PCO  { D896_PCO  < co_dem_6 }
-!goal maxdelD204_PCO  { D204_PCO  < co_dem_7 }
+goal maxdelD204_PCO  { D204_PCO  < co_dem_7 }
 goal maxdelD883_PCO  { D883_PCO  < co_dem_8 }
 !goal maxdelD201_PCO  { D201_PCO  < co_dem_9 }
 goal maxdelD847_PCO  { D847_PCO  < co_dem_10}
@@ -281,6 +300,7 @@ define swp_demand_mi {value
       dem_d25_pmi*SWP_oth_ratio*taf_cfs*perdel_11       +
       dem_D28_PMI*SWP_oth_ratio*taf_cfs*perdel_38       +
       dem_D29_PMI*SWP_oth_ratio*taf_cfs*perdel_39       +
+      dem_D204_PMI*SWP_oth_ratio*taf_cfs*perdel_7       +
       dem_D403B_PMI*SWP_oth_ratio*taf_cfs*perdel_27       +
       dem_D403C_PMI*SWP_oth_ratio*taf_cfs*perdel_36       +
       dem_D810_PMI*SWP_oth_ratio*taf_cfs*perdel_1        +

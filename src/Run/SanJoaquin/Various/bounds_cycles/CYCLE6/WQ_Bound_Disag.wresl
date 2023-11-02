@@ -123,7 +123,7 @@ define Tuo_WQparam_2 {value 500.75}
                 }
      case NonPulsePlusDO {
           condition always    !June thru September
-          value min(2000., max(500., Lan_WQparam_1*log(max(1.,C_SJRLNDR[VAMP_AND_DO])) + Lan_WQparam_2)) ! Lander Ave.
+          value min(2000., max(500., Lan_WQparam_1*log(max(1.,C_SJRLNDR[SJR_WQ2])) + Lan_WQparam_2)) ! Lander Ave.
                 }}
 */
 ! Merced at Stevinson:  EC[microS/cm] = f(flow[cfs]), subject to max/min constraints
@@ -134,13 +134,13 @@ define EC_MERCED2_NP {
                 }
      case NonPulsePlusDO {
           condition always    !June thru September
-          value min(500., max(85., Mer_WQparam_1*log(max(1.,C_MERCED2[VAMP_AND_DO])) + Mer_WQparam_2)) ! Merced River June-Sep
+          value min(500., max(85., Mer_WQparam_1*log(max(1.,C_MERCED2[SJR_WQ2])) + Mer_WQparam_2)) ! Merced River June-Sep
                 }}
 
 define EC_MERCED2_P {
      case APRILMAY {
           condition month >= apr .and. month <= may
-          value min(500., max(85., Mer_WQparam_1*log(max(1.,C_MERCED2[VAMP_AND_DO])) + Mer_WQparam_2)) ! Merced River VAMP
+          value min(500., max(85., Mer_WQparam_1*log(max(1.,C_MERCED2[SJR_WQ2])) + Mer_WQparam_2)) ! Merced River VAMP
                 }
      case otherwise {
           condition always
@@ -155,13 +155,13 @@ define EC_TUOL_NP {
                 }
      case NonPulsePlusDO {
           condition always    !June thru September
-          value min(275., max(85., Tuo_WQparam_1*log(max(1.,C_TUOL[VAMP_AND_DO])) + Tuo_WQparam_2)) ! Tuolumne River June-Sep
+          value min(275., max(85., Tuo_WQparam_1*log(max(1.,C_TUOL[SJR_WQ2])) + Tuo_WQparam_2)) ! Tuolumne River June-Sep
                 }}
 
 define EC_TUOL_P {
      case APRILMAY {
           condition month >= apr .and. month <= may
-          value min(275., max(85., Tuo_WQparam_1*log(max(1.,C_TUOL[VAMP_AND_DO])) + Tuo_WQparam_2)) ! Tuolumne River VAMP
+          value min(275., max(85., Tuo_WQparam_1*log(max(1.,C_TUOL[SJR_WQ2])) + Tuo_WQparam_2)) ! Tuolumne River VAMP
                 }
      case otherwise {
           condition always
@@ -183,10 +183,10 @@ define EC_595_NP {
             / (C_Chowbyp2[SJR_WQ1] + D_Chowbyp[SJR_WQ1] + L_Chowbyp[SJR_WQ1] )}
      case NonPulsePlusDO {
      	condition	always
-     	value (C_Chowbyp1[VAMP_AND_DO] * EC_605_NPandP
-            + C_FRSNO[VAMP_AND_DO] * EC_C_FRSNO
-            + R_Chowbyp[VAMP_AND_DO] * EC_R_Chowbyp)
-            / (C_Chowbyp2[VAMP_AND_DO] + D_Chowbyp[VAMP_AND_DO] + L_Chowbyp[VAMP_AND_DO] )}
+     	value (C_Chowbyp1[SJR_WQ2] * EC_605_NPandP
+            + C_FRSNO[SJR_WQ2] * EC_C_FRSNO
+            + R_Chowbyp[SJR_WQ2] * EC_R_Chowbyp)
+            / (C_Chowbyp2[SJR_WQ2] + D_Chowbyp[SJR_WQ2] + L_Chowbyp[SJR_WQ2] )}
 }
 
 define EC_595_P {
@@ -195,14 +195,14 @@ define EC_595_P {
      	value		EC_595_NP
      }
      case NearZero {
-         condition C_Chowbyp2[VAMP_AND_DO] + D_Chowbyp[VAMP_AND_DO] + L_Chowbyp[VAMP_AND_DO]< 0.0001
+         condition C_Chowbyp2[SJR_WQ2] + D_Chowbyp[SJR_WQ2] + L_Chowbyp[SJR_WQ2]< 0.0001
          value 0.0 }
      case Pulse {
           condition always
-          value (C_Chowbyp1[VAMP_AND_DO] * EC_605_NPandP
-            + C_FRSNO[VAMP_AND_DO] * EC_C_FRSNO
-            + R_Chowbyp[VAMP_AND_DO] * EC_R_Chowbyp)
-            / (C_Chowbyp2[VAMP_AND_DO] + D_Chowbyp[VAMP_AND_DO] + L_Chowbyp[VAMP_AND_DO])
+          value (C_Chowbyp1[SJR_WQ2] * EC_605_NPandP
+            + C_FRSNO[SJR_WQ2] * EC_C_FRSNO
+            + R_Chowbyp[SJR_WQ2] * EC_R_Chowbyp)
+            / (C_Chowbyp2[SJR_WQ2] + D_Chowbyp[SJR_WQ2] + L_Chowbyp[SJR_WQ2])
             }}/**/
 
 define EC_607_NP {
@@ -219,12 +219,12 @@ define EC_607_NP {
             / (C_MDOTA[SJR_WQ1] + C_MDOTABC[SJR_WQ1] + D_MDOTAA[SJR_WQ1] + D_MDOTAD[SJR_WQ1] + L_MDOTA[SJR_WQ1])}
      case NonPulsePlusDO {
           condition always    !June thru September
-        value (C_SJRCB[VAMP_AND_DO] * EC_605_NPandP
+        value (C_SJRCB[SJR_WQ2] * EC_605_NPandP
             + I_MDOTA * EC_I_MDOTA
-            + C_CVPDMC[VAMP_AND_DO] * EC_Mendota_Pool
-            + R_MDOTA[VAMP_AND_DO] * EC_Mendota_Pool)
-            / (C_MDOTA[VAMP_AND_DO] + C_MDOTABC[VAMP_AND_DO]
-            + D_MDOTAA[VAMP_AND_DO] + D_MDOTAD[VAMP_AND_DO] + L_MDOTA[VAMP_AND_DO])}
+            + C_CVPDMC[SJR_WQ2] * EC_Mendota_Pool
+            + R_MDOTA[SJR_WQ2] * EC_Mendota_Pool)
+            / (C_MDOTA[SJR_WQ2] + C_MDOTABC[SJR_WQ2]
+            + D_MDOTAA[SJR_WQ2] + D_MDOTAD[SJR_WQ2] + L_MDOTA[SJR_WQ2])}
             }
 
 define EC_607_P {
@@ -233,17 +233,17 @@ define EC_607_P {
 		value		EC_607_NP
 	}
      case NearZero {
-         condition C_MDOTA[VAMP_AND_DO] + C_MDOTABC[VAMP_AND_DO]
-                + D_MDOTAA[VAMP_AND_DO] + D_MDOTAD[VAMP_AND_DO] + L_MDOTA[VAMP_AND_DO] < 0.0001
+         condition C_MDOTA[SJR_WQ2] + C_MDOTABC[SJR_WQ2]
+                + D_MDOTAA[SJR_WQ2] + D_MDOTAD[SJR_WQ2] + L_MDOTA[SJR_WQ2] < 0.0001
          value 0.0 }
      case Pulse {
           condition always
-        value (C_SJRCB[VAMP_AND_DO] * EC_605_NPandP
+        value (C_SJRCB[SJR_WQ2] * EC_605_NPandP
             + I_MDOTA * EC_I_MDOTA
-            + C_CVPDMC[VAMP_AND_DO] * EC_Mendota_Pool
-            + R_MDOTA[VAMP_AND_DO] * EC_Mendota_Pool)
-            / (C_MDOTA[VAMP_AND_DO] + C_MDOTABC[VAMP_AND_DO]
-            + D_MDOTAA[VAMP_AND_DO] + D_MDOTAD[VAMP_AND_DO] + L_MDOTA[VAMP_AND_DO])}
+            + C_CVPDMC[SJR_WQ2] * EC_Mendota_Pool
+            + R_MDOTA[SJR_WQ2] * EC_Mendota_Pool)
+            / (C_MDOTA[SJR_WQ2] + C_MDOTABC[SJR_WQ2]
+            + D_MDOTAA[SJR_WQ2] + D_MDOTAD[SJR_WQ2] + L_MDOTA[SJR_WQ2])}
             }
 
 define EC_608_NP {
@@ -257,9 +257,9 @@ define EC_608_NP {
             / (C_SJRSACK[SJR_WQ1] + L_SJRREST[SJR_WQ1] + C_SJRSACKBC[SJR_WQ1])}
      case NonPulsePlusDO {
           condition always    !June thru September
-        value (C_MDOTA[VAMP_AND_DO] * EC_607_NP
-            + C_SJRREST[VAMP_AND_DO] * EC_605_NPandP )
-            / (C_SJRSACK[VAMP_AND_DO] + L_SJRREST[VAMP_AND_DO] + C_SJRSACKBC[SJR_WQ1])}
+        value (C_MDOTA[SJR_WQ2] * EC_607_NP
+            + C_SJRREST[SJR_WQ2] * EC_605_NPandP )
+            / (C_SJRSACK[SJR_WQ2] + L_SJRREST[SJR_WQ2] + C_SJRSACKBC[SJR_WQ1])}
             }
 define EC_608_P {
 	case JunToMar {
@@ -267,13 +267,13 @@ define EC_608_P {
 		value		EC_608_NP
 	}
      case NearZero {
-         condition C_SJRSACK[VAMP_AND_DO] + L_SJRREST[VAMP_AND_DO] + C_SJRSACKBC[SJR_WQ1] < 0.0001
+         condition C_SJRSACK[SJR_WQ2] + L_SJRREST[SJR_WQ2] + C_SJRSACKBC[SJR_WQ1] < 0.0001
          value 0.0 }
      case Pulse {
           condition always
-        value (C_MDOTA[VAMP_AND_DO] * EC_607_P
-            + C_SJRREST[VAMP_AND_DO] * EC_605_NPandP )
-            / (C_SJRSACK[VAMP_AND_DO] + L_SJRREST[VAMP_AND_DO] + C_SJRSACKBC[SJR_WQ1])}
+        value (C_MDOTA[SJR_WQ2] * EC_607_P
+            + C_SJRREST[SJR_WQ2] * EC_605_NPandP )
+            / (C_SJRSACK[SJR_WQ2] + L_SJRREST[SJR_WQ2] + C_SJRSACKBC[SJR_WQ1])}
             }
 
 define EC_SJRSAND_NP {
@@ -286,8 +286,8 @@ define EC_SJRSAND_NP {
             / (C_SANDSL[SJR_WQ1] + C_SJRSAND[SJR_WQ1] + L_SJRSAND[SJR_WQ1])}
      case NonPulsePlusDO {
           condition always    !June thru September
-        value (C_SJRSACK[VAMP_AND_DO] * EC_608_NP)
-            / (C_SANDSL[VAMP_AND_DO] + C_SJRSAND[VAMP_AND_DO] + L_SJRSAND[VAMP_AND_DO])}
+        value (C_SJRSACK[SJR_WQ2] * EC_608_NP)
+            / (C_SANDSL[SJR_WQ2] + C_SJRSAND[SJR_WQ2] + L_SJRSAND[SJR_WQ2])}
             }
 define EC_SJRSAND_P {
 	case JunToMar {
@@ -295,12 +295,12 @@ define EC_SJRSAND_P {
 		value		EC_SJRSAND_NP
 	}
      case NearZero {
-         condition C_SANDSL[VAMP_AND_DO] + C_SJRSAND[VAMP_AND_DO] + L_SJRSAND[VAMP_AND_DO] < 0.0001
+         condition C_SANDSL[SJR_WQ2] + C_SJRSAND[SJR_WQ2] + L_SJRSAND[SJR_WQ2] < 0.0001
          value 0.0 }
      case Pulse {
           condition always
-        value (C_SJRSACK[VAMP_AND_DO] * EC_608_P)
-            / (C_SANDSL[VAMP_AND_DO] + C_SJRSAND[VAMP_AND_DO] + L_SJRSAND[VAMP_AND_DO])}
+        value (C_SJRSACK[SJR_WQ2] * EC_608_P)
+            / (C_SANDSL[SJR_WQ2] + C_SJRSAND[SJR_WQ2] + L_SJRSAND[SJR_WQ2])}
             }
 
 define EC_587_NP {
@@ -318,12 +318,12 @@ define EC_587_NP {
             }
      case NonPulsePlusDO {
           condition always
-        value (C_Chowbyp2[VAMP_AND_DO] * EC_595_NP
-            + C_CHOWR[VAMP_AND_DO] * EC_C_CHOWR
-            + R_CHOWR2A[VAMP_AND_DO] * EC_R_CHOWR2A
-            + R_CHOWR2B[VAMP_AND_DO] * EC_R_CHOWR2B
-            + C_SANDSL[VAMP_AND_DO] * EC_SJRSAND_NP)
-            / (C587[VAMP_AND_DO] + C_MPBYP[VAMP_AND_DO] + L_CHOWR2[VAMP_AND_DO])
+        value (C_Chowbyp2[SJR_WQ2] * EC_595_NP
+            + C_CHOWR[SJR_WQ2] * EC_C_CHOWR
+            + R_CHOWR2A[SJR_WQ2] * EC_R_CHOWR2A
+            + R_CHOWR2B[SJR_WQ2] * EC_R_CHOWR2B
+            + C_SANDSL[SJR_WQ2] * EC_SJRSAND_NP)
+            / (C587[SJR_WQ2] + C_MPBYP[SJR_WQ2] + L_CHOWR2[SJR_WQ2])
             }}
 
 define EC_587_P {
@@ -332,16 +332,16 @@ define EC_587_P {
 		value		EC_587_NP
 	}
     case NearZero {
-         condition C587[VAMP_AND_DO] + C_MPBYP[VAMP_AND_DO] + L_CHOWR2[VAMP_AND_DO] < 0.0001
+         condition C587[SJR_WQ2] + C_MPBYP[SJR_WQ2] + L_CHOWR2[SJR_WQ2] < 0.0001
          value 0.0 }
      case Pulse {
           condition always
-        value (C_Chowbyp2[VAMP_AND_DO] * EC_595_P
-            + C_CHOWR[VAMP_AND_DO] * EC_C_CHOWR
-            + R_CHOWR2A[VAMP_AND_DO] * EC_R_CHOWR2A
-            + R_CHOWR2B[VAMP_AND_DO] * EC_R_CHOWR2B
-            + C_SANDSL[VAMP_AND_DO] * EC_SJRSAND_P)
-            / (C587[VAMP_AND_DO] + C_MPBYP[VAMP_AND_DO] + L_CHOWR2[VAMP_AND_DO])
+        value (C_Chowbyp2[SJR_WQ2] * EC_595_P
+            + C_CHOWR[SJR_WQ2] * EC_C_CHOWR
+            + R_CHOWR2A[SJR_WQ2] * EC_R_CHOWR2A
+            + R_CHOWR2B[SJR_WQ2] * EC_R_CHOWR2B
+            + C_SANDSL[SJR_WQ2] * EC_SJRSAND_P)
+            / (C587[SJR_WQ2] + C_MPBYP[SJR_WQ2] + L_CHOWR2[SJR_WQ2])
             }}
 
 define EC_589_NP {
@@ -356,9 +356,9 @@ define EC_589_NP {
             }
      case NonPulsePlusDO {
           condition always    !June thru September
-        value (C587[VAMP_AND_DO] * EC_587_NP
+        value (C587[SJR_WQ2] * EC_587_NP
             + I_EASTBYP * EC_I_EASTBYP )
-            / C_EASTBYP[VAMP_AND_DO]
+            / C_EASTBYP[SJR_WQ2]
             }}
 define EC_589_P {
 	case JunToMar {
@@ -366,13 +366,13 @@ define EC_589_P {
 		value		EC_589_NP
 	}
     case NearZero {
-         condition C_EASTBYP[VAMP_AND_DO] < 0.0001
+         condition C_EASTBYP[SJR_WQ2] < 0.0001
          value 0.0 }
      case Pulse {
           condition always
-        value (C587[VAMP_AND_DO] * EC_587_P
+        value (C587[SJR_WQ2] * EC_587_P
             + I_EASTBYP * EC_I_EASTBYP )
-            / C_EASTBYP[VAMP_AND_DO]
+            / C_EASTBYP[SJR_WQ2]
             }}
 
 define EC_SJRMPBYP_NP {
@@ -386,9 +386,9 @@ define EC_SJRMPBYP_NP {
             / (C_SJRMPBYP[SJR_WQ1] + L_SJRMPBYP[SJR_WQ1])}
      case NonPulsePlusDO {
           condition always    !June thru September
-        value (C_SJRSAND[VAMP_AND_DO] * EC_SJRSAND_NP
-            + C_MPBYP[VAMP_AND_DO] * EC_587_NP)
-            / (C_SJRMPBYP[VAMP_AND_DO] + L_SJRMPBYP[VAMP_AND_DO])}
+        value (C_SJRSAND[SJR_WQ2] * EC_SJRSAND_NP
+            + C_MPBYP[SJR_WQ2] * EC_587_NP)
+            / (C_SJRMPBYP[SJR_WQ2] + L_SJRMPBYP[SJR_WQ2])}
             }
 define EC_SJRMPBYP_P {
 	case JunToMar {
@@ -396,13 +396,13 @@ define EC_SJRMPBYP_P {
 		value		EC_SJRMPBYP_NP
 	}
     case NearZero {
-         condition C_SJRMPBYP[VAMP_AND_DO] + L_SJRMPBYP[VAMP_AND_DO] < 0.0001
+         condition C_SJRMPBYP[SJR_WQ2] + L_SJRMPBYP[SJR_WQ2] < 0.0001
          value 0.0 }
      case Pulse {
           condition always
-        value (C_SJRSAND[VAMP_AND_DO] * EC_SJRSAND_P
-            + C_MPBYP[VAMP_AND_DO] * EC_587_P)
-            / (C_SJRMPBYP[VAMP_AND_DO] + L_SJRMPBYP[VAMP_AND_DO])}
+        value (C_SJRSAND[SJR_WQ2] * EC_SJRSAND_P
+            + C_MPBYP[SJR_WQ2] * EC_587_P)
+            / (C_SJRMPBYP[SJR_WQ2] + L_SJRMPBYP[SJR_WQ2])}
             }
 
 define EC_611_NP {
@@ -417,9 +417,9 @@ define EC_611_NP {
             }
      case NonPulsePlusDO {
           condition always    !June thru September
-        value (C_EASTBYP[VAMP_AND_DO] * EC_589_NP
-            + C_SJRMPBYP[VAMP_AND_DO] * EC_SJRMPBYP_NP)
-            / (C_SJRLNDR[VAMP_AND_DO] + L_SJRLNDR[VAMP_AND_DO] )
+        value (C_EASTBYP[SJR_WQ2] * EC_589_NP
+            + C_SJRMPBYP[SJR_WQ2] * EC_SJRMPBYP_NP)
+            / (C_SJRLNDR[SJR_WQ2] + L_SJRLNDR[SJR_WQ2] )
             }}
 define EC_611_P {
 	case JunToMar {
@@ -427,13 +427,13 @@ define EC_611_P {
 		value		EC_611_NP
 	}
     case NearZero {
-         condition C_SJRLNDR[VAMP_AND_DO] + L_SJRLNDR[VAMP_AND_DO] < 0.0001
+         condition C_SJRLNDR[SJR_WQ2] + L_SJRLNDR[SJR_WQ2] < 0.0001
          value 0.0 }
      case Pulse {
           condition always
-        value (C_EASTBYP[VAMP_AND_DO] * EC_589_P
-            + C_SJRMPBYP[VAMP_AND_DO] * EC_SJRMPBYP_P)
-            / (C_SJRLNDR[VAMP_AND_DO] + L_SJRLNDR[VAMP_AND_DO] )
+        value (C_EASTBYP[SJR_WQ2] * EC_589_P
+            + C_SJRMPBYP[SJR_WQ2] * EC_SJRMPBYP_P)
+            / (C_SJRLNDR[SJR_WQ2] + L_SJRLNDR[SJR_WQ2] )
             }}
 /**/
 ! Conditions for the SJR at Mud and Salt Slough
@@ -451,25 +451,25 @@ define EC_614_NP {
                
       case NonPulsePlusDO {
       condition always    !June thru September
-          value (C_SJRLNDR[VAMP_AND_DO] * EC_611_NP                       !  Node 614 June-Sep
+          value (C_SJRLNDR[SJR_WQ2] * EC_611_NP                       !  Node 614 June-Sep
                + I_SJRMSA * EC_I_SJRMSA
-               + (I_SJRMS[VAMP_AND_DO]-I_SJRMSA) * EC_Grassland_B
-               + R_SJRMS[VAMP_AND_DO] * EC5_R_SJRMS
-               + C_MDOTABVAMP[VAMP_AND_DO] * EC_Mendota_Pool
+               + (I_SJRMS[SJR_WQ2]-I_SJRMSA) * EC_Grassland_B
+               + R_SJRMS[SJR_WQ2] * EC5_R_SJRMS
+               + C_MDOTABVAMP[SJR_WQ2] * EC_Mendota_Pool
                + PctAt614*AbvNwmnResLoad)   !LDB, 8/30/04
-               /C_SJRMS[VAMP_AND_DO]
+               /C_SJRMS[SJR_WQ2]
                }}
 
 define EC_614_P {
      case APRILMAY {
           condition month >= apr .and. month <= may                        ! Node 614 VAMP
-      value (C_SJRLNDR[VAMP_AND_DO] * EC_611_P
+      value (C_SJRLNDR[SJR_WQ2] * EC_611_P
                + I_SJRMSA * EC_I_SJRMSA
-               + (I_SJRMS[VAMP_AND_DO]-I_SJRMSA) * EC_Grassland_B
-               + R_SJRMS[VAMP_AND_DO] * EC5_R_SJRMS
-               + C_MDOTABVAMP[VAMP_AND_DO] * EC_Mendota_Pool
+               + (I_SJRMS[SJR_WQ2]-I_SJRMSA) * EC_Grassland_B
+               + R_SJRMS[SJR_WQ2] * EC5_R_SJRMS
+               + C_MDOTABVAMP[SJR_WQ2] * EC_Mendota_Pool
                + PctAt614*AbvNwmnResLoad)   !LDB, 8/30/04
-               /C_SJRMS[VAMP_AND_DO]
+               /C_SJRMS[SJR_WQ2]
                }
      case otherwise {
                condition always
@@ -491,25 +491,25 @@ define EC_620_NP {
                }
       case NonPulsePlusDO {
       condition always    !June thru September
-          value (C_SJRMS[VAMP_AND_DO] * EC_614_NP                            !Node 620 June-Sep
-               + C_MERCED2[VAMP_AND_DO] * EC_MERCED2_NP
-               + C619[VAMP_AND_DO] * EC5_R_SJRMer                ! EC5_RSJRMer =EC5_R619
-               + R_SJRMER[VAMP_AND_DO] * EC_E_Return620
+          value (C_SJRMS[SJR_WQ2] * EC_614_NP                            !Node 620 June-Sep
+               + C_MERCED2[SJR_WQ2] * EC_MERCED2_NP
+               + C619[SJR_WQ2] * EC5_R_SJRMer                ! EC5_RSJRMer =EC5_R619
+               + R_SJRMER[SJR_WQ2] * EC_E_Return620
                + PctAt620*AbvNwmnResLoad)  !LDB, 8/30/04
-               /(C_SJRMER[VAMP_AND_DO]+D_SJRMERA[VAMP_AND_DO]+D_SJRMERB[VAMP_AND_DO]
-                 +D_SJRMERC[VAMP_AND_DO]) !LDB, 8/30/04
+               /(C_SJRMER[SJR_WQ2]+D_SJRMERA[SJR_WQ2]+D_SJRMERB[SJR_WQ2]
+                 +D_SJRMERC[SJR_WQ2]) !LDB, 8/30/04
                }}
 
 define EC_620_P {
      case APRILMAY {
           condition month >= apr .and. month <= may                        !Node 620 VAMP
-      value (C_SJRMS[VAMP_AND_DO] * EC_614_P
-               + C_MERCED2[VAMP_AND_DO] * EC_MERCED2_P
-               + C619[VAMP_AND_DO] * EC5_R_SJRMer 
-               + R_SJRMER[VAMP_AND_DO] * EC_E_Return620
+      value (C_SJRMS[SJR_WQ2] * EC_614_P
+               + C_MERCED2[SJR_WQ2] * EC_MERCED2_P
+               + C619[SJR_WQ2] * EC5_R_SJRMer 
+               + R_SJRMER[SJR_WQ2] * EC_E_Return620
                + PctAt620*AbvNwmnResLoad)  !LDB, 8/30/04
-               /(C_SJRMER[VAMP_AND_DO]+D_SJRMERA[VAMP_AND_DO]+D_SJRMERB[VAMP_AND_DO]
-                 +D_SJRMERC[VAMP_AND_DO]) !LDB, 8/30/04
+               /(C_SJRMER[SJR_WQ2]+D_SJRMERA[SJR_WQ2]+D_SJRMERB[SJR_WQ2]
+                 +D_SJRMERC[SJR_WQ2]) !LDB, 8/30/04
                }
      case otherwise {
                condition always
@@ -536,33 +536,33 @@ define EC_SJRTUOL_NP {
                }
       case NonPulsePlusDO {
       condition always    !June thru September
-          value (C_SJRMER[VAMP_AND_DO] * EC_620_NP                            !Node 630 June - Sep
-               + C_TUOL[VAMP_AND_DO] * EC_TUOL_NP
-               + R_SJRTUOLWest[VAMP_AND_DO] * EC5_R_SJRTUOL
-               + R_SJRTUOLJ[VAMP_AND_DO] * EC_TID_Return
-               + R_SJRTUOLK[VAMP_AND_DO] * EC_TID_Return
-               + R_SJRTUOLL[VAMP_AND_DO] * EC_TID_Return
-               + R_SJRTUOLM[VAMP_AND_DO] * EC_R_SJRTUOLM
+          value (C_SJRMER[SJR_WQ2] * EC_620_NP                            !Node 630 June - Sep
+               + C_TUOL[SJR_WQ2] * EC_TUOL_NP
+               + R_SJRTUOLWest[SJR_WQ2] * EC5_R_SJRTUOL
+               + R_SJRTUOLJ[SJR_WQ2] * EC_TID_Return
+               + R_SJRTUOLK[SJR_WQ2] * EC_TID_Return
+               + R_SJRTUOLL[SJR_WQ2] * EC_TID_Return
+               + R_SJRTUOLM[SJR_WQ2] * EC_R_SJRTUOLM
                + SaltSJRTUOL  !A. Fock 2005/09/23 Salt from tile drains and GW base flow
                + PctAt630*BtwMazeNwmnResLoad) !LDB, 9/13/04
-               / (C_SJRTUOL[VAMP_AND_DO]
-                  +D_SJRTUOLA[VAMP_AND_DO]+D_SJRTUOLB[VAMP_AND_DO])
+               / (C_SJRTUOL[SJR_WQ2]
+                  +D_SJRTUOLA[SJR_WQ2]+D_SJRTUOLB[SJR_WQ2])
                }}
 
 define EC_SJRTUOL_P {
      case APRILMAY {
           condition month >= apr .and. month <= may
-         value (C_SJRMER[VAMP_AND_DO] * EC_620_P                            !Node 630 VAMP
-               + C_TUOL[VAMP_AND_DO] * EC_TUOL_P
-               + R_SJRTUOLWest[VAMP_AND_DO] * EC5_R_SJRTUOL
-               + R_SJRTUOLJ[VAMP_AND_DO] * EC_TID_Return
-               + R_SJRTUOLK[VAMP_AND_DO] * EC_TID_Return
-               + R_SJRTUOLL[VAMP_AND_DO] * EC_TID_Return
-               + R_SJRTUOLM[VAMP_AND_DO] * EC_R_SJRTUOLM
+         value (C_SJRMER[SJR_WQ2] * EC_620_P                            !Node 630 VAMP
+               + C_TUOL[SJR_WQ2] * EC_TUOL_P
+               + R_SJRTUOLWest[SJR_WQ2] * EC5_R_SJRTUOL
+               + R_SJRTUOLJ[SJR_WQ2] * EC_TID_Return
+               + R_SJRTUOLK[SJR_WQ2] * EC_TID_Return
+               + R_SJRTUOLL[SJR_WQ2] * EC_TID_Return
+               + R_SJRTUOLM[SJR_WQ2] * EC_R_SJRTUOLM
                + saltSJRTUOL  !A. Fock 2005/09/23 Salt from tile drains and GW base flow
                + PctAt630*BtwMazeNwmnResLoad) !LDB, 9/13/04
-               /(C_SJRTUOL[VAMP_AND_DO]
-                 +D_SJRTUOLA[VAMP_AND_DO]+D_SJRTUOLB[VAMP_AND_DO])
+               /(C_SJRTUOL[SJR_WQ2]
+                 +D_SJRTUOLA[SJR_WQ2]+D_SJRTUOLB[SJR_WQ2])
                }
      case otherwise {
                condition always
@@ -584,25 +584,25 @@ define EC_SJRMAZE_NP {
                }
       case NonPulsePlusDO {
       condition always    !June thru September
-          value (C_SJRTUOL[VAMP_AND_DO]  * EC_SJRTUOL_NP                            !Node 636 June-Sep
-               + R_SJRMAZEA[VAMP_AND_DO] * EC_MID_Return
-               + R_SJRMAZEB[VAMP_AND_DO] * EC_MID_Return
-               + R_SJRMAZEC[VAMP_AND_DO] * EC_MID_Return
+          value (C_SJRTUOL[SJR_WQ2]  * EC_SJRTUOL_NP                            !Node 636 June-Sep
+               + R_SJRMAZEA[SJR_WQ2] * EC_MID_Return
+               + R_SJRMAZEB[SJR_WQ2] * EC_MID_Return
+               + R_SJRMAZEC[SJR_WQ2] * EC_MID_Return
                + SaltSJRMaze !A. Fock 2005/09/23 Salt from tile drains and GW base flow
                + PctAt636*BtwMazeNwmnResLoad) !LDB, 9/13/04
-               /(C_SJRMAZE[VAMP_AND_DO])
+               /(C_SJRMAZE[SJR_WQ2])
                }}
 
 define EC_SJRMAZE_P {
      case APRILMAY {
           condition month >= apr .and. month <= may                        !Node 636 VAMP
-      value (C_SJRTUOL[VAMP_AND_DO] * EC_SJRTUOL_P
-               + R_SJRMAZEA[VAMP_AND_DO] * EC_MID_Return
-               + R_SJRMAZEB[VAMP_AND_DO] * EC_MID_Return
-               + R_SJRMAZEC[VAMP_AND_DO] * EC_MID_Return
+      value (C_SJRTUOL[SJR_WQ2] * EC_SJRTUOL_P
+               + R_SJRMAZEA[SJR_WQ2] * EC_MID_Return
+               + R_SJRMAZEB[SJR_WQ2] * EC_MID_Return
+               + R_SJRMAZEC[SJR_WQ2] * EC_MID_Return
                + SaltSJRMaze !A. Fock 2005/09/23 Salt from tile drains and GW base flow
                + PctAt636*BtwMazeNwmnResLoad) !LDB, 9/13/04
-               /(C_SJRMAZE[VAMP_AND_DO])
+               /(C_SJRMAZE[SJR_WQ2])
                }
      case otherwise {
                condition always
@@ -645,31 +645,31 @@ define EC_STANRIPN_NP {
                }
      case NonPulsePlusDO {
       condition always    !June thru September
-          value (C_STANGDWN[VAMP_AND_DO] * EC_Goodwin                            !Node STANRIPN June-Oct
-               + R_STANRIPNA[VAMP_AND_DO] * EC_Stan_Return !OID/SSJID
-               + R_STANRIPNB[VAMP_AND_DO] * EC_Stan_Return !SSJID
-               + R_STANRIPNC[VAMP_AND_DO] * EC_MID_Return
+          value (C_STANGDWN[SJR_WQ2] * EC_Goodwin                            !Node STANRIPN June-Oct
+               + R_STANRIPNA[SJR_WQ2] * EC_Stan_Return !OID/SSJID
+               + R_STANRIPNB[SJR_WQ2] * EC_Stan_Return !SSJID
+               + R_STANRIPNC[SJR_WQ2] * EC_MID_Return
                + I_STANRIPNpos * EC_Stan_Accr
                + VernMinRel_np * EC_Goodwin)     ! Vernalis X2 Flows
 !               + OIDInstreamToBeMet*TAF_cfs * EC_Goodwin)  !OID Water Purchases)
-               /(C_STANRIPN[VAMP_AND_DO]
+               /(C_STANRIPN[SJR_WQ2]
                  + VernMinRel_np !+ OIDInstreamToBeMet*TAF_cfs
-                 +D_STANRIPN[VAMP_AND_DO]-I_STANRIPNneg)
+                 +D_STANRIPN[SJR_WQ2]-I_STANRIPNneg)
                }}
 
 define EC_STANRIPN_P {
      case APRILMAY {
           condition month >= apr .and. month <= may                        !Node STANRIPN VAMP
-      value (C_STANGDWN[VAMP_AND_DO] * EC_Goodwin
-               + R_STANRIPNA[VAMP_AND_DO] * EC_Stan_Return !OID/SSJID
-               + R_STANRIPNB[VAMP_AND_DO] * EC_Stan_Return !SSJID
-               + R_STANRIPNC[VAMP_AND_DO] * EC_MID_Return
+      value (C_STANGDWN[SJR_WQ2] * EC_Goodwin
+               + R_STANRIPNA[SJR_WQ2] * EC_Stan_Return !OID/SSJID
+               + R_STANRIPNB[SJR_WQ2] * EC_Stan_Return !SSJID
+               + R_STANRIPNC[SJR_WQ2] * EC_MID_Return
                + I_STANRIPNpos * EC_Stan_Accr
                + VernMinRel_p * EC_Goodwin)
 !               + OIDInstreamToBeMet*TAF_cfs * EC_Goodwin)  !OID Water Purchases)
-               /(C_STANRIPN[VAMP_AND_DO]
+               /(C_STANRIPN[SJR_WQ2]
 !                 + OIDInstreamToBeMet*TAF_cfs
-                 +D_STANRIPN[VAMP_AND_DO]-I_STANRIPNneg + VernMinRel_p)
+                 +D_STANRIPN[SJR_WQ2]-I_STANRIPNneg + VernMinRel_p)
                }
      case otherwise {
                condition always
@@ -698,38 +698,38 @@ define EC_637_NP {
                }
     case NonPulsePlusDO {
       condition always    !June thru September
-          value (C_SJRMAZE[VAMP_AND_DO] * EC_SJRMAZE_NP
-               + C_STANRIPN[VAMP_AND_DO] * EC_STANRIPN_NP
+          value (C_SJRMAZE[SJR_WQ2] * EC_SJRMAZE_NP
+               + C_STANRIPN[SJR_WQ2] * EC_STANRIPN_NP
                + (VernMinRel_np /*+ OIDInstreamToBeMet*TAF_cfs*/) * EC_STANRIPN_NP
 !WB               + I_SJRSTAN * EC_I_SJRSTAN !A. Fock  2005/9/17
 !WB EC_I_SJRSTAN is wrong variable to use here, it is inconsistent with value used to determine Goodwin release, therefor use EC_Stan_Rip_Rtn
                + I_SJRSTAN * EC_Stan_Rip_Rtn
-               + R_SJRSTANA[VAMP_AND_DO] * EC_MID_Return
-               + R_SJRSTANB[VAMP_AND_DO] * EC_MID_Return
-               + R_SJRSTANC[VAMP_AND_DO] * EC_Stan_Rip_Rtn
-               + R_SJRSTAND[VAMP_AND_DO] * EC_R_SJRSTAND)
-               /(C_SJRSTAN[VAMP_AND_DO]
+               + R_SJRSTANA[SJR_WQ2] * EC_MID_Return
+               + R_SJRSTANB[SJR_WQ2] * EC_MID_Return
+               + R_SJRSTANC[SJR_WQ2] * EC_Stan_Rip_Rtn
+               + R_SJRSTAND[SJR_WQ2] * EC_R_SJRSTAND)
+               /(C_SJRSTAN[SJR_WQ2]
                  + VernMinRel_np !+ OIDInstreamToBeMet*TAF_cfs
-                 +D_SJRSTAN[VAMP_AND_DO])
+                 +D_SJRSTAN[SJR_WQ2])
                }}
 
 define EC_637_P {
      case APRILMAY {
           condition month >= apr .and. month <= may
-      value (C_SJRMAZE[VAMP_AND_DO] * EC_SJRMAZE_P
-               + C_STANRIPN[VAMP_AND_DO] * EC_STANRIPN_P
+      value (C_SJRMAZE[SJR_WQ2] * EC_SJRMAZE_P
+               + C_STANRIPN[SJR_WQ2] * EC_STANRIPN_P
                + VernMinRel_p * EC_STANRIPN_P
 !               + OIDInstreamToBeMet*TAF_cfs * EC_STANRIPN_P
 !WB               + I_SJRSTAN * EC_I_SJRSTAN !A. Fock  2005/9/17
 !WB EC_I_SJRSTAN is wrong variable to use here, it is inconsistent with value used to determine Goodwin release, therefor use EC_Stan_Rip_Rtn
                + I_SJRSTAN * EC_Stan_Rip_Rtn
-               + R_SJRSTANA[VAMP_AND_DO] * EC_MID_Return
-               + R_SJRSTANB[VAMP_AND_DO] * EC_MID_Return
-               + R_SJRSTANC[VAMP_AND_DO] * EC_Stan_Rip_Rtn
-               + R_SJRSTAND[VAMP_AND_DO] * EC_R_SJRSTAND)
-               /(C_SJRSTAN[VAMP_AND_DO]
+               + R_SJRSTANA[SJR_WQ2] * EC_MID_Return
+               + R_SJRSTANB[SJR_WQ2] * EC_MID_Return
+               + R_SJRSTANC[SJR_WQ2] * EC_Stan_Rip_Rtn
+               + R_SJRSTAND[SJR_WQ2] * EC_R_SJRSTAND)
+               /(C_SJRSTAN[SJR_WQ2]
 !                 + OIDInstreamToBeMet*TAF_cfs
-                 +D_SJRSTAN[VAMP_AND_DO] + VernMinRel_p)
+                 +D_SJRSTAN[SJR_WQ2] + VernMinRel_p)
                }
      case otherwise {
                condition always
@@ -752,27 +752,27 @@ define VERNWQNONPULSE {
 
      case NonPulsePlusDO {
           condition always    !June thru September
-          value (C_SJRSTAN[VAMP_AND_DO] * EC_637_NP
+          value (C_SJRSTAN[SJR_WQ2] * EC_637_NP
                 + (VernMinRel_np /*+ OIDInstreamToBeMet*TAF_cfs*/) * EC_637_NP
-                + R_SJRVERA[VAMP_AND_DO] * EC_R_SJRVERA
-                + R_SJRVERWest[VAMP_AND_DO] * EC5_R_SJRVER)
-                /(C_SJRVER[VAMP_AND_DO]
+                + R_SJRVERA[SJR_WQ2] * EC_R_SJRVERA
+                + R_SJRVERWest[SJR_WQ2] * EC5_R_SJRVER)
+                /(C_SJRVER[SJR_WQ2]
                   + VernMinRel_np ! + OIDInstreamToBeMet*TAF_cfs
-                  +D_SJRVER[VAMP_AND_DO])
+                  +D_SJRVER[SJR_WQ2])
                 }}
 
 define VERNWQPULSE {
      case APRILMAY {
           condition month >= apr .and. month <= may
-          value (C_SJRSTAN[VAMP_AND_DO] * EC_637_P
+          value (C_SJRSTAN[SJR_WQ2] * EC_637_P
           	+ VernMinRel_p * EC_637_P
 !                + OIDInstreamToBeMet*TAF_cfs * EC_637_P
-                + R_SJRVERA[VAMP_AND_DO] * EC_R_SJRVERA
-                + R_SJRVERWest[VAMP_AND_DO] * EC5_R_SJRVER)
-                /(C_SJRVER[VAMP_AND_DO]
+                + R_SJRVERA[SJR_WQ2] * EC_R_SJRVERA
+                + R_SJRVERWest[SJR_WQ2] * EC5_R_SJRVER)
+                /(C_SJRVER[SJR_WQ2]
                 + VernMinRel_p
 !                  + OIDInstreamToBeMet*TAF_cfs
-                  +D_SJRVER[VAMP_AND_DO])
+                  +D_SJRVER[SJR_WQ2])
                 }
      case otherwise {
           condition always
@@ -1061,52 +1061,52 @@ define VERNWQPULSEDV {alias VERNWQPULSE kind 'Salinity-EC' units 'umhos/cm'}
 define C_MERCED2_NP_DV{std kind 'Flow-Channel' units 'cfs'}
 define C_MERCED2_P_DV {std kind 'Flow-Channel' units 'cfs'}
 goal setC_MERCED2_NPDV { C_MERCED2_NP_DV = C_MERCED2[SJR_WQ1] + MercedRelease_Oct*TAF_cfs}
-goal setC_MERCED2_PDV { C_MERCED2_P_DV = C_MERCED2[VAMP_AND_DO] }
+goal setC_MERCED2_PDV { C_MERCED2_P_DV = C_MERCED2[SJR_WQ2] }
 
 define C_TUOL_NP_DV{std kind 'Flow-Channel' units 'cfs'}
 define C_TUOL_P_DV {std kind 'Flow-Channel' units 'cfs'}
 goal setC_TUOL_NPDV { C_TUOL_NP_DV = C_TUOL[SJR_WQ1] }
-goal setC_TUOL_PDV { C_TUOL_P_DV = C_TUOL[VAMP_AND_DO] }
+goal setC_TUOL_PDV { C_TUOL_P_DV = C_TUOL[SJR_WQ2] }
 
 define C_SJRMSCycle2 {std kind 'Flow-Cycle2' units 'cfs'}
 define C_SJRMSCycle5 {std kind 'Flow-Cycle5' units 'cfs'}
 goal setC_SJRMS_Cyc2 { C_SJRMSCycle2 = C_SJRMS[SJR_WQ1] }
-goal setC_SJRMS_Cyc5 { C_SJRMSCycle5 = C_SJRMS[VAMP_AND_DO] }
+goal setC_SJRMS_Cyc5 { C_SJRMSCycle5 = C_SJRMS[SJR_WQ2] }
 
 define C_SJRMS_NP_DV{std kind 'Flow-Channel' units 'cfs'}
 define C_SJRMS_P_DV {std kind 'Flow-Channel' units 'cfs'}
 goal setC_SJRMS_NPDV { C_SJRMS_NP_DV = C_SJRMS[SJR_WQ1] }
-goal setC_SJRMS_PDV { C_SJRMS_P_DV = C_SJRMS[VAMP_AND_DO] }
+goal setC_SJRMS_PDV { C_SJRMS_P_DV = C_SJRMS[SJR_WQ2] }
 
 define C_SJRMERCycle2 {std kind 'Flow-Cycle2' units 'cfs'}
 define C_SJRMERCycle5 {std kind 'Flow-Cycle5' units 'cfs'}
 goal setC_SJRMER_Cyc2 { C_SJRMERCycle2 = C_SJRMER[SJR_WQ1] }
-goal setC_SJRMER_Cyc5 { C_SJRMERCycle5 = C_SJRMER[VAMP_AND_DO] }
+goal setC_SJRMER_Cyc5 { C_SJRMERCycle5 = C_SJRMER[SJR_WQ2] }
 
 define C_SJRMER_NP_DV{std kind 'Flow-Channel' units 'cfs'}
 define C_SJRMER_P_DV {std kind 'Flow-Channel' units 'cfs'}
 goal setC_SJRMER_NPDV { C_SJRMER_NP_DV = C_SJRMER[SJR_WQ1] + MercedRelease_Oct*TAF_cfs}
-goal setC_SJRMER_PDV { C_SJRMER_P_DV = C_SJRMER[VAMP_AND_DO] }
+goal setC_SJRMER_PDV { C_SJRMER_P_DV = C_SJRMER[SJR_WQ2] }
 
 define C_SJRTUOLCycle2 {std kind 'Flow-Cycle2' units 'cfs'}
 define C_SJRTUOLCycle5 {std kind 'Flow-Cycle5' units 'cfs'}
 goal setC_SJRTUOL_Cyc2 { C_SJRTUOLCycle2 = C_SJRTUOL[SJR_WQ1] }
-goal setC_SJRTUOL_Cyc5 { C_SJRTUOLCycle5 = C_SJRTUOL[VAMP_AND_DO] }
+goal setC_SJRTUOL_Cyc5 { C_SJRTUOLCycle5 = C_SJRTUOL[SJR_WQ2] }
 
 define C_SJRTUOL_NP_DV{std kind 'Flow-Channel' units 'cfs'}
 define C_SJRTUOL_P_DV {std kind 'Flow-Channel' units 'cfs'}
 goal setC_SJRTUOL_NPDV { C_SJRTUOL_NP_DV = C_SJRTUOL[SJR_WQ1] + MercedRelease_Oct*TAF_cfs}
-goal setC_SJRTUOL_PDV { C_SJRTUOL_P_DV = C_SJRTUOL[VAMP_AND_DO] }
+goal setC_SJRTUOL_PDV { C_SJRTUOL_P_DV = C_SJRTUOL[SJR_WQ2] }
 
 define C_SJRMAZECycle2 {std kind 'Flow-Cycle2' units 'cfs'}
 define C_SJRMAZECycle5 {std kind 'Flow-Cycle5' units 'cfs'}
 goal setC_SJRMAZE_Cyc2 { C_SJRMAZECycle2 = C_SJRMAZE[SJR_WQ1] }
-goal setC_SJRMAZE_Cyc5 { C_SJRMAZECycle5 = C_SJRMAZE[VAMP_AND_DO] }
+goal setC_SJRMAZE_Cyc5 { C_SJRMAZECycle5 = C_SJRMAZE[SJR_WQ2] }
 
 define C_SJRMAZE_NP_DV{std kind 'Flow-Channel' units 'cfs'}
 define C_SJRMAZE_P_DV {std kind 'Flow-Channel' units 'cfs'}
 goal setC_SJRMAZE_NPDV { C_SJRMAZE_NP_DV = C_SJRMAZE[SJR_WQ1] + MercedRelease_Oct*TAF_cfs }
-goal setC_SJRMAZE_PDV { C_SJRMAZE_P_DV = C_SJRMAZE[VAMP_AND_DO] }
+goal setC_SJRMAZE_PDV { C_SJRMAZE_P_DV = C_SJRMAZE[SJR_WQ2] }
 
 define C_STANGDWN_NP_DV{std kind 'Flow-Channel' units 'cfs'}
 define C_STANGDWN_P_DV {std kind 'Flow-Channel' units 'cfs'}
@@ -1117,7 +1117,7 @@ define C_STANRIPN_P_DV {std kind 'Flow-Channel' units 'cfs'}
 define C_SJRSTANCycle2 {std kind 'Flow-Cycle2' units 'cfs'}
 define C_SJRSTANCycle5 {std kind 'Flow-Cycle5' units 'cfs'}
 goal setC_SJRSTAN_Cyc2 { C_SJRSTANCycle2 = C_SJRSTAN[SJR_WQ1] }
-goal setC_SJRSTAN_Cyc5 { C_SJRSTANCycle5 = C_SJRSTAN[VAMP_AND_DO] }
+goal setC_SJRSTAN_Cyc5 { C_SJRSTANCycle5 = C_SJRSTAN[SJR_WQ2] }
 
 define C_SJRSTAN_NP_DV{std kind 'Flow-Channel' units 'cfs'}
 define C_SJRSTAN_P_DV {std kind 'Flow-Channel' units 'cfs'}
@@ -1176,7 +1176,7 @@ goal setC_STANGDWN_PDV {
 	lhs C_STANGDWN_P_DV
 	case AprilOrMay {
 		condition	month == apr .or. month == may
-		rhs		C_STANGDWN[VAMP_AND_DO] + C_MELONMIN_P
+		rhs		C_STANGDWN[SJR_WQ2] + C_MELONMIN_P
 	}
 	case otherwise {
 		condition	always
@@ -1204,7 +1204,7 @@ goal setC_STANRIPN_PDV {
 	lhs C_STANRIPN_P_DV
 	case AprilOrMay {
 		condition	month == apr .or. month == may
-		rhs		C_STANRIPN[VAMP_AND_DO] + C_MELONMIN_P
+		rhs		C_STANRIPN[SJR_WQ2] + C_MELONMIN_P
 	}
 	case otherwise {
 		condition	always
@@ -1232,7 +1232,7 @@ goal setC_SJRSTAN_PDV {
 	lhs C_SJRSTAN_P_DV
 	case AprilOrMay {
 		condition	month == apr .or. month == may
-		rhs		C_SJRSTAN[VAMP_AND_DO] + C_MELONMIN_P
+		rhs		C_SJRSTAN[SJR_WQ2] + C_MELONMIN_P
 	}
 	case otherwise {
 		condition	always
@@ -1263,7 +1263,7 @@ goal setC_SJRVER_PDV {
 	lhs C_SJRVER_P_DV
 	case AprilOrMay {
 		condition	month == apr .or. month == may
-		rhs		C_SJRVER[VAMP_AND_DO] + C_MELONMIN_P
+		rhs		C_SJRVER[SJR_WQ2] + C_MELONMIN_P
 	}
 	case otherwise {
 		condition	always
@@ -1275,5 +1275,5 @@ define MercedRelOctDV {alias MercedRelease_Oct*TAF_cfs  kind 'temp' units 'cfs'}
 define VrnMn_rqtobmtDV {alias VernMin_reqtobemet  kind 'temp' units 'cfs'}
 !define OIDInstrmToBMDV {alias OIDInstreamToBeMet*TAF_cfs kind 'temp' units 'cfs'}
 !define AL_C_SJRVERchk2 {alias C_SJRVER[SJR_WQ1] kind 'temp' units 'cfs'}
-!define AL_C_SJRVERchk4 {alias C_SJRVER[VAMP_AND_DO] kind 'temp' units 'cfs'}
+!define AL_C_SJRVERchk4 {alias C_SJRVER[SJR_WQ2] kind 'temp' units 'cfs'}
 

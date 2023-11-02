@@ -12,10 +12,10 @@ define daysX2_chs {
           value          0.    }
      case Sep_FWS_W {
           condition      month == SEP .and. wyt_SAC <= 1 .and. FallX2 == 1 ! FWS BO (Dec 08) Action 4 - Fall X2 for Wet Years
-          value          daysin    }
+          value          0.    }
      case OctNov_FWS_W {
           condition      month <= NOV .and. wyt_SAC <= 1 .and. FallX2 == 1 ! FWS BO (Dec 08) Action 4 - Fall X2 for Wet Years
-          value          daysin    }
+          value          0.    }
      case StandardOff {
           condition      always
           value          0.    }

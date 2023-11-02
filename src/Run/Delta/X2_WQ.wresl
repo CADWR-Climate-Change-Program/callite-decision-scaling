@@ -1,0 +1,13 @@
+/** X2_BO_WQ.WRESL
+
+Nazrul Islam, 11/05/10
+
+*/
+define km_PA {value 80. }     ! km to Confluence (Sac & SJR)    
+define km_Aug {value 82. }     ! km to Confluence (Sac & SJR)  
+
+Include 'Ann\lastX2_ANN_KM.wresl'
+INCLUDE 'Ann\X2days_WQ.wresl'
+
+!Include 'Ann\X2req_ann_KM.wresl'
+!Include 'final-mrdo.wresl'

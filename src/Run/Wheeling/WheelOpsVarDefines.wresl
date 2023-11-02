@@ -9,6 +9,7 @@ define C_Wkytn_m {std kind 'FLOW' UNITS 'CFS'}
 define D_Spring_m {std kind 'FLOW' UNITS 'CFS'}  
 define C_Kswck_m {std kind 'FLOW' UNITS 'CFS'}
 define C_Nimbus_m {std kind 'FLOW' UNITS 'CFS'}
+define C_THERM_ITP {lower -10000. kind 'FLOW-CHANNEL' UNITS 'CFS'}
 
 define C_Wkytn_whlcv {std kind 'FLOW-WHEEL' UNITS 'CFS'} 
 define D_Spring_whlcv {std kind 'FLOW-WHEEL' UNITS 'CFS'} 

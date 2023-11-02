@@ -31,10 +31,10 @@ define MayExportRest {value max(800.0,3000.*16.0/daysin + PulseExpRes*0.5*15.0/d
 */
 
 !Retrieve May export restriction as pre-processed by CalSim
-define MayExportRest_b2 {timeseries kind 'Export-Restriction' units 'cfs'}
+define MayExportRest_b2 {value 99999.}
 
 define MayExportRestdv {alias MayExportRest_b2 kind 'May-Export-Restrict' units 'cfs'}
-
+/*
 ! Monthly VAMP export restriction for CVP during May 16-31
 goal b2action4_1 {
   lhs D_Jones_cvp + D_Banks_cvp
@@ -42,8 +42,8 @@ goal b2action4_1 {
     condition    month==MAY .and. int(B2Action4)==1 .and. int(B2Action4On)==1
     rhs         MayExportRest_b2
     lhs<rhs     penalty 0 }
-}
-
+}*/
+/*
 !for output only:
 define b2_4_1cap {std kind 'OUTPUT' units 'CFS'}
 goal setb2_4_1 {
@@ -59,3 +59,4 @@ goal setb2_4_1 {
     lhs>rhs    constrain
     lhs<rhs    constrain}
 }
+*/

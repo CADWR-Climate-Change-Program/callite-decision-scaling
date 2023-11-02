@@ -1342,3 +1342,42 @@ define wyt_ann {
     	condition always
     	value mod_wyt_SAC}
 }
+
+define wyt_SJR_stan { ! TO BE UPDATED ! SP MBK
+    case OCTtoFeb {
+         condition  month >= OCT .and. month <= FEB
+         select     SJRindex_0
+         from       wytypes
+         where      wateryear=wateryear - 1.}
+    case rest {
+         condition  always
+         select     SJRindex_0
+         from       wytypes
+         where      wateryear=wateryear}
+}
+
+define wyt_Driest {
+    case OCTtoJAN {
+        condition   month >= OCT .and. month <= JAN
+        select      DriestYrs
+        from        wytypes
+        where       wateryear=wateryear-1.}
+    case rest {
+        condition   always
+        select      DriestYrs
+        from        wytypes
+        where       wateryear=wateryear }
+}
+
+define prev_wyt_SAC {
+    case OCTtoJAN {
+         condition  month >= OCT .and. month <= JAN
+         select     SACindex_0
+         from       wytypes
+         where      wateryear=wateryear - 2.}
+    case rest {
+         condition  always
+         select     SACindex_0
+         from       wytypes
+         where      wateryear=wateryear - 1.}
+}

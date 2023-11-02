@@ -1,0 +1,67 @@
+! Repeat_ITP.wresl
+
+define NMFS_MaxExp_ONdv {alias NMFS_MaxExp_ONdv[DELTA3] kind 'NMFS' units 'cfs'}
+
+define initial_30TAF_cut_reduction_ {std kind 'SJRIE' units 'TAF'}
+goal set_initial_30TAF_cut_reduction_ {initial_30TAF_cut_reduction_ = initial_30TAF_cut_reduction_[DELTA3]}
+        
+define SWPITP_ExpCut_SJRIE_ {std kind 'flow-delivery' units 'CFS'}
+goal set_SWPITP_ExpCut_SJRIE_ {SWPITP_ExpCut_SJRIE_ = SWPITP_ExpCut_SJRIE_[DELTA3]}
+
+define release_SWPITP_OroCarryover_ {std kind 'carryover-release' units 'cfs'}
+goal set_release_SWPITP_OroCarryover_ {release_SWPITP_OroCarryover_ = release_SWPITP_OroCarryover_[DELTA3]}
+
+define remain_SWPITP_OroCarryover_ {std kind 'carryover-remain' units 'taf'}
+goal set_remain_SWPITP_OroCarryover_ {remain_SWPITP_OroCarryover_ = remain_SWPITP_OroCarryover_[DELTA3]}
+
+define ITP_Oro_Spill_of_Rem_ {alias ITP_Oro_Spill_of_Rem_[DELTA3] kind 'carryover-spill' units 'taf'}
+
+define SWPITP_ExpCutX2dv {std kind 'flow-delivery' units 'CFS'}
+goal set_SWPITP_ExpCutX2dv {SWPITP_ExpCutX2dv = SWPITP_ExpCutX2dv[DELTA3]}
+
+define SWPITP_ExpCut_Carryover_ {std kind 'flow-delivery' units 'cfs'}
+goal set_SWPITP_ExpCut_Carryover_ {SWPITP_ExpCut_Carryover_ = SWPITP_ExpCut_Carryover_[DELTA3]}
+
+define remain_SWPITP_AugExpCut_ {std kind 'flex-account-remain' units 'taf'}
+goal set_remain_SWPITP_AugExpCut_ {remain_SWPITP_AugExpCut_ = remain_SWPITP_AugExpCut_[DELTA3]}
+
+define SWPITP_ExpCut_X2_used_ {std kind 'Flex-Account-Used' units 'TAF'}
+goal set_SWPITP_ExpCut_X2_used_ {SWPITP_ExpCut_X2_used_ = SWPITP_ExpCut_X2_used_[DELTA3]}
+
+define ITP_Unused_ {alias ITP_Unused_[DELTA3] kind 'carryover' units 'taf'}
+
+define SWPITP_ExpCut_Carryover_total_ {std kind 'flow-delivery' units 'taf'}
+goal set_SWPITP_ExpCut_Carryover_total_ {SWPITP_ExpCut_Carryover_total_ = SWPITP_ExpCut_Carryover_total_[DELTA3]} 
+
+define SWPITP_ExpCut_Final_        {alias SWPITP_ExpCut_Final_[DELTA3] kind 'flow-delivery' units 'cfs'}
+define SWPITP_ExpCut_Outflow_      {alias SWPITP_ExpCut_Outflow_[DELTA3] kind 'flow-delivery' units 'cfs'}
+define SWPITP_ExpCut_Credit_       {alias SWPITP_ExpCut_Credit_[DELTA3] kind 'flow-delivery' units 'cfs'}
+define SWPITP_ExpCut_Carryover_taf {alias SWPITP_ExpCut_Carryover_*cfs_taf  kind 'flow-delivery' units 'taf'}
+define SWPITP_ExpCut_Outflow_taf   {alias SWPITP_ExpCut_Outflow_*cfs_taf kind 'flow-delivery' units 'taf'}
+define SWPITP_ExpCut_Credit_taf    {alias SWPITP_ExpCut_Credit_*cfs_taf kind 'flow-delivery' units 'taf'}
+
+define ITP_Oro_Spill_ {alias ITP_Oro_Spill_[DELTA3] kind 'carryover-spill' units 'taf'}
+goal set_SWPITP_OroCarryover_ {SWPITP_OroCarryover_ = SWPITP_OroCarryover_[DELTA3]}
+
+!Total ITP export cuts (SJRIE and 100 TAF)
+define SWPITP_ExpCutdv {alias SWPITP_ExpCut_SJRIE_ +  SWPITP_ExpCutX2dv + SWPITP_ExpCut_Final_ kind 'flow-delivery' units 'CFS'}
+
+define SMSCG_Oro_Rel_for_DO_ {alias SMSCG_Oro_Rel_for_DO_[DELTA3] kind 'ITP-Action' units 'cfs'}
+define SMSCG_Carryover_Rel_ {alias SMSCG_Carryover_Rel_[DELTA3] kind 'ITP-Action' units 'cfs'}
+
+goal reduceD419_SWP {D419_SWP < D419_SWP[DELTA2] - SWPITP_ExpCut_SJRIE_ - SWPITP_ExpCutX2dv - SWPITP_ExpCut_Final_}
+
+!goal zeroWheeling {
+!    lhs D419_CVC + D419_CVPWHL
+!    case ITP {
+!        condition SWPITP_ExpCutdv[DELTA3]>0. .or. SMSCG_Oro_Rel_for_DO_[DELTA3] + SMSCG_Carryover_Rel_[DELTA3]>0.
+!        rhs 0.  }
+!}
+goal limitWhlSurp {
+	lhs D419_CVCSURP + D419_WHLSURP
+    case ITP {
+        condition SWPITP_ExpCutdv[DELTA3]>0. .or. SMSCG_Oro_Rel_for_DO_[DELTA3] + SMSCG_Carryover_Rel_[DELTA3]>0.
+        rhs 0. }!C407_CVP[DELTA2]+C407_SWP[DELTA2]
+}
+
+goal fixC203_ITP {C203_ITP = C203_ITP[DELTA3]}

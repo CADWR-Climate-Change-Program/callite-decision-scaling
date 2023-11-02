@@ -26,18 +26,11 @@ goal C_TUOLtotal {C_TUOL=C_TUOL_MIF+C_TUOL_ITUOLC+C_TUOL_EXC}
 define C548 {lower 0 upper 99999 kind 'FLOW-CHANNEL' units 'CFS'} !Supply to Turlock Area Ag
 define C550 {lower 0 upper 99999 kind 'FLOW-CHANNEL' units 'CFS'} !Supply to Lands West of Turlock Area
 define C_MERCED1 {lower 0 upper 99999 kind 'FLOW-CHANNEL' units 'CFS'} !Merced R at POD to Merced ID to Snelling, C561 and C562 combined
-define minflow_C_MERCED1B {timeseries kind 'FLOW-MIN-REQUIRED' units 'TAF' convert 'CFS'} !MINFLOW_C561
-define minflow_C_MERCED1C {timeseries kind 'FLOW-MIN-REQUIRED' units 'TAF' convert 'CFS'} !MINFLOW_C562
+define minflow_C_MERCED1B {timeseries kind 'FLOW-MIN-REQUIRED' units 'CFS'} !MINFLOW_C561
+define minflow_C_MERCED1C {timeseries kind 'FLOW-MIN-REQUIRED' units 'CFS'} !MINFLOW_C562
 define C_MERCED1_MIF {std kind 'FLOW-MIN-INSTREAM' units 'CFS'}  !MIF set in Merced_dems.wresl, since deliv estimate required beforehand
 define C_MERCED1_EXC {std kind 'FLOW-EXCESS-INSTREAM' units 'CFS'}
-goal C_MERCED1total {!C_MERCED1=C_MERCED1_MIF+C_MERCED1_EXC}  added shortage term to avoid crashes
-	lhs C_MERCED1
-	rhs C_MERCED1_MIF+C_MERCED1_EXC
-	lhs>rhs constrain
-	lhs<rhs penalty 5000
-	}
-define short_C_MERCED1total {alias C_MERCED1_MIF+C_MERCED1_EXC - C_MERCED1 kind 'Shortage-FLOW' units 'CFS'}
-
+goal C_MERCED1total {C_MERCED1=C_MERCED1_MIF+C_MERCED1_EXC}
 define C_MERCED2 {lower 0 upper 99999 kind 'FLOW-CHANNEL' units 'CFS'} !Merced R Abv San Joaquin
 define C570 {lower 0 upper 99999 kind 'FLOW-CHANNEL' units 'CFS'} !Merced River Delivery to Refuge
 define C573 {lower 0 upper 99999 kind 'FLOW-CHANNEL' units 'CFS'} !Delivery to DAU212

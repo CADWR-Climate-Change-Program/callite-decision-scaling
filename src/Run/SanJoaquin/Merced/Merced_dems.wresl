@@ -145,7 +145,7 @@ Usable water = Inflow (taf) - Minimum channel flow (taf)
 define MercedForTS_part {
     case aprthrusep {
         condition   month >= apr .and. month <= sep
-        sum(i=apr-month,12-month,1) (I_MCLRE(i)+I_MERCED1C(i)-minflow_C_MERCED1C(i))*cfs_taf(i) }
+               sum(i=apr-month,12-month,1) (I_MCLRE(i)+I_MERCED1C(i)-minflow_C_MERCED1C(i))*cfs_taf(i) }
     case otherwise {
         condition   always
         value 0. }

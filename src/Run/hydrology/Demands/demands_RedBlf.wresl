@@ -25,9 +25,9 @@ define con_d104_psc {select contract from nodcvpcontract where contractor=3}
 define con_58_total {select contract from nodcvpcontract where contractor=4} 
  
 ! Define delivery target based on minimum of adjusted contract demands and diversion requirement
-define target_d104_pag {value min(ad_d104_pag, demand_prj_58*con_d104_pag/con_58_total)}
-define target_d104_pmi {value min(ad_d104_pmi, demand_prj_58*con_d104_pmi/con_58_total)}
-define target_d104_psc {value min(ad_d104_psc, demand_prj_58*con_d104_psc/con_58_total)}
+define target_d104_pag {value ad_d104_pag}
+define target_d104_pmi {value ad_d104_pmi}
+define target_d104_psc {value ad_d104_psc}
 
 ! Limits deliveries to targets
 goal limit_d104_pag  {d104_pag < target_d104_pag}
@@ -64,7 +64,8 @@ goal limitD172_1 {D172_pag < target_D17201 + L17201}
 goal splitD172 {D172 = D172_pag}
   
 /****** WBA7N ******/ 
-goal setL17401 {L17401 = D174 * (ConvLs_17401 + ConvLs_172)}  !set conveyance loss
+goal setL17401 {L17401 = D174 * (ConvLs_17401 + ConvLs_172)}  !set conveyance loss4
+
 
 define D174_pag {std kind 'FLOW-DELIVERY' units 'CFS'}
 

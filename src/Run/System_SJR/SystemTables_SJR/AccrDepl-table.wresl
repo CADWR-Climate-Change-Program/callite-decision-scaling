@@ -28,7 +28,11 @@ define AD_SJRSTAN {std kind 'FLOW-ACCRDEPL' units 'CFS'}
 goal setADSJRSTAN { AD_SJRSTAN = R_SJRSTANA + R_SJRSTANB + R_SJRSTANC + R_SJRSTAND }
 
 define AD_SJRVER {std kind 'FLOW-ACCRDEPL' units 'CFS'}
-goal setADSJRVER { AD_SJRVER = R_SJRVERA + R_SJRVERWEST }
+!goal setADSJRVER { AD_SJRVER = R_SJRVERA + R_SJRVERWEST }
+goal setADSJRVER {lhs AD_SJRVER  rhs R_SJRVERA + R_SJRVERWEST lhs>rhs penalty 999999 lhs<rhs penalty 999999}
+define AD_SJRVER_check {lower unbounded upper unbounded kind 'FLOW-ACCRDEPL' units 'CFS'}
+goal setAD_SJRVER_check {AD_SJRVER_check = AD_SJRVER - R_SJRVERA - R_SJRVERWEST}
+
 
 define AD_CALAV {upper unbounded lower unbounded kind 'FLOW-ACCRDEPL' units 'CFS'}
 goal setADCALAV { AD_CALAV = R_CALAV - L_CALAVA - L_CALAVB }
@@ -37,10 +41,11 @@ define AD_SJRMER {upper unbounded lower unbounded kind 'FLOW-ACCRDEPL' units 'CF
 goal setADSJRMER { AD_SJRMer = C619 + R_SJRMer}
                                 
 define AD_SJRCAL {std kind 'FLOW-ACCRDEPL' units 'CFS'}
-goal setADSJRCAL { AD_SJRCAL = R_SJRCAL }
-
+goal setADSJRCAL { AD_SJRCAL = R_SJRCAL  }
+define D514A {timeseries kind 'FLOW-DELIVERY' units 'CFS'} !Riparian Diversion from Delta for COSMA Ag DWSP
+define D514B {timeseries kind 'FLOW-DELIVERY' units 'CFS'} !DWSP Diversion M&I
 !define AD_SJRCalALL {std kind 'FLOW-ACCRDEPL' units 'CFS'}
-goal setADSJRCalALL { AD_SJRCalALL = C_CALAV + AD_SJRCAL - D_CALAV }
+goal setADSJRCalALL { AD_SJRCalALL = C_CALAV + AD_SJRCAL  -D514A - D514B}
 
 define AD_STANRIPN {std kind 'FLOW-ACCRDEPL' units 'CFS'}
 goal setADSTANRIPN { AD_STANRIPN = R_STANRIPNA + R_STANRIPNB + R_STANRIPNC }

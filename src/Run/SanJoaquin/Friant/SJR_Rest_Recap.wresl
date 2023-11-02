@@ -1,0 +1,57 @@
+! SJR_Rest_Recap.wresl
+
+! Retrieve SJR Restoration Settlement flow requirements.
+! This file is included in full system cycles and uses average monthly values
+! for the restoration flow requirements.  This allows the solution for the overall
+! volume movement of water in the month.  
+
+define SJRR_rel {value SJRR_mon}
+
+define SJRR_relDV {alias SJRR_rel kind 'flow-min-requirement' units 'cfs'}
+
+! restrict the release from Friant to be the restoration release target
+! this value includes Gravelly Ford diversions and losses.  Set the segment
+! of flow below Gravelly Ford as the actual restoration flow - this will be
+! passed on to the restoration channel in SJR_Restrict.wresl
+goal boundC18main { C_MLRTNM < SJRR_rel  }
+define SJRR_L_SJRcb {value max(0., min(SJRR_rel - C_MLRTN_min*taf_cfs, 0.05*(SJRR_rel - C_MLRTN_min*taf_cfs) + 95.))}
+goal setC603_mainSJRR {C_GRAVF_mainSJRR < max(0.,SJRR_rel - C_MLRTN_min*taf_cfs - SJRR_L_SJRcb)}
+
+goal set_D_GRAVF { D_GRAVF < 0.4 * min(SJRR_rel, C_MLRTN_min * taf_cfs) }
+goal set_L_GRAVF { L_GRAVF = min(SJRR_rel, C_MLRTN_min * taf_cfs) - D_GRAVF }
+
+goal lim_I18_rest_bal {I18_rest_bal < 0.}
+
+goal set_C18A { C_MLRTNA < Fr_snow_rel * taf_cfs}
+
+! in some rare cases, upper SJR operations get modified in the final cycle
+! fix final cycle operations to DELTA3 cycle results
+goal fixC605A {c_sjrrest = c_sjrrest[B2_BO2]}
+goal fixC605B {c_sjrrest = c_sjrrest[B2_BO2]}
+goal fixC605C {c_sjrrest = c_sjrrest[B2_BO2]}
+
+!*********************************************************************************************
+! SJRR Recapture ops
+! Fix recapture deliveries on the mainstem SJR to their previous cycle solution
+! Enable remaining SJRR flow to proceed to the Delta for recapture by setting D639B to zero
+
+! Calculate monthly weighted Millerton flood release (in April this is from the independent 
+! non-pulse and pulse period sjrr req'ts, not on the combined overall average release req't)
+define Friant_FloodRels {
+    case April {
+        condition month==APR 
+        value 14.*(C_MLRTNA[SJR_WQ1] + C_MLRTNF[SJR_WQ1])/30. + 16.*(C_MLRTNA[SJR_WQ2] + C_MLRTNF[SJR_WQ2])/30.}
+    case otherwise {
+        condition always
+        value C_MLRTNA[SJR_WQ1] + C_MLRTNF[SJR_WQ1]}
+}
+define Friant_FloodRels_ {alias Friant_FloodRels kind 'SJRR-flow' units 'cfs'}
+
+goal limitD620D {D620D = D620D[B2_BO2]}
+goal limitD639A {D639A = D639A[B2_BO2]}
+goal limitD630C {D630C = D630C[B2_BO2]}
+
+define LwrSJR_Recap_ {alias D620D + D639A + D630C kind 'SJRR-Recap' units 'cfs'}
+
+goal D639B_lmt1 { D639B = 0.}  
+

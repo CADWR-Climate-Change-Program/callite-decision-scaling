@@ -46,11 +46,24 @@ define trinity_importdv {alias trinity_import2 units 'cfs'}
 ! Split the Clear Creek tunnel into an import arc and an excess arc that can be used to aid Delta and Exports
 define D_ClearTu_import {std kind 'FLOW-DELIVERY' units 'CFS'}
 define D_ClearTu_exc    {std kind 'FLOW-DELIVERY' units 'CFS'}
+
 goal D_ClearTu_split {D_ClearTu = D_ClearTu_import + D_ClearTu_exc}
+!define D100 {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
+
+!define D_ClearTuSV   {std kind 'FLOW-DELIVERY' units 'CFS'}
+!goal D100FIX {D_ClearTuSV = D100 } ! Fixed to check other issues. to be dynamic later
 
 goal set_import {D_ClearTu_import < trinity_import2}
 
-
+/*
+goal fixD100_ {
+  lhs     D_ClearTu
+  case Onlyone {
+  condition always 
+  rhs     D100
+  lhs>rhs penalty 0
+  lhs<rhs penalty 0}
+}*/
  
 
 

@@ -10,9 +10,7 @@ Include all SWP delivery logic files.
 !Step 2: Define delivery parameters for each contractor:
 INCLUDE '\demands\swp_arcsplit.wresl'
 
-!Step 3: Keep a running account of actual deliveries made to each contractor
-INCLUDE '\deliveries\sumswpdel.wresl'
-INCLUDE '\deliveries\swp_delivery_summary.wresl'
+
 
 !Step 1: Determine SWP allocation (use either WSI-DI or CAM):
   !Option 1a - WSI-DI Procedure:
@@ -27,6 +25,10 @@ INCLUDE '\wsi_di\delcar_swp.wresl'
 
 !Step 2b: Define demands for each contractor
 INCLUDE '\demands\swp_demands_s.wresl'
+
+!Step 3: Keep a running account of actual deliveries made to each contractor
+INCLUDE '\deliveries\sumswpdel.wresl'
+INCLUDE '\deliveries\swp_delivery_summary.wresl'
 
 !Step 4: Distribute SWP allocation to each contractor
 INCLUDE '\allocation\swp_contractor_perdel_A.wresl'

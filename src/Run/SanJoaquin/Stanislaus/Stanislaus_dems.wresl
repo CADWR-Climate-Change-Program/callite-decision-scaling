@@ -25,7 +25,14 @@ year.  The two requests in the monthly demand imposed on CP 520.
 Define annual delivery quantity based on February forecast, and monthly distributions
 */
 ! Define SEWD annually M & I delivery
-define SEWD_PMIyr {select  SEWD from stan_yr given NMF = NMforecast1 use linear }
+define SEWD_PMIyr {!select  SEWD from stan_yr given NMF = NMforecast1 use linear }
+Case W_AN_BN {
+		condition wyt_SJR_stan < 3.5
+		value 75. }
+	case otherwise {
+		condition always
+		value 0. }
+		}
 
 !define AL_sewdpmiyr {alias sewd_pmiyr kind 'temp' units 'taf'}
 
@@ -60,11 +67,21 @@ define CSJSEWD_PAGyr {
 !        value 0. }
 !    case below2500 {
 !        condition NMforecast1 >= 2000.0 .and. NMforecast1 <=2500.0
-        select CSJSEWD from stan_yr given NMF = NMforecast1 use linear}
+!        select CSJSEWD from stan_yr given NMF = NMforecast1 use linear}
 !    case otherwise {
 !        condition always
 !        value 80.0 }
 !}
+	case W_AN_BN {
+		condition wyt_SJR_stan < 3.5
+		value 80. }
+	case D {
+		condition wyt_SJR_stan < 4.5
+		value 49. }
+	case otherwise {
+		condition always
+		value 0. }
+	}
 define CSJSEWD_PAGyr_a {alias CSJSEWD_PAGyr kind 'temp' units 'taf'}
 
 ! Retrieve predefined CUAW timeseries values for SJR demand
@@ -335,8 +352,11 @@ goal set_dloss_STANRIPNA_pag {dloss_STANRIPNA_pag = D_STANRIPN * (1.-(1.1*.75))}
 define dperc_STANRIPNA_pag {value cuaw_STANRIPNA_pag * .3}
 ! Set limits on Satnislaus River river diversion delivery
 goal set_D_STANRIPN_riv {D_STANRIPNA_riv < 1.1*CUAW_STANRIPNA_pag + dperc_STANRIPNA_pag}
+
 ! Set limits on Stanislaus River return flow
-goal set_R_SJRSTANc {R_SJRSTANc = dloss_STANRIPNA_pag}
+!goal set_R_SJRSTANc {R_SJRSTANc = dloss_STANRIPNA_pag}
+goal set_R_SJRSTANc  {lhs R_SJRSTANc  rhs dloss_STANRIPNA_pag lhs>rhs penalty 99999 lhs<rhs penalty 99999} !-WA, softly fixed
+
 
 /*
 Stanislaus River Diversions M&I pumping- all met by GW (A)

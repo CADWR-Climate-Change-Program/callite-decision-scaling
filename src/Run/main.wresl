@@ -54,11 +54,12 @@ SEQUENCE CYCLE5 {
      condition (month==APR .or. month==MAY) .and. int(Dynamic_SJR)==1
     order   5
     }
-SEQUENCE CYCLE6 {
+/*SEQUENCE CYCLE6 {
     model   VAMP_AND_DO
-    condition month>=APR .and. month<=SEP .and. int(Dynamic_SJR)==1
+    condition month>=APR .and. month<=SEP .and.  int(Dynamic_SJR)==1
     order   6
-    }   
+    } */  
+ 
 SEQUENCE CYCLE7 {
     model   Upstream
     order   7
@@ -67,24 +68,27 @@ SEQUENCE CYCLE8 {
     model   BASE
     order   8
     }
+
 SEQUENCE CYCLE9 {
     model   B2_BO
     order   9
-    }    
-/***SEQUENCE CYCLE9 {
-    model   Daily1
-    order   9
-    }    
-SEQUENCE CYCLE10 {
-    model   Daily2
-    order   10
     }
-***/    
-SEQUENCE CYCLE10 {
-    model   Wheeling
-    order   10
-    }    
     
+SEQUENCE CYCLE10 {
+    model   B2_BO2
+    order   10
+    }        
+SEQUENCE CYCLE11 {
+    model   Wheeling
+    order   11
+    } 
+ 
+
+SEQUENCE CYCLE12 {
+    model   ITP
+    order   11
+    }	
+ 
 model block1 {
     INCLUDE '\Assumptions\Options_Switches.wresl'
     
@@ -110,7 +114,7 @@ model block1 {
     INCLUDE '\sanjoaquin\Friant\SJRR_Rest.wresl'                     !Turns on SJRR Operations
 
     INCLUDE '\sanjoaquin\SanJoaquinCoreA.wresl'
-        
+    
     if int(LOD_DLTSW)>=1 {
         INCLUDE '\sanjoaquin\Delta\COSMA_dmd.wresl' 
     } 
@@ -225,21 +229,19 @@ MODEL block2 {
         INCLUDE '\SanJoaquin\Delta\ZeroAOWater.wresl'
         INCLUDE '\SanJoaquin\Delta\COSMA_restrict_c6_c7.wresl'
 !        INCLUDE '\sanjoaquin\Friant\SJR_Rest_Req_Off_Local.wresl'
-        INCLUDE '\sanjoaquin\Friant\SJR_Rest_Full.wresl'     !Turns on SJRR Operations
+        
     }  
 }
 
 MODEL block3 {
     define getFinalMrdo {EXTERNAL f90}  ! OBJ code file must be located in run\external directory for compilation
 
-    if banksifswitch > 0.5 .or. jonesifswitch > 0.5 {
-		INCLUDE  'Delta\DeltaExtFuncs_7inpANN_roa25_slr0.wresl'}
-	elseif int(SLR_DLTSW)==0{
+    if int(SLR_DLTSW)==0{
 		INCLUDE  'Delta\DeltaExtFuncs_7inpANN_roa0_slr0.wresl'}
 	elseif int(SLR_DLTSW) == 1{
     	INCLUDE  'Delta\DeltaExtFuncs_7inpANNslr15cm.wresl'}
     elseif int(SLR_DLTSW) == 2{
-    	INCLUDE  'Delta\DeltaExtFuncs_7inpANNslr45cm.wresl'}
+        INCLUDE  'Delta\DeltaExtFuncs_7inpANNslr45cm.wresl'}
 
     INCLUDE  'swp_dellogic\allocation\co_extfcn.wresl'
 
@@ -270,7 +272,7 @@ MODEL block4 {
     INCLUDE 'Wheeling\WheelOpsVarDefines.wresl'
 	if int(PBwheel_ON)==1 {INCLUDE 'Wheeling\WheelD1485.wresl'}
     INCLUDE 'B2Actions\BaseStudyResults.wresl' 
-    INCLUDE 'B2Actions\B2Action1Repeat.wresl'
+    !INCLUDE 'B2Actions\B2Action1Repeat.wresl'
     INCLUDE 'System\Connectivity-table.wresl'
 	
     INCLUDE 'system\weight-table.wresl'
@@ -350,7 +352,8 @@ MODEL SJRBASE {         !CYCLE 2
     INCLUDE model block1
 
 !    INCLUDE 'sanjoaquin\Friant\SJR_Rest_Req_Off_Local.wresl'
-    INCLUDE '\sanjoaquin\Friant\SJR_Rest_Req_Local.wresl'     !Turns on SJRR Operations
+    !INCLUDE '\sanjoaquin\Friant\SJR_Rest_Req_Local.wresl'     !Turns on SJRR Operations
+	INCLUDE 'SanJoaquin\Friant\SJR_Rest_Req_Cycle1.wresl'     !Turns on SJRR Operations    
     INCLUDE '\SanJoaquin\Delta\ZeroAOWater.wresl'
     INCLUDE '\sanjoaquin\various\SetWSReturns\SetWSRetcycle1thru5.wresl' !fixing return flows into SJR by fixing associated deliveries
     INCLUDE '\sanjoaquin\PurchasedWater\InstreamFromOID.wresl'
@@ -363,11 +366,13 @@ MODEL SJR_WQ1 {         !CYCLE 3
     INCLUDE model block1
 
 !    INCLUDE 'sanjoaquin\Friant\SJR_Rest_Req_Off_Local.wresl'
-    INCLUDE '\sanjoaquin\Friant\SJR_Rest_Req_Local.wresl'     !Turns on SJRR Operations
+    !INCLUDE '\sanjoaquin\Friant\SJR_Rest_Req_Local.wresl'     !Turns on SJRR Operations
+	INCLUDE 'SanJoaquin\Friant\SJR_Rest_Req_Cycle2.wresl'     !Turns on SJRR Operations    
     INCLUDE '\SanJoaquin\Delta\ZeroAOWater.wresl'
     INCLUDE '\sanjoaquin\various\SetWSReturns\SetWSRetcycle1thru5.wresl' !fixing return flows into SJR by fixing associated deliveries
     INCLUDE '\sanjoaquin\WaterQuality\disaggregation\WestsideReturns\WSReturnC1_stub.wresl'
     INCLUDE '\sanjoaquin\WaterQuality\Vernalis_WQmin_Disag.wresl'
+    INCLUDE '\SANJOAQUIN\STANISLAUS\DO.WRESL'
     INCLUDE '\sanjoaquin\Groundwater\SJRGW_restrict.wresl'
     INCLUDE '\sanjoaquin\various\bounds_cycles\bounds_cycle2.wresl'
 }
@@ -376,7 +381,8 @@ MODEL SJR_PULSE {            !CYCLE 4
     INCLUDE model block1
 
 !    INCLUDE 'sanjoaquin\Friant\SJR_Rest_Req_Off_Local.wresl'   
-    INCLUDE '\sanjoaquin\Friant\SJR_Rest_Pulse_Local.wresl'     !Turns on SJRR Operations
+   !INCLUDE '\sanjoaquin\Friant\SJR_Rest_Req_Local.wresl'     !Turns on SJRR Operations
+	INCLUDE 'SanJoaquin\Friant\SJR_Rest_Req_Cycle3.wresl'     !Turns on SJRR Operations    
     INCLUDE '\SanJoaquin\Delta\ZeroAOWater.wresl'
     INCLUDE '\sanjoaquin\various\SetWSReturns\SetWSRetcycle1thru5.wresl' !fixing return flows into SJR by fixing associated deliveries
     INCLUDE '\sanjoaquin\Stanislaus\stan_FW_pulse.wresl'
@@ -389,7 +395,8 @@ MODEL SJR_WQ2 {         !CYCLE 5
     INCLUDE model block1
 
 !    INCLUDE 'sanjoaquin\Friant\SJR_Rest_Req_Off_Local.wresl'   
-    INCLUDE '\sanjoaquin\Friant\SJR_Rest_Pulse_Local.wresl'     !Turns on SJRR Operations
+        !INCLUDE '\sanjoaquin\Friant\SJR_Rest_Req_Local.wresl'     !Turns on SJRR Operations
+	INCLUDE 'SanJoaquin\Friant\SJR_Rest_Req_Cycle4.wresl'     !Turns on SJRR Operations    
     INCLUDE '\SanJoaquin\Delta\ZeroAOWater.wresl'
     INCLUDE '\sanjoaquin\various\SetWSReturns\SetWSRetcycle1thru5.wresl' !fixing return flows into SJR by fixing associated deliveries
     INCLUDE '\sanjoaquin\WaterQuality\disaggregation\WestsideReturns\WSReturnC3_stub.wresl'
@@ -397,7 +404,7 @@ MODEL SJR_WQ2 {         !CYCLE 5
     INCLUDE '\sanjoaquin\Groundwater\SJRGW_restrict.wresl'
     INCLUDE '\sanjoaquin\various\bounds_cycles\bounds_cycle4.wresl'
 }
-
+/* 
 MODEL VAMP_AND_DO {           !CYCLE 6
     INCLUDE model block1
 	if int(Dynamic_SJR)==0 {define VAMP_reqdv {std kind 'flow-requirement' units 'cfs'}}
@@ -412,15 +419,18 @@ MODEL VAMP_AND_DO {           !CYCLE 6
     INCLUDE '\sanjoaquin\Groundwater\SJRGW_restrict.wresl'
     INCLUDE '\sanjoaquin\various\bounds_cycles\bounds_cycle5.wresl'
 }
-    
+   */ 
+
 MODEL Upstream {         !CYCLE 7
 INCLUDE model Block2
 INCLUDE model Block3
-
+INCLUDE '\sanjoaquin\Friant\SJR_Rest_Full.wresl'     !Turns on SJRR Operations
 INCLUDE [LOCAL] 'hydrology\WEIRS\weir_steps_monthops.wresl'
 
 INCLUDE model Block4
-
+INCLUDE 'NorthOfDelta\Sacramento\setNODMinFlows.wresl'
+Include 'NorthOfDelta\Sacramento\keswickmin.wresl'  
+INCLUDE 'Export_Ops\april_may_maxexport.wresl'
 if LVEM_switch > 0.5 {
 	INCLUDE 'CCWD\LVM_System.wresl'
 	INCLUDE 'CCWD\UserInput.wresl'
@@ -429,14 +439,21 @@ else {
 	INCLUDE 'CCWD\STATIC_LVEM.WRESL'
 }
 
+INCLUDE [LOCAL] 'COA\SharingRatios.wresl' ! SP MBK
 INCLUDE [LOCAL] 'Wheeling\WheelzeroCVC.wresl'
 INCLUDE [LOCAL] 'Wheeling\WheelzeroJPOD.wresl' 
 INCLUDE [LOCAL] 'COA\coa_Up.wresl'
 INCLUDE [LOCAL] 'Delta\Ann\ExportEstimate1_up.wresl'
 if int(DCC_DLTSW)==3 {INCLUDE 'Delta\xc-gates_D1485_Up.wresl'}
+INCLUDE [LOCAL] 'Delta\ANN\AnnCommon1.wresl'
+
 INCLUDE [LOCAL] 'Delta\Split_IFTD.wresl'
+
+INCLUDE [LOCAL] 'Delta\X2_WQ.wresl'
+INCLUDE [LOCAL] 'Delta\estX2_ANN_stub.wresl'
+INCLUDE [LOCAL] 'Delta\SpecProjects\SMSCG_stub.wresl'
+INCLUDE [LOCAL] 'Delta\Ann\X2req_ann_KM.wresl'
 INCLUDE [LOCAL] 'Delta\Delta.wresl'
-INCLUDE [LOCAL] 'Delta\X2_BO_WQ.wresl'
 
 if LVEM_switch > 0.5 {
 	INCLUDE 'CCWD\LVM_Ops1.wresl'
@@ -461,11 +478,13 @@ if LVEM_switch > 0.5 {
 MODEL BASE {         !CYCLE 8
 INCLUDE model Block2
 INCLUDE model Block3
-
+INCLUDE '\sanjoaquin\Friant\SJR_Rest_Full.wresl'     !Turns on SJRR Operations
 INCLUDE [LOCAL] 'hydrology\WEIRS\weir_steps_dailyops_UPSTREAM.wresl'
 
 INCLUDE model Block4
-
+INCLUDE 'NorthOfDelta\Sacramento\setNODMinFlows.wresl'
+Include 'NorthOfDelta\Sacramento\keswickmin_sp.wresl'  
+INCLUDE 'Export_Ops\april_may_maxexport.wresl'
 if LVEM_switch > 0.5 {
 	INCLUDE 'CCWD\LVM_System.wresl'
 	INCLUDE 'CCWD\UserInput.wresl'
@@ -473,26 +492,30 @@ if LVEM_switch > 0.5 {
 else {
 	INCLUDE 'CCWD\STATIC_LVEM.WRESL'
 }
-
+INCLUDE [LOCAL] 'COA\SharingRatios.wresl' ! SP MBK
 INCLUDE [LOCAL] 'Wheeling\WheelzeroCVC.wresl'
 INCLUDE [LOCAL] 'Wheeling\WheelzeroJPOD.wresl' 
 INCLUDE [LOCAL] 'COA\coa.wresl'
 INCLUDE [LOCAL] 'Delta\Ann\ExportEstimate1.wresl'
 if int(DCC_DLTSW)==3 {INCLUDE 'Delta\xc-gates.wresl'}
-INCLUDE [LOCAL] 'Delta\Split_IFTD.wresl'
-INCLUDE [LOCAL] 'Delta\Delta.wresl'
-INCLUDE [LOCAL] 'Delta\X2_BO_WQ.wresl'
+INCLUDE [LOCAL] 'Delta\ANN\AnnCommon1.wresl'
 
+INCLUDE [LOCAL] 'Delta\Split_IFTD.wresl'
+
+INCLUDE [LOCAL] 'Delta\X2_WQ.wresl'
+INCLUDE [LOCAL] 'Delta\estX2_ANN_Upstream.wresl'
+INCLUDE [LOCAL] 'Delta\SpecProjects\SMSCG_operation.wresl'
+INCLUDE [LOCAL] 'Delta\Ann\X2req_ann_KM.wresl'
+INCLUDE [LOCAL] 'Delta\Delta.wresl'
+!INCLUDE [local] 'export_ops\SMELT_FallX2_limCVPSW.wresl'
 if LVEM_switch > 0.5 {
 	INCLUDE 'CCWD\LVM_Ops1.wresl'
 }
 
 !INCLUDE [LOCAL] 'Export_Ops\JUL_NOV_PREFER_TD_EXP.wresl'
 
-
-INCLUDE [LOCAL] 'Delta\IF_off.wresl'   
-
-!INCLUDE [LOCAL] 'Export_Ops\JUL_AUG_PREFER_TD_EXP_BASE_INIT.wresl'
+!INCLUDE [LOCAL] 'Delta\IsolatedFacility\IFDiversionCriteria.wresl'
+INCLUDE [LOCAL] 'Delta\IF_off.wresl'
 
 INCLUDE [LOCAL] 'Shortage\shortage.wresl'
 
@@ -504,15 +527,16 @@ if LVEM_switch > 0.5 {
 }
 }
 
-
 MODEL B2_BO {         !CYCLE 9
 INCLUDE model Block2
 INCLUDE model Block3
-
+INCLUDE '\sanjoaquin\Friant\SJR_Rest_Full.wresl'     !Turns on SJRR Operations
 INCLUDE [LOCAL] 'hydrology\WEIRS\weir_steps_dailyops_BASE.wresl'
 
 INCLUDE model Block4
-
+INCLUDE 'NorthOfDelta\Sacramento\setNODMinFlows.wresl'
+Include 'NorthOfDelta\Sacramento\keswickmin_sp.wresl'  
+INCLUDE 'Export_Ops\april_may_maxexport.wresl'
 if LVEM_switch > 0.5 {
 	INCLUDE 'CCWD\LVM_System.wresl'
 	INCLUDE 'CCWD\UserInput.wresl'
@@ -525,27 +549,102 @@ INCLUDE [LOCAL] 'Wheeling\WheelzeroCVC.wresl'
 INCLUDE [LOCAL] 'Wheeling\WheelzeroJPOD.wresl' 
 INCLUDE [LOCAL] 'B2Actions\B2SetBaseline.wresl'                    
 INCLUDE [LOCAL] 'B2Actions\B2ActionsDeltaRepeat.wresl'      
-INCLUDE [LOCAL] 'B2Actions\B2BanksFix.wresl' 
-INCLUDE [LOCAL] 'Delta\Ann\ExportEstimate1_B2.wresl'
+!INCLUDE [LOCAL] 'B2Actions\B2BanksFix.wresl' 
+INCLUDE [LOCAL] 'Delta\Ann\ExportEstimate1.wresl'
+INCLUDE [LOCAL] 'Delta\ANN\AnnCommon1.wresl'
 INCLUDE [LOCAL] 'Delta\Split_IFTD.wresl'
-INCLUDE [LOCAL] 'Delta\Delta_reduced_calls.wresl'
 INCLUDE [LOCAL] 'Delta\X2_BO_WQ.wresl'
+INCLUDE [LOCAL] 'Delta\estX2_ANN_Upstream.wresl'
+INCLUDE [LOCAL] 'Delta\SpecProjects\SMSCG_operation.wresl'
+INCLUDE [LOCAL] 'Delta\Ann\X2req_ann_KM.wresl'
+INCLUDE [LOCAL] 'Delta\Delta_reduced_calls.wresl'
+INCLUDE [local] 'export_ops\SMELT_FallX2_limCVPSW.wresl'
+if LVEM_switch > 0.5 {
+	INCLUDE 'CCWD\LVM_Ops1.wresl'
+}
+INCLUDE [LOCAL] 'COA\SharingRatios.wresl' ! SP MBK
+! BO Code
+INCLUDE [LOCAL] 'Export_Ops\OMR\DELTA_RPA_init.wresl'
+!INCLUDE [LOCAL] 'Export_Ops\FWS_SMELT_BO_FallX2check.wresl'
+INCLUDE [LOCAL] 'Export_Ops\NMFS_SALMON_BO_DCC.wresl'
+INCLUDE [LOCAL] 'Export_Ops\NMFS_SALMON_BO_Def.wresl'
+INCLUDE [LOCAL] 'Export_Ops\NMFS_SALMON_BO_SJR.wresl'
+INCLUDE [LOCAL] 'Export_Ops\OMR\OMR_PA.wresl' 
+INCLUDE [LOCAL] 'Export_Ops\OMR\EXP_constraint.wresl'
+INCLUDE [LOCAL] 'Export_Ops\OMR\OMR_constraint1.wresl'
 
+INCLUDE [LOCAL] 'COA\coa_BO.wresl' ! SP MBK
+
+INCLUDE [LOCAL] 'Delta\xc-gates.wresl'                 
+!INCLUDE[LOCAL] 'output\cycle_output.wresl'
+!INCLUDE[LOCAL] 'Shortage\ShortWarning.wresl'
+INCLUDE [LOCAL] 'FlowCriteria\FlowCriteria.wresl'
+
+!INCLUDE [LOCAL] 'Export_Ops\JUL_NOV_PREFER_TD_EXP.wresl'
+
+INCLUDE [LOCAL] 'Delta\IF_off.wresl'   
+
+!INCLUDE 'output\DV_output.wresl'
+!INCLUDE [LOCAL] 'Export_Ops\JUL_AUG_PREFER_TD_EXP_BASE.wresl'
+
+INCLUDE [LOCAL] 'Shortage\shortage.wresl'
+
+if LVEM_switch > 0.5 {
+	INCLUDE 'CCWD\CCWD_Ops\CCWD_LVFill_OMR_B2_BO.wresl'
+	INCLUDE 'CCWD\LVM_Ops2.wresl'
+	INCLUDE 'CCWD\LVE\Wheeling_off.wresl'
+	INCLUDE 'CCWD\CalLiteConnection.wresl'
+}
+}
+
+MODEL B2_BO2 {         !CYCLE 9
+INCLUDE model Block2
+INCLUDE model Block3
+INCLUDE '\sanjoaquin\Friant\SJR_Rest_Full.wresl'     !Turns on SJRR Operations
+INCLUDE [LOCAL] 'hydrology\WEIRS\weir_steps_dailyops_BASE.wresl'
+
+INCLUDE model Block4
+INCLUDE 'NorthOfDelta\Sacramento\setNODMinFlows.wresl'
+Include 'NorthOfDelta\Sacramento\keswickmin_sp.wresl'  
+INCLUDE [LOCAL] 'COA\SharingRatios_BO.wresl' ! SP MBK
+INCLUDE 'Export_Ops\april_may_maxexport_BO.wresl'
+if LVEM_switch > 0.5 {
+	INCLUDE 'CCWD\LVM_System.wresl'
+	INCLUDE 'CCWD\UserInput.wresl'
+}
+else {
+	INCLUDE 'CCWD\STATIC_LVEM.WRESL'
+}
+
+INCLUDE [LOCAL] 'Wheeling\WheelzeroCVC.wresl'
+INCLUDE [LOCAL] 'Wheeling\WheelzeroJPOD.wresl' 
+INCLUDE [LOCAL] 'B2Actions\B2SetBaseline.wresl'                    
+INCLUDE [LOCAL] 'B2Actions\B2ActionsDeltaRepeat.wresl'      
+!INCLUDE [LOCAL] 'B2Actions\B2BanksFix.wresl' 
+INCLUDE [LOCAL] 'Delta\Ann\ExportEstimate1.wresl'
+INCLUDE [LOCAL] 'Delta\ANN\AnnCommon1.wresl'
+INCLUDE [LOCAL] 'Delta\Split_IFTD.wresl'
+INCLUDE [LOCAL] 'Delta\X2_BO_WQ.wresl'
+INCLUDE [LOCAL] 'Delta\estX2_ANN_Upstream.wresl'
+INCLUDE [LOCAL] 'Delta\SpecProjects\SMSCG_operation.wresl'
+INCLUDE [LOCAL] 'Delta\Ann\X2req_ann_KM.wresl'
+INCLUDE [LOCAL] 'Delta\Delta_reduced_calls.wresl'
+INCLUDE [local] 'export_ops\SMELT_FallX2_limCVPSW.wresl'
 if LVEM_switch > 0.5 {
 	INCLUDE 'CCWD\LVM_Ops1.wresl'
 }
 
 ! BO Code
 INCLUDE [LOCAL] 'Export_Ops\OMR\DELTA_RPA_init.wresl'
-INCLUDE [LOCAL] 'Export_Ops\FWS_SMELT_BO_FallX2check.wresl'
+!INCLUDE [LOCAL] 'Export_Ops\FWS_SMELT_BO_FallX2check.wresl'
 INCLUDE [LOCAL] 'Export_Ops\NMFS_SALMON_BO_DCC.wresl'
 INCLUDE [LOCAL] 'Export_Ops\NMFS_SALMON_BO_Def.wresl'
 INCLUDE [LOCAL] 'Export_Ops\NMFS_SALMON_BO_SJR.wresl'
+INCLUDE [LOCAL] 'Export_Ops\OMR\OMR_PA.wresl' 
+INCLUDE [LOCAL] 'Export_Ops\OMR\EXP_constraint2.wresl'
+INCLUDE [LOCAL] 'Export_Ops\OMR\OMR_constraint2.wresl'
 
-INCLUDE [LOCAL] 'Export_Ops\OMR\FWS_SMELT_BO.wresl' 
-INCLUDE [LOCAL] 'Export_Ops\OMR\EXP_constraint.wresl'
-INCLUDE [LOCAL] 'Export_Ops\OMR\OMR_constraint.wresl'
-INCLUDE [LOCAL] 'COA\coa_BO.wresl'
+INCLUDE [LOCAL] 'COA\coa_BO2.wresl' ! SP MBK
 
 INCLUDE [LOCAL] 'Delta\xc-gates.wresl'                 
 !INCLUDE[LOCAL] 'output\cycle_output.wresl'
@@ -574,7 +673,11 @@ MODEL Wheeling {         !CYCLE 10
 INCLUDE model Block2
 INCLUDE model Block3
 INCLUDE model Block4
-
+INCLUDE '\sanjoaquin\Friant\SJR_Rest_Recap.wresl'     !Turns on SJRR Operations
+INCLUDE 'NorthOfDelta\Sacramento\setNODMinFlows.wresl'
+Include 'NorthOfDelta\Sacramento\keswickmin_sp.wresl'  
+INCLUDE [LOCAL] 'COA\SharingRatios_BO.wresl' ! SP MBK
+INCLUDE 'Export_Ops\april_may_maxexport_BO.wresl'
 if LVEM_switch > 0.5 {
 	INCLUDE 'CCWD\LVM_System.wresl'
 	INCLUDE 'CCWD\UserInput.wresl'
@@ -586,27 +689,32 @@ else {
 INCLUDE [LOCAL] 'hydrology\WEIRS\weir_steps_dailyops_B2_BO.wresl'  
 INCLUDE [LOCAL] 'B2Actions\B2SetBaseline.wresl'                    
 INCLUDE [LOCAL] 'B2Actions\B2ActionsDeltaRepeat.wresl'      
-INCLUDE [LOCAL] 'B2Actions\B2BanksFix.wresl' 
-INCLUDE [LOCAL] 'Delta\Ann\ExportEstimate1_B2.wresl'
+!INCLUDE [LOCAL] 'B2Actions\B2BanksFix.wresl' 
+INCLUDE [LOCAL] 'Delta\Ann\ExportEstimate1.wresl'
+INCLUDE [LOCAL] 'Delta\ANN\AnnCommon1.wresl'
 INCLUDE [LOCAL] 'Delta\Split_IFTD.wresl'
-INCLUDE [LOCAL] 'Delta\Delta_reduced_calls.wresl'
 INCLUDE [LOCAL] 'Delta\X2_BO_WQ.wresl'
-
+INCLUDE [LOCAL] 'Delta\estX2_ANN_Upstream.wresl'
+INCLUDE [LOCAL] 'Delta\SpecProjects\SMSCG_Operation.wresl'
+INCLUDE [LOCAL] 'Delta\Ann\X2req_ann_KM.wresl'
+INCLUDE [LOCAL] 'Delta\Delta_reduced_calls.wresl'
+INCLUDE [local] 'export_ops\SMELT_FallX2_limCVPSW.wresl'
 if LVEM_switch > 0.5 {
 	INCLUDE 'CCWD\LVM_Ops1.wresl'
 }
 
 ! BO Code
 INCLUDE [LOCAL] 'Export_Ops\OMR\DELTA_RPA_init.wresl'
-INCLUDE [LOCAL] 'Export_Ops\FWS_SMELT_BO_FallX2check.wresl'
+!INCLUDE [LOCAL] 'Export_Ops\FWS_SMELT_BO_FallX2check.wresl'
 INCLUDE [LOCAL] 'Export_Ops\NMFS_SALMON_BO_DCC.wresl'
 INCLUDE [LOCAL] 'Export_Ops\NMFS_SALMON_BO_Def.wresl'
 INCLUDE [LOCAL] 'Export_Ops\NMFS_SALMON_BO_SJR.wresl'
 
-INCLUDE [LOCAL] 'Export_Ops\OMR\FWS_SMELT_BO.wresl' 
-INCLUDE [LOCAL] 'Export_Ops\OMR\EXP_constraint.wresl'
-INCLUDE [LOCAL] 'Export_Ops\OMR\OMR_constraint.wresl'
-INCLUDE [LOCAL] 'COA\coa_BO.wresl'
+INCLUDE [LOCAL] 'Export_Ops\OMR\OMR_PA.wresl' 
+INCLUDE [LOCAL] 'Export_Ops\OMR\EXP_constraint2.wresl'
+INCLUDE [LOCAL] 'Export_Ops\OMR\OMR_constraint2.wresl'
+
+INCLUDE [LOCAL] 'COA\coa_BO2.wresl' ! SP MBK
 
 INCLUDE [LOCAL] 'Delta\xc-gates.wresl'                 
 INCLUDE [LOCAL] 'Wheeling\Wheelcap.wresl'
@@ -619,7 +727,86 @@ else{INCLUDE 'Wheeling\wheelfixes.wresl'}
         INCLUDE '\output\SJR_cycle_output.wresl'
     }
 
-!INCLUDE [LOCAL] 'Shortage\ShortWarning.wresl'
+INCLUDE [LOCAL] 'Shortage\ShortWarning.wresl'
+INCLUDE [LOCAL] 'FlowCriteria\FlowCriteria.wresl'
+
+!INCLUDE [LOCAL] 'Export_Ops\JUL_NOV_PREFER_TD_EXP.wresl'
+                                                  
+INCLUDE [LOCAL] 'output\cycle_output.wresl'
+INCLUDE [LOCAL] 'Delta\IF_off.wresl'	
+
+INCLUDE [LOCAL] 'output\DV_output.wresl'
+!INCLUDE [LOCAL] 'Export_Ops\JUL_AUG_PREFER_TD_EXP_BASE.wresl'
+
+INCLUDE [LOCAL] 'Shortage\shortage.wresl'
+if LVEM_switch > 0.5 {
+	INCLUDE 'CCWD\CCWD_Ops\CCWD_LVFill_OMR_B2_BO.wresl'
+	INCLUDE 'CCWD\LVM_Ops2.wresl'
+	INCLUDE 'CCWD\LVE\Wheeling_off.wresl'
+	INCLUDE 'CCWD\CalLiteConnection.wresl'
+	INCLUDE 'CCWD\WQ_Calcs\WQ_Calcs_B2_BO.wresl'
+}
+}
+
+MODEL ITP {         !CYCLE 10
+INCLUDE model Block2
+INCLUDE model Block3
+INCLUDE model Block4
+INCLUDE '\sanjoaquin\Friant\SJR_Rest_Recap.wresl'     !Turns on SJRR Operations
+INCLUDE 'NorthOfDelta\Sacramento\setNODMinFlows.wresl'
+Include 'NorthOfDelta\Sacramento\keswickmin_sp.wresl'  
+INCLUDE [LOCAL] 'COA\SharingRatios_BO.wresl' ! SP MBK
+INCLUDE 'Export_Ops\april_may_maxexport_BO.wresl'
+if LVEM_switch > 0.5 {
+	INCLUDE 'CCWD\LVM_System.wresl'
+	INCLUDE 'CCWD\UserInput.wresl'
+}
+else {
+	INCLUDE 'CCWD\STATIC_LVEM.WRESL'
+}
+
+INCLUDE [LOCAL] 'hydrology\WEIRS\weir_steps_dailyops_B2_BO.wresl'  
+INCLUDE [LOCAL] 'B2Actions\B2SetBaseline.wresl'                    
+INCLUDE [LOCAL] 'B2Actions\B2ActionsDeltaRepeat.wresl'      
+!INCLUDE [LOCAL] 'B2Actions\B2BanksFix.wresl' 
+INCLUDE [LOCAL] 'Delta\Ann\ExportEstimate1.wresl'
+INCLUDE [LOCAL] 'Delta\ANN\AnnCommon1.wresl'
+INCLUDE [LOCAL] 'Delta\Split_IFTD.wresl'
+INCLUDE [LOCAL] 'Delta\X2_BO_WQ_Fixed.wresl'
+INCLUDE [LOCAL] 'Delta\estX2_ANN_Upstream.wresl'
+INCLUDE [LOCAL] 'Delta\SpecProjects\SMSCG_operation_SWPITP.wresl'
+INCLUDE [LOCAL] 'Delta\Ann\X2req_ann_KM_Fixed.wresl'
+INCLUDE [LOCAL] 'Delta\Delta_reduced_calls_Output.wresl'
+
+if LVEM_switch > 0.5 {
+	INCLUDE 'CCWD\LVM_Ops1.wresl'
+}
+
+! BO Code
+INCLUDE [LOCAL] 'Export_Ops\OMR\DELTA_RPA_init.wresl'
+!INCLUDE [LOCAL] 'Export_Ops\FWS_SMELT_BO_FallX2check.wresl'
+INCLUDE [LOCAL] 'Export_Ops\NMFS_SALMON_BO_DCC_LAST.wresl'
+INCLUDE [LOCAL] 'Export_Ops\NMFS_SALMON_BO_Def.wresl'
+INCLUDE [LOCAL] 'Export_Ops\NMFS_SALMON_BO_SJR.wresl'
+
+INCLUDE [LOCAL] 'Export_Ops\OMR\OMR_PA.wresl' 
+INCLUDE [LOCAL] 'Export_Ops\OMR\EXP_constraint2.wresl'
+INCLUDE [LOCAL] 'Export_Ops\OMR\OMR_constraint2.wresl'
+
+INCLUDE [LOCAL] 'COA\coa_ITP.wresl' ! SP MBK
+
+INCLUDE [LOCAL] 'Delta\xc-gates.wresl'                 
+INCLUDE [LOCAL] 'Wheeling\Wheelcap.wresl'
+
+if int(PBwheel_ON)==1 {INCLUDE 'Wheeling\wheelfixes_D1485.wresl'}
+else{INCLUDE 'Wheeling\wheelfixes.wresl'}
+
+! Output Processing
+    if int(Dynamic_SJR)==1  {
+        INCLUDE '\output\SJR_cycle_output.wresl'
+    }
+
+INCLUDE [LOCAL] 'Shortage\ShortWarning.wresl'
 INCLUDE [LOCAL] 'FlowCriteria\FlowCriteria.wresl'
 
 !INCLUDE [LOCAL] 'Export_Ops\JUL_NOV_PREFER_TD_EXP.wresl'
@@ -639,5 +826,19 @@ if LVEM_switch > 0.5 {
 	INCLUDE 'CCWD\CalLiteConnection.wresl'
 	INCLUDE 'CCWD\WQ_Calcs\WQ_Calcs_B2_BO.wresl'
 }
-}
+INCLUDE[local] 'ITP\SWPITP_X2req_ANN_Summer.wresl'
+INCLUDE[local] 'ITP\SWPITP_ExpContraint.wresl'
+!INCLUDE[local] 'ITP\ITPAlt2BExpContraint.wresl'
+!INCLUDE[local] 'ITP\SMSCG_30_days.wresl'
+INCLUDE[local] 'ITP\Fixeddeliveries.wresl'
+INCLUDE[local] 'ITP\FixedFlowsTracked.wresl'
+INCLUDE[local] 'ITP\FixedOperations.wresl'
 
+
+define C_SACSJR_WH  {alias C_SACSJR[WHEELING] kind 'debug-cfs' units 'cfs'}
+define D_JONES_WH  {alias D_JONES[WHEELING] kind 'debug-cfs' units 'cfs'}
+define D_BANKS_WH  {alias D_BANKS[WHEELING] kind 'debug-cfs' units 'cfs'}
+define C_HOOD_WH  {alias C_HOOD[WHEELING] kind 'debug-cfs' units 'cfs'}
+define D_BANKS_SWP_WH  {alias D_BANKS_SWP[WHEELING] kind 'debug-cfs' units 'cfs'}
+define S_OROVL_WH  {alias S_OROVL[WHEELING] kind 'debug-taf' units 'taf'} 
+}

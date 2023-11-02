@@ -1,0 +1,169 @@
+/*************************************
+EXP_constraint.wresl
+ 
+Hao Xie   DWR (09/03/2010)
+
+Export constraint
+
+Z.Q. Richard Chen DWR (10/06/2010) 
+   Adding BO switch to the goal statements.
+   05/25/2010: enable constrain in individual BO actions
+**************************************/
+
+! Determine health and safety level at OMR that must be allowed
+define HandS_minpump {
+     case JanMay {
+          condition month>=JAN .and. month<=MAY
+          value 1500.}
+     case Jun {
+          condition month==JUN
+!          value 2000.}
+          value 1500.}
+     case other {
+          condition always
+          value 0.}
+}
+! Take the most restrictive of the NMFS export restrictions but consider the Health
+!   and safety level export that must be allowed
+define MAXEXP_RPA {
+	case IF_On {
+		condition int(IF_SWPorCVP_Onoff)==1
+		value min(NMFS_MaxExp, NMFS_MaxExp_DCC)}
+	case IF_Off {
+		condition always
+		value max( min(NMFS_MaxExp, NMFS_MaxExp_DCC), HandS_minpump)}
+}
+!
+! **********************************************************************************************
+!
+
+define Export_dec_RPA {value max(0.,D_EXPTD[base] - MAXEXP_RPA)}
+!define SWP_exp_dec_RPA {value max(0.,min(Export_dec_RPA,D_Banks_swp_TD[base] - D_Jones_TD[base]))}
+!define CVP_exp_dec_RPA {value max(0.,min(Export_dec_RPA,D_Jones_TD[base] - D_Banks_swp_TD[base]))}
+!define Comb_exp_dec_RPA {value max(0., Export_dec_RPA - SWP_exp_dec_RPA - CVP_exp_dec_RPA)}
+
+define Export_dec_RPA_ {alias Export_dec_RPA kind 'temp' units 'cfs'}
+!define SWP_exp_dec_RPA_ {alias SWP_exp_dec_RPA kind 'temp' units 'cfs'}
+!define CVP_exp_dec_RPA_ {alias CVP_exp_dec_RPA kind 'temp' units 'cfs'}
+!define Comb_exp_dec_RPA_ {alias Comb_exp_dec_RPA kind 'temp' units 'cfs'}
+
+!-KS, 9/17/18. Adjust for months when despite the BO RPAs limiting South Delta pumping, Delta remains in Balanced conditions using following criteria
+!-KS, 9/17/18. 1 = Balanced Delta. 0 = Surplus Delta
+!	- Balanced month before RPAs are applied (C407[UPSTREAM] - C407_ANN[UPSTREAM] < 0.1 .or. EI_Control_On[UPSTREAM] > 0.5)
+!	- South Delta exports are controlled by RPA (D_ExpTD[B2_BO] > MaxExp + 0.1) OR (D_ExpTD[B2_BO] + 0.1 < D_ExpTD[UPSTREAM])
+!	- Delta remains in Balanced conditions (NDO[UPSTREAM] - NDO[B2_BO] < 0.1)
+
+define Balanced_NMFS {  
+    case Balanced_to_Excess {
+        condition Balanced_up > 0.5                                          !(1) Delta under Balanced conditions in the Upstream cycle; defined in SharingRatios_BO.wresl
+                    .and. D_ExpTD[UPSTREAM] > D_ExpTD[B2_BO] + 0.1              !(2) South Delta exports drop below the Upstream cycle levels
+                    .and. D_ExpTD[B2_BO] - MaxExp_RPA[B2_BO] < 0.1     !(3) South Delta exports capped by MaxExp exports
+                    .and. NDO[B2_BO] > NDO[UPSTREAM] + 0.1              !(4) RPAs result in additional Delta Outflow and "push" Delta into Surplus conditions
+        value 0.0 }
+    case Remains_Balanced {
+        condition Balanced_up > 0.5                                          !(1) Delta under Balanced conditions in the Upstream cycle; defined in SharingRatios_BO.wresl
+                    .and. D_ExpTD[UPSTREAM] > D_ExpTD[B2_BO] + 0.1              !(2) South Delta exports drop below the Upstream cycle levels
+                    .and. D_ExpTD[B2_BO] - MaxExp_RPA[B2_BO] < 0.1     !(3) South Delta exports capped by MaxExp exports
+                    .and. NDO[B2_BO] - NDO[UPSTREAM] < 0.1              !(4) No additional outflow despite reduction in South Delta exports, i.e., Delta remains in Balanced conditions
+        value 1.0 }
+    case Remains_Excess {
+        condition always
+        value 0.0 }
+}
+
+define CVPExpCapShare_NMFS {
+	case Apr_May {
+		condition month >= apr .and. month <= may !-KS, 9/12/18. Limiting to SJR IE only.
+		value CVPExpCapShare_Srpls
+	}
+	case otherwise {
+		condition always
+		value 0.5	!-KS, 9/12/18. 50/50 sharing of Fall X2 and DXC burden.
+	}
+}
+
+define SWPExpCapShare_NMFS {
+	case Apr_May {
+		condition month >= apr .and. month <= may !-KS, 9/12/18. Limiting to SJR IE only.
+		value SWPExpCapShare_Srpls
+	}
+	case otherwise {
+		condition always
+		value 0.5	!-KS, 9/12/18. 50/50 sharing of Fall X2 and DXC burden.
+	}
+}
+
+define Balanced_NMFS_ {alias Balanced_NMFS kind 'temp' units 'none'}
+define CVPExpCapShare_NMFS_ {alias CVPExpCapShare_NMFS kind 'temp' units 'none'}
+define SWPExpCapShare_NMFS_ {alias SWPExpCapShare_NMFS kind 'temp' units 'none'}
+
+
+
+!define MAXEXP_RPA_CVP {value max(jonesminpump,d_jones_td[BASE] - CVP_exp_dec_RPA - 0.5*Comb_exp_dec_RPA) }
+!define MAXEXP_RPA_SWP {value max(banksminpump,d_banks_swp_td[base] - SWP_exp_dec_RPA - 0.5*Comb_exp_dec_RPA) }
+
+define MAXEXP_RPA_CVP_Init {value CVPExpCapShare_NMFS*MAXEXP_RPA}
+define MAXEXP_RPA_SWP_Init {value SWPExpCapShare_NMFS*MAXEXP_RPA}
+
+define Unused_MAXEXP_RPA_CVP {value max(0., MAXEXP_RPA_CVP_Init - d_jones_td[BASE])}
+define Unused_MAXEXP_RPA_SWP {value max(0., MAXEXP_RPA_SWP_Init - d_banks_swp_td[base])}
+
+define MAXEXP_RPA_CVP {value max(jonesminpump,min(d_jones_td[BASE], MAXEXP_RPA_CVP_Init) + Unused_MAXEXP_RPA_SWP)}
+define MAXEXP_RPA_SWP {value max(banksminpump,min(d_banks_swp_td[base], MAXEXP_RPA_SWP_Init) + Unused_MAXEXP_RPA_CVP)}
+
+goal set_MAXEXP_RPA_SWP {
+    lhs     D_Banks_swp_TD
+    case BOSWITCHON {
+    condition FallX2 == 1 .or. Action_4_1_2 == 1 .or. Action_4_2_1 == 1    
+    rhs     MAXEXP_RPA_SWP
+    lhs<rhs penalty    0}
+    }    
+    
+define MAXEXP_RPA_SWPdv {alias MAXEXP_RPA_SWP kind 'EXPORT-LIMIT' units 'CFS'}
+
+goal set_MAXEXP_RPA_CVP {
+    lhs     D_Jones_TD
+    case BOSWITCHON {
+    condition FallX2 == 1 .or. Action_4_1_2 == 1 .or. Action_4_2_1 == 1
+    rhs     MAXEXP_RPA_CVP
+    lhs<rhs penalty    0}
+    }
+    
+define MAXEXP_RPA_CVPdv {alias MAXEXP_RPA_CVP kind 'EXPORT-LIMIT' units 'CFS'}
+
+if int(banksifswitch) > 0.5 .or. int(jonesifswitch) > 0.5 {
+goal set_MAXEXP_RPA {
+    lhs     D_banks_swp_TD + D_jones_TD
+    case BOSWITCHON {
+		condition FallX2 == 1 .or. Action_4_1_2 == 1 .or. Action_4_2_1 == 1
+		rhs     MAXEXP_RPA
+    lhs<rhs penalty    0}
+    }
+}
+
+define MAXEXP_RPAdv {alias MAXEXP_RPA kind 'EXPORT-LIMIT' units 'CFS'}
+
+
+/***
+goal set_MAXEXP_RPA_SWP {
+    lhs     D_Banks
+    rhs     MAXEXP_RPA_SWP
+    lhs<rhs penalty    0}
+define MAXEXP_RPA_SWPdv {alias MAXEXP_RPA_SWP kind 'EXPORT-LIMIT' units 'CFS'}
+
+goal set_MAXEXP_RPA_CVP {
+    lhs     D_Jones
+    rhs     MAXEXP_RPA_CVP
+    lhs<rhs penalty    0}
+***/
+
+if int(banksifswitch) > 0.5 .or. int(jonesifswitch) > 0.5 {
+goal set_HandSminpump {
+    lhs     D_Jones_TD + D_Banks_TD + D_Jones_IF + D_Banks_IF
+    rhs     HandS_minpump
+    lhs>rhs penalty 0
+    lhs<rhs penalty 90000}
+}
+
+!Limit Partner use of LV by export constraints.
+goal constrain_LVP {D_jones_TD + D_banks_TD /*+ D408_P_WHL_SF_E1*/  < maxexp_rpa}

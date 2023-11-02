@@ -32,7 +32,8 @@ define demand_D_Daguer_NP {timeseries kind 'DEMAND' units 'CFS'}!Dagurre Point N
 define D_Daguer_NP {std kind 'FLOW-DELIVERY' units 'CFS'} !Non Project Diversion at Daguerre Point
 define D_Daguer {std kind 'FLOW-DELIVERY' units 'CFS'} !Diversion at Daguerre Point
 goal meet_D_Daguer_NP {D_Daguer_NP = demand_D_Daguer_NP}
-goal Diversion_Daguer {D_Daguer = D_Daguer_NP}
+!goal Diversion_Daguer {D_Daguer = D_Daguer_NP}
+goal Diversion_Daguer  {lhs D_Daguer rhs D_Daguer_NP lhs>rhs penalty 999999 lhs<rhs penalty 999999} !-WA, softly fixed
 define demand_D_Folsm_NP {timeseries kind 'DEMAND' units 'CFS'}!Non-Project Diversion from Folsom reservoir
 define D_Folsm_P {std kind 'FLOW-DELIVERY' units 'CFS'}!Project Diversion from Folsom reservoir
 define D_Folsm_NP {std kind 'FLOW-DELIVERY' units 'CFS'}!NonProject Diversion from Folsom reservoir
@@ -43,19 +44,19 @@ define demand_D_Nimbus_NP {timeseries kind 'DEMAND' units 'CFS'} !Non-Project Di
 define D_Nimbus_P {std kind 'FLOW-DELIVERY' units 'CFS'} !Project Diversion at Nimbus
 define D_Nimbus_NP {std kind 'FLOW-DELIVERY' units 'CFS'} !NonProject Diversion at Nimbus
 define D_Nimbus {std kind 'FLOW-DELIVERY' units 'CFS'} !Diversion at Nimbus
-goal meet_D_Nimbus_NP {D_Nimbus_NP = demand_D_Nimbus_NP}
+!goal meet_D_Nimbus_NP {D_Nimbus_NP = demand_D_Nimbus_NP}
+goal meet_D_Nimbus_NP {lhs D_Nimbus_NP rhs demand_D_Nimbus_NP lhs<rhs penalty 999999 lhs>rhs penalty 999999}
+define meet_D_Nimbus_NP_check {lower unbounded upper unbounded kind 'FLOW-DELIVERY' units 'cfs'}
+goal setmeet_D_Nimbus_NP_check {meet_D_Nimbus_NP_check = D_Nimbus_NP - demand_D_Nimbus_NP}
 goal Diversion_Nimbus {D_Nimbus=D_Nimbus_P+D_Nimbus_NP}
 define demand_D_HSt_NP {timeseries kind 'DEMAND' units 'CFS'}!Non-Project Diversion at H St
 define D_HSt_NP {std kind 'FLOW-DELIVERY' units 'CFS'}! Diversion at H St
 define D_HSt {std kind 'FLOW-DELIVERY' units 'CFS'}! Diversion at H St
 goal meet_D_Hst_NP {D_Hst_NP = demand_D_Hst_NP}
-goal Diversion_Hst{   !added shortage term to avoid crashes
-	lhs D_HSt
-	rhs D_Hst_NP
-	lhs>rhs constrain
-	lhs<rhs penalty 11000
-}
-define short_D_Hst {alias D_Hst_NP - D_Hst kind 'Shortage-FLOW' units 'CFS'}
+!goal Diversion_HSt {D_HSt=D_HSt_NP}
+goal Diversion_HSt {lhs D_HSt rhs D_HSt_NP lhs<rhs penalty 999999 lhs>rhs penalty 999999}
+define Diversion_HSt_check {lower unbounded upper unbounded kind 'FLOW-DELIVERY' units 'cfs'}
+goal setDiversion_HSt_check {Diversion_HSt_check = D_HSt - D_HSt_NP}
 
 define demand_D_Hood_NP {timeseries kind 'NETDICU_POS' units 'CFS'}
 define D_Hood_NP {lower 0. upper demand_D_Hood_NP kind 'FLOW-DELIVERY' units 'CFS'} !NET DELTA ISLAND CONSUMPTIVE USE (NET DICU) - POSITIVE VALUES
@@ -171,4 +172,5 @@ goal Diversion_Alamo {D_Alamo=D_Alamo_P}
 define D_PearBlPP_P {std kind 'FLOW-DELIVERY' units 'CFS'} !Project total Demand after Pearblossom Pumping Plant
 define D_PearBlPP {std kind 'FLOW-DELIVERY' units 'CFS'} !Total Demand after Pearblossom Pumping Plant
 goal Diversion_PearBlPP{D_PearBlPP=D_PearBlPP_P}
+define D_Folsm_EID {std kind 'FLOW-DELIVERY' units 'CFS'}!Diversion from Folsom reservoir
 

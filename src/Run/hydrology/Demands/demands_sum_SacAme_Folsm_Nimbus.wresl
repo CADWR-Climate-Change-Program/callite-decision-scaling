@@ -13,7 +13,7 @@ goal setD_SacAme_psc {D_SacAme_psc = d163_psc + d165_psc + d162_psc}
 
 goal setD_Folsm_P {D_Folsm_P = d8_prj}
 goal setD_Folsm_pmi {D_Folsm_pmi = d8_pmi}
-  
+goal setD_Folsm_EID {D_Folsm_EID = d8_ed}  
 goal setD_Nimbus_P {D_Nimbus_P = d9_prj}
 goal setD_Nimbus_pmi {D_Nimbus_pmi = d9_pmi}
  

@@ -8,14 +8,14 @@ source(file.path('..','src','func_callite_run.R'))
 ## Table names
 ```{r}
 txt_files <-c("_1_100.txt", "_101_200.txt", "_201_300.txt", "_301_400.txt",
-              "_401_500.txt", "_501_600.txt", "_601_700.txt", "_701_796.txt")
+              "_401_500.txt", "_501_600.txt", "_601_682.txt")
 
 if (wytAdap==T) {
   lookupTbls <-c("x2days", "eightriver", "SacValleyIndex", "wytypeSJR", "wytypeSJRave5",  "wytypeSJR_adap", "wytypeSJRave5_adap",
          "FebEiRatio", "delta_index", "wytypes", "wytypes_adap", "wytypeTRIN", "FWS_BO_A3_Temp")
 } else {
   lookupTbls <-c("x2days", "eightriver", "SacValleyIndex", "wytypeSJR", "wytypeSJRave5", 
-         "FebEiRatio", "delta_index", "wytypes","wytypeTRIN", "FWS_BO_A3_Temp")
+         "FebEiRatio", "delta_index", "wytypes","wytypeTRIN", "FWS_BO_A3_Temp", "UIFR", "AR_B120", "WIIN_wetness")
 }
 
 forecastTbls <- c("american_runoff_forecast","feather_runoff_forecast","sacramento_runoff_forecast")
@@ -39,128 +39,119 @@ file.copy(file.path('..','src','runConfig_ds.bat'),
           overwrite=T)
 ```
 
-## Set Alternative WRESL files
-Possible sets: 
-   - 64 bit ANNs
-   - ...
-```{r}
-if (ANNset=='x64') {
-  file.copy(file.path('..','src','Run-Alternatives','main_ANNx64.wresl'),
-            file.path(calLiteInputDir,'Run','main.wresl'),
-            overwrite=T)
-} else if  (ANNset=='x32') {
-  file.copy(file.path('..','src','Run-Alternatives','main_ANNx32.wresl'),
-          file.path(calLiteInputDir,'Run','main.wresl'),
-          overwrite=T)
+
+## Create SV DSS
+```{r warning=FALSE}
+for (cc_idx in cc) {
+  for (run in 1:calLiteRunCount) {
+    #Set run directory
+    ptRunFolder <- paste0(cc_idx)
+    print(ptRunFolder)
+    
+    dir_newdss <- file.path(calLiteInputDir, ptRunFolder, "DSS")
+    
+    # Copy SV DSS file to callite model run directory
+    if(!file.exists(file.path(dir_newdss, paste0("Output_SV_", run, ".dss")))) {
+      print('Writing SV dss')
+      calliteSVwriteDSS(dir_newdss, run, javaPy, defaultInputDir, txt_files)
+    } else {
+        print('SV dss already exists')
+    }
+  }
 }
 ```
-
 
 ## CalLite Run Loop
 ```{r warning=FALSE}
 stop = FALSE
-# un-comment if not running SD perutbations (don't foreget bracket at end of loop):
-# for (sd in c(1:10)){
-#   sdChangeVal = sdChangeList[[sd]]; sdChangeName = names(sdChangeList)[sd]
-#   runName <- paste0("pSac_",sdChangeName,"SD_TmonoNoAdap")
-#   calLiteInputDir <- file.path(calliteRuns,runName)
-#   print(calLiteInputDir)
-for (SLRType in slrChangeList[c(3)]) {    
-  for (p in c(4)) {
-    for (t in c(1,3,5)) {
-      for (run in 1:calLiteRunCount) {
-  
-        #Set run directory
-        pChangeVal = pChangeList[[p]]; pChangeName = names(pChangeList)[p]
-        tChangeVal = tChangeList[[t]]; tChangeName = names(tChangeList)[t]
-        ptRunFolder <- paste0(pChangeName, "DP", tChangeName, "DT", SLRType)
-        print(ptRunFolder)
-        
-        # Set Callite Generated Input by Perturbation File Paths
-        dir_newtbls <- file.path(calLiteInputDir, ptRunFolder, "Lookup_tables")
-        dir_newForetbls <- file.path(calLiteInputDir, ptRunFolder, "New_ForecastTables")
-        dir_newdss <- file.path(calLiteInputDir, ptRunFolder, "DSS")
-        
-        # Set CalLite Run File Paths
-        dir_callite_DV <- file.path(calliteRuns, runName)
-        dir_callite_SV <- file.path(calliteRuns, runName, "Run", "DSS")
-        dir_callite_tbls <- file.path(calliteRuns, runName, "Run", "Lookup")
-        
-        # write new SLR lookup GUI
-        slrGUI(SLRType, ANNset, ptRunFolder, dir_newtbls, dir_callite_tbls)
-        
-        # get time-stamps for moderating model run sequence
-        runstart <- now()
-        noError <- file.info(file.path(
-          dir_callite_DV, "Run","=ILP=","D.config","Error.log"))$mtime
-  
-        # Copy SV DSS file to callite model run directory
-        if(!file.exists(file.path(dir_newdss, paste0("Output_SV_", run, ".dss")))) {
-          print('Writing SV dss')
-          calliteSVwriteDSS(dir_newdss, run, javaPy, defaultInputDir, txt_files)
-        } else {
-            print('SV dss already exists')
-        }
-        svSize <- file.info(file.path(dir_newdss, paste0("Output_SV_", run, ".dss")))$size
-        file.copy(file.path(dir_newdss, paste0("Output_SV_", run, ".dss")),
-            file.path(dir_callite_SV, "Output_SV.dss"),
-            overwrite = TRUE)
-        while (file.info(file.path(dir_callite_SV, "/Output_SV.dss"))$size < svSize) {
-          file.copy(file.path(dir_newdss, paste0("Output_SV_", run, ".dss")),
-            file.path(dir_callite_SV, "Output_SV.dss"),
-            overwrite = TRUE)
-          Sys.sleep(3)
-        } 
-        
-        # Copy lookup table files to proper CalLite directory
-        print('Writing lookup tables')
-        calliteLookupTblsWrite(lookupTbls, dir_newtbls, run, dir_callite_tbls)
-        
-        print('Writing forecast tables')
-        calliteForecastTblsWrite(forecastTbls, dir_newForetbls, run, dir_callite_tbls)
-        
-        # Create INIT file and Copy it to DSS folder to proper directory
-        calliteINITwriteDSS(run, defaultInputDir, 
-                            dir_callite_SV, javaPy, calLiteInputDir, dir_newdss,
-                            last_cent_only=FALSE)
-        
-        # RUN CALLITE IN BATCH MODE
-        calgui <- file.path(calliteV3,'Model_w2','runConfig_ds')
-        runConfig <- file.path(calliteRuns, runName, "D.config")
-        system(paste("cmd /c", calgui, runConfig))
-        while (runstart > file.info(file.path(dir_callite_DV, "output.dss"))$mtime) {
-          Sys.sleep(3)
-        }
-        # model is complete, check to verify
-        errFile =file.path(dir_callite_DV, "/Run/=ILP=/D.config/Error.log")
-        if (file.exists(errFile)) {
-          if (noError != file.info(errFile)$mtime) {
-            stop = TRUE 
-            break 
-          }
-        }
-        
-        # copy output dss back to perturbation folder
-        dvSize <- file.info(file.path(dir_callite_DV, "output.dss"))$size
-        file.copy(
-            file.path(dir_callite_DV, "output.dss"),
-            file.path(dir_newdss, paste0("Output_DV_", run, ".dss")),
-            overwrite = TRUE
-          )
-        while (file.info(file.path(dir_newdss, paste0("Output_DV_", run, ".dss")))$size < dvSize) {
-          file.copy(
-            file.path(dir_callite_DV, "output.dss"),
-            file.path(dir_newdss, paste0("Output_DV_", run, ".dss")),
-            overwrite = TRUE
-          )
-          Sys.sleep(3)
-        }
-        # clean-up sv and init
-        unlink(file.path(dir_callite_SV, "*"))
-      }
-      if (stop){break} 
+for (cc_idx in cc) { #c(1,6:20)
+  for (run in 1:calLiteRunCount) {
+    
+    #Set run directory
+    ptRunFolder <- paste0(cc_idx)
+    print(ptRunFolder)
+    
+    # Set Callite Generated Input by Perturbation File Paths
+    dir_newtbls <- file.path(calLiteInputDir, ptRunFolder, "Lookup_tables")
+    dir_newForetbls <- file.path(calLiteInputDir, ptRunFolder, "New_ForecastTables")
+    dir_newdss <- file.path(calLiteInputDir, ptRunFolder, "DSS")
+    
+    # Set CalLite Run File Paths
+    dir_callite_DV <- file.path(calliteRuns, runName)
+    dir_callite_SV <- file.path(calliteRuns, runName, "Run", "DSS")
+    dir_callite_tbls <- file.path(calliteRuns, runName, "Run", "Lookup")
+    
+    # write new SLR lookup GUI
+    if (cc_idx %in% list(6,11,16)) {
+      SLRType<-"15SLR"
+    } else if (cc_idx == 1) {
+      SLRType<-"0SLR"
+    } else {
+      SLRType<-"45SLR"
     }
-    if (stop){break} 
+    slrGUI(SLRType, ANNset, ptRunFolder, dir_newtbls, dir_callite_tbls)
+    
+    # get time-stamps for moderating model run sequence
+    runstart <- now()
+    noError <- file.info(file.path(
+      dir_callite_DV, "Run","=ILP=","D.config","Error.log"))$mtime
+
+    # Copy SV DSS file to callite model run directory
+    svSize <- file.info(file.path(dir_newdss, paste0("Output_SV_", run, ".dss")))$size
+    file.copy(file.path(dir_newdss, paste0("Output_SV_", run, ".dss")),
+        file.path(dir_callite_SV, "Output_SV.dss"),
+        overwrite = TRUE)
+    while (file.info(file.path(dir_callite_SV, "/Output_SV.dss"))$size < svSize) {
+      file.copy(file.path(dir_newdss, paste0("Output_SV_", run, ".dss")),
+        file.path(dir_callite_SV, "Output_SV.dss"),
+        overwrite = TRUE)
+      Sys.sleep(3)
+    } 
+    
+    # Copy lookup table files to proper CalLite directory
+    print('Writing lookup tables')
+    calliteLookupTblsWrite(lookupTbls, dir_newtbls, run, dir_callite_tbls)
+    
+    print('Writing forecast tables')
+    calliteForecastTblsWrite(forecastTbls, dir_newForetbls, run, dir_callite_tbls)
+    
+    # Create INIT file and Copy it to DSS folder to proper directory
+    calliteINITwriteDSS(run, defaultInputDir, 
+                        dir_callite_SV, javaPy, calLiteInputDir, dir_newdss)
+
+    # RUN CALLITE IN BATCH MODE
+    calgui <- file.path(calliteV3,'Model_w2','runConfig_ds')
+    runConfig <- file.path(calliteRuns, runName, "D.config")
+    system(paste("cmd /c", calgui, runConfig))
+    while (runstart > file.info(file.path(dir_callite_DV, "output.dss"))$mtime) {
+      Sys.sleep(3)
+    }
+    # model is complete, check to verify
+    errFile =file.path(dir_callite_DV, "/Run/=ILP=/D.config/Error.log")
+    if (file.exists(errFile)) {
+      if (noError != file.info(errFile)$mtime) {
+        stop = TRUE 
+        break 
+      }
+    }
+    
+    # copy output dss back to perturbation folder
+    dvSize <- file.info(file.path(dir_callite_DV, "output.dss"))$size
+    file.copy(
+        file.path(dir_callite_DV, "output.dss"),
+        file.path(dir_newdss, paste0("Output_DV_", run, ".dss")),
+        overwrite = TRUE
+      )
+    while (file.info(file.path(dir_newdss, paste0("Output_DV_", run, ".dss")))$size < dvSize) {
+      file.copy(
+        file.path(dir_callite_DV, "output.dss"),
+        file.path(dir_newdss, paste0("Output_DV_", run, ".dss")),
+        overwrite = TRUE
+      )
+      Sys.sleep(3)
+    }
+    # clean-up sv and init
+    unlink(file.path(dir_callite_SV, "*"))
   }
   if (stop){break} 
 }

@@ -24,9 +24,9 @@ define SWP_Rule_Cap_Oroville {
   use     linear}
 define SWP_rule_Cap {alias SWP_Rule_Cap_Oroville units 'NONE'}
 
-define OroDrainAmt4SL {value min(max(S_Orovl(-1) - OroSepTarg, 0.),
-                                 max(S_SLSWPlevel4 - S_SLSWP(-1),0.) )}
-define OroDrainAmtMon {value max(S_Orovl(-1) - OroNextMonTarg, 0.)}
+define OroDrainAmt4SL {value min(max(S_Orovl(-1) - SWPITP_OroCarryover_(-1) - OroSepTarg, 0.),
+                                 max(S_SLSWPlevel4 - S_SLSWP(-1)- SWPITP_OroCarryover_(-1),0.) )}
+define OroDrainAmtMon {value max(S_Orovl(-1) - OroNextMonTarg - SWPITP_OroCarryover_(-1), 0.)}
 !define ExpPmpAmtMon {value 60.} ! roughly 1000 cfs for the month
 !define ExpPmpAmtMon {value 180.} ! roughly 3000 cfs for the month    !Changes for the IF operations
 define ExpPmpAmtMon {
@@ -67,13 +67,13 @@ define SWPRULEcalcNoIF {
      case August {
           condition month == aug
           value max(min(S_SLSWP(-1) - (swpdemfinal_aug - ExpPmpAmtMon) + OroDrainAmtMon,
-		        SWPRuleDrainTar + (swpdemfinal_sep - ExpPmpAmtMon)),
-                    init_SWPRuleDrainTar + OroDrainAmt4SL)}
+		        SWPRuleDrainTar + (swpdemfinal_sep - ExpPmpAmtMon) -SWPITP_OroCarryover_(-1)),
+                    init_SWPRuleDrainTar + OroDrainAmt4SL- SWPITP_OroCarryover_(-1))}
      case Sep {
           condition always
           value max(min(S_SLSWP(-1) - (swpdemfinal_sep - ExpPmpAmtMon) + OroDrainAmtMon,
-		        SWPRuleDrainTar),
-                    init_SWPRuleDrainTar + OroDrainAmt4SL)}
+		        SWPRuleDrainTar - SWPITP_OroCarryover_(-1)),
+                    init_SWPRuleDrainTar + OroDrainAmt4SL - SWPITP_OroCarryover_(-1))}
 }
 
 define SWPRULEcalcIF {

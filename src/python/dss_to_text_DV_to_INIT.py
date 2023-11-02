@@ -119,7 +119,11 @@ pathnames.append("/CALLITE/VERNWQFINAL/SALINITY-EC//1MON/2020D09E/")
 #pathnames.append("/CALLITE/WQ422/SALINITY//1MON/2020D09E/")
 pathnames.append("/CALLITE/WQRELCAPDV/WQ-REL-CAP//1MON/2020D09E/")
 pathnames.append("/CALLITE/X2_PRV/X2-POSITION-PREV//1MON/2020D09E/")
-
+# new CalLite V2
+pathnames.append("/CALLITE/NDO_ADJ/FLOW-NDO-ADJ//1MON/2020D09E/")
+pathnames.append("/CALLITE/NET_DICU_ADJ/DICU-FLOW-ADJ//1MON/2020D09E/")
+pathnames.append("/CALLITE/SWPITP_OROCARRYOVER_/CARRYOVER//1MON/2020D09E/")
+pathnames.append("/CALLITE/X2_PRV_MOD/X2-POSITION-PREV//1MON/2020D09E/")
 
 y_arr = {}
 
@@ -144,6 +148,7 @@ for i in range(0,len(y_arr[pathnames[0]])):
         text_file.write(','+str(y_arr[pathname][i]))
     text_file.write('\n')
 
+text_file.write('\n')
 text_file.close()
 
 # print 'completed.'

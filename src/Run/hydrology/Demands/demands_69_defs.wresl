@@ -9,6 +9,7 @@ define dem_d7a_PAG    {timeseries kind 'DEMAND-SWP-AG' units 'TAF'}
 define dem_d7a_PWR    {timeseries kind 'DEMAND-SWP-WR' units 'TAF'}
 define dem_d7b_PAG    {timeseries kind 'DEMAND-SWP-AG' units 'TAF'}
 define dem_d7b_PWR    {timeseries kind 'DEMAND-SWP-WR' units 'TAF'}
+define dem_d7C_dcmp    {timeseries kind 'DEMAND-SWP-DECOMP' units 'TAF'} ! SP MBK
 define dem_d202_PWR   {timeseries kind 'DEMAND-SWP-WR' units 'TAF'}
 define dem_d206a_PAG  {timeseries kind 'DEMAND-SWP-AG' units 'TAF'}
 define dem_d204_PIMI   {timeseries kind 'DEMAND-SWP-MI' units 'TAF'}
@@ -16,11 +17,23 @@ define dem_d201_PIMI   {timeseries kind 'DEMAND-SWP-MI' units 'TAF'}
 define dem_d204_POMI   {timeseries kind 'DEMAND-SWP-MI' units 'TAF'}
 define dem_d201_POMI   {timeseries kind 'DEMAND-SWP-MI' units 'TAF'}
 
+define frac_dem_d204_PIMI {
+	case GreaterThanZeroDemand {
+		condition	dem_d204_PIMI > 0.001 .or. dem_d204_POMI > 0.001
+		value		dem_d204_PIMI/(dem_d204_PIMI + dem_d204_POMI)
+	}
+	case otherwise {
+		condition	always
+		value		1.
+	}
+}
+define frac_dem_d204_POMI {value 1. - frac_dem_d204_PIMI}
+
 define dem_d201_PMI   {STD KIND 'DEMAND-SWP-MI' units 'TAF' }
-define dem_d204_PMI   {STD KIND 'DEMAND-SWP-MI' units 'TAF' }
+!define dem_d204_PMI   {STD KIND 'DEMAND-SWP-MI' units 'TAF' }
 
 goal set_dem_d201_pmi {dem_d201_PMI = dem_d201_PIMI + dem_d201_POMI}
-goal set_dem_d204_pmi {dem_d204_PMI = dem_d204_PIMI + dem_d204_POMI}
+!goal set_dem_d204_pmi {dem_d204_PMI = dem_d204_PIMI + dem_d204_POMI}
 define dem_d206b_PAG {timeseries kind 'DEMAND-SWP-AG' units 'TAF'}
 define dem_d206b_PWR {timeseries kind 'DEMAND-SWP-WR' units 'TAF'}
 

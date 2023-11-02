@@ -28,47 +28,87 @@ define HandS_minpump {
 define MAXEXP_RPA {
 	case IF_On {
 		condition int(IF_SWPorCVP_Onoff)==1
-		value min(NMFS_MaxExp, NMFS_MaxExp_DCC, FWS_MaxExp_X2)}
+		value min(NMFS_MaxExp, NMFS_MaxExp_DCC)}
 	case IF_Off {
 		condition always
-		value max( min(NMFS_MaxExp, NMFS_MaxExp_DCC, FWS_MaxExp_X2), HandS_minpump)}
+		value max( min(NMFS_MaxExp, NMFS_MaxExp_DCC), HandS_minpump)}
 }
 !
 ! **********************************************************************************************
 !
 
 define Export_dec_RPA {value max(0.,D_EXPTD[base] - MAXEXP_RPA)}
-define SWP_exp_dec_RPA {value max(0.,min(Export_dec_RPA,D_Banks_swp_TD[base] - D_Jones_TD[base]))}
-define CVP_exp_dec_RPA {value max(0.,min(Export_dec_RPA,D_Jones_TD[base] - D_Banks_swp_TD[base]))}
-define Comb_exp_dec_RPA {value max(0., Export_dec_RPA - SWP_exp_dec_RPA - CVP_exp_dec_RPA)}
+!define SWP_exp_dec_RPA {value max(0.,min(Export_dec_RPA,D_Banks_swp_TD[base] - D_Jones_TD[base]))}
+!define CVP_exp_dec_RPA {value max(0.,min(Export_dec_RPA,D_Jones_TD[base] - D_Banks_swp_TD[base]))}
+!define Comb_exp_dec_RPA {value max(0., Export_dec_RPA - SWP_exp_dec_RPA - CVP_exp_dec_RPA)}
 
 define Export_dec_RPA_ {alias Export_dec_RPA kind 'temp' units 'cfs'}
-define SWP_exp_dec_RPA_ {alias SWP_exp_dec_RPA kind 'temp' units 'cfs'}
-define CVP_exp_dec_RPA_ {alias CVP_exp_dec_RPA kind 'temp' units 'cfs'}
-define Comb_exp_dec_RPA_ {alias Comb_exp_dec_RPA kind 'temp' units 'cfs'}
+!define SWP_exp_dec_RPA_ {alias SWP_exp_dec_RPA kind 'temp' units 'cfs'}
+!define CVP_exp_dec_RPA_ {alias CVP_exp_dec_RPA kind 'temp' units 'cfs'}
+!define Comb_exp_dec_RPA_ {alias Comb_exp_dec_RPA kind 'temp' units 'cfs'}
 
-define MAXEXP_RPA_CVP {value max(jonesminpump,d_jones_td[BASE] - CVP_exp_dec_RPA - 0.5*Comb_exp_dec_RPA) }
-define MAXEXP_RPA_SWP {value max(banksminpump,d_banks_swp_td[base] - SWP_exp_dec_RPA - 0.5*Comb_exp_dec_RPA) }
+define CVPExpCapShare_NMFS {
+	case Apr_May {
+		condition month >= apr .and. month <= may !-KS, 9/12/18. Limiting to SJR IE only.
+		value CVPExpCapShare_Srpls
+	}
+	case otherwise {
+		condition always
+		value 0.5	!-KS, 9/12/18. 50/50 sharing of Fall X2 and DXC burden.
+	}
+}
 
+define SWPExpCapShare_NMFS {
+	case Apr_May {
+		condition month >= apr .and. month <= may !-KS, 9/12/18. Limiting to SJR IE only.
+		value SWPExpCapShare_Srpls
+	}
+	case otherwise {
+		condition always
+		value 0.5	!-KS, 9/12/18. 50/50 sharing of Fall X2 and DXC burden.
+	}
+}
+
+
+
+!define MAXEXP_RPA_CVP {value max(jonesminpump,d_jones_td[BASE] - CVP_exp_dec_RPA - 0.5*Comb_exp_dec_RPA) }
+!define MAXEXP_RPA_SWP {value max(banksminpump,d_banks_swp_td[base] - SWP_exp_dec_RPA - 0.5*Comb_exp_dec_RPA) }
+
+define MAXEXP_RPA_CVP_Init {value CVPExpCapShare_NMFS*MAXEXP_RPA}
+define MAXEXP_RPA_SWP_Init {value SWPExpCapShare_NMFS*MAXEXP_RPA}
+
+define Unused_MAXEXP_RPA_CVP {value max(0., MAXEXP_RPA_CVP_Init - d_jones_td[BASE])}
+define Unused_MAXEXP_RPA_SWP {value max(0., MAXEXP_RPA_SWP_Init - d_banks_swp_td[base])}
+
+define MAXEXP_RPA_CVP {value max(jonesminpump,min(d_jones_td[BASE], MAXEXP_RPA_CVP_Init) + Unused_MAXEXP_RPA_SWP)}
+define MAXEXP_RPA_SWP {value max(banksminpump,min(d_banks_swp_td[base], MAXEXP_RPA_SWP_Init) + Unused_MAXEXP_RPA_CVP)}
 
 goal set_MAXEXP_RPA_SWP {
     lhs     D_Banks_swp_TD
-    case BOSWITCHON {
-    condition FallX2 == 1 .or. Action_4_1_2 == 1 .or. Action_4_2_1 == 1    
-    rhs     MAXEXP_RPA_SWP
+	case SjrIeOnly {
+		condition   month>=apr .and.  month<=may
+		rhs     MAXEXP_RPA_SWP
+
     lhs<rhs penalty    0}
     }    
     
+define MAXEXP_RPA_SWP_Initdv {alias MAXEXP_RPA_SWP_Init kind 'TEMP' units 'CFS'}
+define Unused_MAXEXP_RPA_SWPdv {alias Unused_MAXEXP_RPA_SWP kind 'TEMP' units 'CFS'}
+
 define MAXEXP_RPA_SWPdv {alias MAXEXP_RPA_SWP kind 'EXPORT-LIMIT' units 'CFS'}
 
 goal set_MAXEXP_RPA_CVP {
     lhs     D_Jones_TD
-    case BOSWITCHON {
-    condition FallX2 == 1 .or. Action_4_1_2 == 1 .or. Action_4_2_1 == 1
+	case SjrIeOnly {
+		condition   month>=apr .and.  month<=may
+
     rhs     MAXEXP_RPA_CVP
     lhs<rhs penalty    0}
     }
     
+define MAXEXP_RPA_CVP_Initdv {alias MAXEXP_RPA_CVP_Init kind 'TEMP' units 'CFS'}
+define Unused_MAXEXP_RPA_CVPdv {alias Unused_MAXEXP_RPA_CVP kind 'TEMP' units 'CFS'}
+
 define MAXEXP_RPA_CVPdv {alias MAXEXP_RPA_CVP kind 'EXPORT-LIMIT' units 'CFS'}
 
 if int(banksifswitch) > 0.5 .or. int(jonesifswitch) > 0.5 {

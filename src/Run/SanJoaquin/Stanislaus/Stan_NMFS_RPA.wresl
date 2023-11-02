@@ -5,7 +5,7 @@
 ! to the rpa flow targets, calculate the deficiency and secure a specific
 ! release from New Melones to meet it.
 
-define stanfish_yr_NMFS { select stanf from stan_yr given NMF = NMforecast1 use linear }
+define stanfish_yr_NMFS { select stanf from stanf_yr given SJRI = wyt_SJR_stan  use linear }
 define stanfishyrNMFSDV {alias stanfish_yr_NMFS units 'taf'}
 
 ! define the required flow
@@ -17,9 +17,16 @@ define StanNMFSmin {
 define StanNMFSmin_dv {alias StanNMFSmin kind 'fish-flow-req' units 'cfs'}
 
 define StanNMFSpulse {
-    select  pulse from stan_pulse_rpa
-    given   stanyr = stanfish_yr_NMFS
-    use     linear }
+    case April {
+        condition       month == apr
+        select          aprpulse from stan_pulse_rpa given stanyr = stanfish_yr_NMFS use linear }
+    case May {
+        condition       month == may
+        select          maypulse from stan_pulse_rpa given stanyr = stanfish_yr_NMFS use linear }
+    case otherwise {
+        condition       always
+        value           0. }
+        }
 define StanNMFSpulse_dv {alias StanNMFSpulse kind 'fish-flow-req' units 'cfs'}
 
 ! check status of previous flow solutions to see if there is a need for
@@ -31,8 +38,8 @@ define StanNMFSdef {
         value 0.}
     case April {
         condition month==APR .and. STAN_RPA == 1
-        value max(0., (StanNMFSpulse-C_STANGDWN[VAMP_AND_DO])*16./30.,
-                      (StanNMFSpulse-C_STANRIPN[VAMP_AND_DO])*16./30.)
+        value max(0., (StanNMFSpulse-C_STANGDWN[SJR_WQ2])*16./30.,
+                      (StanNMFSpulse-C_STANRIPN[SJR_WQ2])*16./30.)
             + max(0., (StanNMFSmin-C_STANGDWN[SJR_WQ1])*14./30.,
                       (StanNMFSmin-C_STANRIPN[SJR_WQ1])*14./30.) }
     case otherwise {

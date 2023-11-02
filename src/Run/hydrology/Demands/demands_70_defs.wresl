@@ -12,7 +12,7 @@ define D_SacAme_pmi {STD KIND 'FLOW-DELIVERY' UNITS 'CFS' }
 define D_SacAme_psc {STD KIND 'FLOW-DELIVERY' UNITS 'CFS' }
 define D_Folsm_pmi {STD KIND 'FLOW-DELIVERY' UNITS 'CFS' }
 define D_Nimbus_pmi {STD KIND 'FLOW-DELIVERY' UNITS 'CFS' }
-
+/*
 !Monthly delivery pattern for each of the water purveyors
 define perdem_70       {timeseries kind 'DELIVERY-PATTERN' units 'NONE'} !AG monthly distribution--DSA 70
 define perdem_70smud   {timeseries kind 'DELIVERY-PATTERN' units 'NONE'} !MI monthly distribution--SMUD Folsom South Canal
@@ -54,4 +54,4 @@ define dem_D9b_pmi_ann   {timeseries kind 'DEMAND-CVP-MI' units 'TAF'}  !Annual 
 define prj_dr70 {timeseries kind 'DIV-REQUIREMENT' units 'TAF'} ! project diversion requirement
 define minpump_70_prj {timeseries kind 'MINPUMP' units 'TAF'} ! project portion of minimum gw pumping 
 define prj_dr70_imi {timeseries kind 'DEM-CVP-INDOORMI' units 'TAF'} ! Additional project diversion requirement for indoor M&I demand
-
+*/

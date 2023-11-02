@@ -1,0 +1,58 @@
+!ITP Proposed Project Alt 2B export limit
+!only applied on SWP exports
+!Apr - May: SWP exports limited to maximum of 600 cfs or 40% of max allowable export under SJR I/E; applied with B2_BO2 is in excess conditions
+!Aug: reduce SWP exports by 100 TAF in all the Wet and AN years
+
+!AK 11/27/2019
+!KS 12/13/2019 - updated references in the condition statements to the B2_BO2 cycle; 
+
+!Calculate the maximum allowable export with SJR I/E
+define NMFS_MaxExp_ON {
+    case AprMay {		
+        condition month>=APR .AND. month<=MAY
+        value SJRatio_MaxExp}
+    case otherwise{
+        condition always
+        value 999999.}
+}
+define NMFS_MaxExp_ONdv {alias NMFS_MaxExp_ON kind 'NMFS' units 'cfs'}
+
+!Determine whether DELTA is in Balanced/Excess conditions
+!Dec - Jun: need to account for OMR; determine whether OMR pushed the DELTA into excess with restriction
+!other months: same as the balanced month definition under D-1641 regs; balanced with B2_BO2 Outflow is controlled by salinity or MRDO or the SOD exports are limited by E/I
+!0 = Excess; 1 = Balanced
+define Balanced_cut {
+case OctNov {
+         condition month>=OCT .AND. month<=NOV .AND. Balanced_D1641[B2_BO2] < 0.5	!Excess
+         value 0}
+case JulSept { 
+         condition month>=JUL .AND. month<=SEP .AND. Balanced_D1641[B2_BO2] < 0.5	!Excess
+         value 0}         
+case DecJun_1 { 
+         condition month>=DEC .AND. month<=JUN .AND. Balanced_D1641[B2_BO2] < 0.5 .AND. Balanced_OMR[B2_BO2] < 0.5    !Excess
+         value 0}   
+case DecJun_2 { 
+         condition month>=DEC .AND. month<=JUN .AND. Balanced_D1641[B2_BO2] > 0.5 .AND. Balanced_OMR[B2_BO2] < 0.5    !Excess with restriction
+         value 0}  
+case otherwise{
+        condition always	!Balanced
+        value 1}
+}
+define Balanced_cutdv {alias Balanced_cut kind 'temp' units 'none'}        
+         
+define Alt2BSWPExpCut {     
+    case AprMay {		
+        condition month>=APR .AND. month<=MAY
+					.AND. C_SACSJR[B2_BO2] < 44500 /*.AND. Balanced_cut < 0.5*/ 
+					.AND. NMFS_MaxExp_ON < D_EXPTD[B2_BO2]			!total SJR I/E export must be less than the baseline total export
+					.AND. 0.4*NMFS_MaxExp_ON < D_BANKS_SWP[B2_BO2]	!40% of the SJR I/E must be less than the baseline SWP exports
+					.AND. D_BANKS[B2_BO2] > 300.					!Health and Safety Exports
+        value max(0,D_BANKS_SWP[B2_BO2]-max(600,0.4*NMFS_MaxExp_ON))}
+    case Aug {		
+        condition month==AUG
+        value min (Aug_Alt2BSWPExpCut*TAF_cfs, D_BANKS_SWP[WHEELING] - 300.) }
+    case otherwise{
+        condition always
+        value 0}
+}
+define Alt2BSWPExpCutdv {alias Alt2BSWPExpCut kind 'flow-delivery' units 'CFS'}

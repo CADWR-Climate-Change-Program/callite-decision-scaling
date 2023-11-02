@@ -13,7 +13,7 @@ source(file.path('..','src','func_quantile_mapping.R'))
 ### Sacramento Temperature Operations (Table 10)
 ```{r sacAirportTemp, paged.print=TRUE, warning=FALSE}
 sacAirpTempHist <-
-  read.table(file = file.path(climData,'data_38.6875_-121.5625'),
+  read.table(file = file.path(climData,'meteo_38.65625_-121.53125'),
              col.names = c("YEAR", "MONTH", "DAY", "PRCP", "TAVG")) %>%
   filter(MONTH %in% c(12, 1, 2, 3, 4, 5)) %>%
   mutate(., YEAR = ifelse(MONTH ==12, YEAR+1,YEAR)) %>%
@@ -21,10 +21,10 @@ sacAirpTempHist <-
   summarise_all(funs(mean))
 sacAirpTempHist <- sacAirpTempHist[,c("YEAR", "MONTH", "TAVG")]
 dbWriteTable(con, "ref_SAC_temp", sacAirpTempHist, overwrite=T, row.names=FALSE)
-sacAirpTempAll <- vector("list",length = length(tChangeList))
-for (i in 1:length(tChangeList)) {
+sacAirpTempAll <- vector("list",length = 5)
+for (i in 1:6) {
   sacAirpTempAll[[i]] <-
-    warm(sacAirpTempHist, warmingType,  as.double(gsub('_','.',tChangeList[i])))
+    warm(sacAirpTempHist, warmingType,  i-1)
 }
 remove(i)
 #sacAirpTempAll[[1]]
@@ -45,7 +45,7 @@ randForecast <- lapply(randForecast, function(x) {
 ### Default CalLite DSS
 ```{r dssCreate}
 dssIn <- dssCreate(defDSSDir)
-#dssIn[,1:10]
+# dssIn[,1:10]
 ```
 
 ### Get historical streamflow data
@@ -60,7 +60,8 @@ wytStationsHist <- dbReadTable(con,'ref_11stations_historical')
 # Keep in mind that the add_stations have a longer period 
 # of record than the rim inflow stations from the dssIn
 mainNodesHist <- cbind(dbReadTable(con,'ref_9stations_historical')[-(985:1068),], 
-                         dbReadTable(con,'ref_12stations_historical_callite')[,-(1:2)])
+                       dbReadTable(con,'ref_12stations_historical_callite')[,-(1:2)], 
+                       dbReadTable(con,'ref_11stations_historical')[-(985:1116),-(1:2)])
 #mainNodesHist
 ```
 
@@ -73,7 +74,7 @@ Calculate correlations between the rim stations, the 9 additional stations, and 
 inputsCorr <- dbGetQuery(con,
   paste('SELECT Time_Series AS dssInput, MAX_R2 AS r2, MAX_NAME as corrFlow',
         "FROM `ref_corr_output_calibrate1950-2000`",
-        'WHERE MAX_NAME <> "SJWYT" AND MAX_NAME <> "SacWYT"'))
+        'WHERE MAX_NAME <> "SJWYT" AND MAX_NAME <> "SacWYT" AND MAX_NAME <> "No Mapping"'))
 # Get list of correlated dss inputs for Sacramento and SJ water year type mapping
 inputsWYTSac <- dbGetQuery(con,paste('SELECT Time_Series AS dssInput',
                                             'FROM `ref_corr_output_calibrate1950-2000`',
@@ -120,122 +121,134 @@ if(writeForecastToDB == T) {
 ```
 
 ```{r message=FALSE, warning=FALSE}
-for (p in c(2:7)) {
-  for (t in c(1:9)) {
-    #Set run directory
-    pChangeVal = pChangeList[[p]]; pChangeName = names(pChangeList)[p]
-    tChangeVal = tChangeList[[t]]; tChangeName = names(tChangeList)[t]
-    ptRunFolder <- paste0(pChangeName, "DP", tChangeName, "DT")
-    print(ptRunFolder)
-    
-    #Create a directory to hold CalLite inputs for the perturbation
-    suppressWarnings(calliteInputDirCreate(ptRunFolder,calLiteInputDir))
-    
-    # Station Sim
-    obs11stations <- stationRead(pChangeVal,tChangeVal,con,
-                                 calLiteRunCount,modelYears,
-                                 paste0('sim_obs11stations_',hydrology,'_maf'), 
-                                 paste("Year,","Month,","AMF,","BLB,","BND,","FTO,",
-                                       "MRC,","SIS,","SJF,","SNS,","TLG,","TNL,","YRS"),TRUE)
-    
-    add9stations <- stationRead(pChangeVal,tChangeVal,con,
+
+for (cc_idx in cc) {
+
+  if (cc_idx %in% list(6,11,16)) {
+    t<-2
+  } else if (cc_idx %in%  list(2,7,12,17,21)) {
+    t<-3
+  } else if (cc_idx %in%  list(3,8,13,18,22)) {
+    t<-4
+  } else if (cc_idx %in%  list(4,9,14,19,21)) {
+    t<-5
+  } else if (cc_idx == 1) {
+    t<-1
+  } else {
+    t<-6
+  }
+
+  #Set run directory
+  ptRunFolder <- paste0(cc_idx)
+  print(ptRunFolder)
+  
+  #Create a directory to hold CalLite inputs for the perturbation
+  suppressWarnings(calliteInputDirCreate(ptRunFolder,calLiteInputDir))
+  
+  # Station Sim
+  obs11stations <- stationRead(cc_idx,con,
                                 calLiteRunCount,modelYears,
-                                 paste0('sim_add9stations_',hydrology,'_taf'), 
-                                 paste("Year,","Month,","BearRiver,","CacheCreek,",
-                                                "CalaverasRiver,","ChowchillaRiver,",
-                                                "CosumnesRiver,","FresnoRiver,",
-                                                "MokelumneRiver,","PutahCreek,","StonyCreek"),TRUE)
+                                paste0('sim_obs11stations_',hydrology,'_maf'), 
+                                paste("Year,","Month,","AMF,","BLB,","BND,","FTO,",
+                                      "MRC,","SIS,","SJF,","SNS,","TLG,","TNL,","YRS"),TRUE)
+  
+  add9stations <- stationRead(cc_idx,con,
+                              calLiteRunCount,modelYears,
+                                paste0('sim_add9stations_',hydrology,'_taf'), 
+                                paste("Year,","Month,","BearRiver,","CacheCreek,",
+                                              "CalaverasRiver,","ChowchillaRiver,",
+                                              "CosumnesRiver,","FresnoRiver,",
+                                              "MokelumneRiver,","PutahCreek,","StonyCreek"),TRUE)
 
-    rim12stations <- stationRead(pChangeVal,tChangeVal,con,
-                                 calLiteRunCount,modelYears,
-                                 paste0('sim_rim12stations_',hydrology),
-                                 paste("I_FOLSM,","I_MCLRE,","I_MELON,","I_MLRTN,",
-                                                "I_MOKELUMNE,","I_NHGAN,","I_OROVL,","I_PEDRO,",
-                                                "I_SHSTA,","I_TRNTY,","I_YUBA,","I_WKYTN"),FALSE)
-    
-    # WY Typing 
-    wytResults <- wyTyping(pChangeVal,tChangeVal,
-                     sac_aji=0.4,sac_omi=0.3,sac_c=5.4,sac_d=6.5,sac_bn=7.8,sac_an=9.2,sac_w=9.2,
-                     sj_aji=0.6,sj_omi=0.2,sj_c=2.1,sj_d=2.5,sj_bn=3.1,sj_an=3.8,sj_w=3.8,
-                     con,calLiteRunCount,runName,modelYears,obs11stations,dbWrite=TRUE)
+  rim12stations <- stationRead(cc_idx,con,
+                                calLiteRunCount,modelYears,
+                                paste0('sim_rim12stations_',hydrology),
+                                paste("I_FOLSM,","I_MCLRE,","I_MELON,","I_MLRTN,",
+                                              "I_MOKELUMNE,","I_NHGAN,","I_OROVL,","I_PEDRO,",
+                                              "I_SHSTA,","I_TRNTY,","I_YUBA,","I_WKYTN"),FALSE)
+  
+  # WY Typing 
+  wytResults <- wyTyping(cc_idx,
+                    sac_aji=0.4,sac_omi=0.3,sac_c=5.4,sac_d=6.5,sac_bn=7.8,sac_an=9.2,sac_w=9.2,
+                    sj_aji=0.6,sj_omi=0.2,sj_c=2.1,sj_d=2.5,sj_bn=3.1,sj_an=3.8,sj_w=3.8,
+                    con,calLiteRunCount,runName,modelYears,obs11stations,dbWrite=FALSE)
 
-    # Quantile Mapping
-    dssInQmapped <- suppressWarnings(qMapping(calLiteRunCount,inputsCorr,dssIn,
-                              add9stations,rim12stations, mainNodesHist))
+  # Quantile Mapping
+  dssInQmapped <- qMapping(calLiteRunCount,inputsCorr,dssIn,
+                            add9stations, obs11stations, rim12stations, mainNodesHist)
 
-    # WYT
-    dssInWYTyped <- wytMapping(inputsWYTSac,inputsWYTSJ,pChangeVal,tChangeVal,
-                           con,calLiteRunCount,modelYears,runName)
+  # WYT
+  dssInWYTyped <- wytMapping(inputsWYTSac,inputsWYTSJ,cc_idx,
+                          con,calLiteRunCount,modelYears,runName)
 
-    # DSS new
-    dssInNew <- dssNew(calLiteRunCount,dssIn,dssInWYTyped,dssInQmapped)
-    writeDSS(pathnames,file.path(calLiteInputDir,ptRunFolder,"DSS"),
-             dssInNew,calLiteRunCount)
+  # DSS new
+  dssInNew <- dssNew(calLiteRunCount,dssIn[1:modelYears*12,],dssInWYTyped,dssInQmapped)
+  writeDSS(pathnames,file.path(calLiteInputDir,ptRunFolder,"DSS"),
+            dssInNew,calLiteRunCount)
 
-    # Tables
-    table1new <- table1create(con,calLiteRunCount,modelYears,table1,wytResults,obs11stations)
-    table2new <- table2create(calLiteRunCount,modelYears,table2,obs11stations)
-    table3new <- table3create(calLiteRunCount,modelYears,table3,wytResults)
-    table4new <- table4create(calLiteRunCount,modelYears,table4,wytResults)
-    table5new <- table5create(calLiteRunCount,modelYears,table4new,table5)
-    table6new <- table6create(con,calLiteRunCount,modelYears,table6,obs11stations)
-    table7new <- table7create(calLiteRunCount,modelYears,table7,wytResults)
-    table8new <- table8create(calLiteRunCount,modelYears,table8,wytResults)
-    table9new <- table9create(calLiteRunCount,modelYears,table9,wytResults)
-    table10new <- table10create(calLiteRunCount,modelYears,
-                           table10,sacAirpTempAll,sacTempTrigger,t)
-    table11new <- table11create(con,calLiteRunCount,modelYears,
-                            table11,obs11stations,wytStationsHist,randForecast,forecastCase)
-    table12new <- table12create(con,calLiteRunCount,modelYears,
-                            table12,obs11stations,wytStationsHist,randForecast,forecastCase)
-    table13new <- table11create(con,calLiteRunCount,modelYears,
-                            table13,obs11stations,wytStationsHist,randForecast,forecastCase)
-    # Lookup Tables
-    writeTable(calLiteRunCount,file.path(calLiteInputDir,ptRunFolder,"Lookup_Tables"),
-               "x2days",table1new,file.path(defTableDir,"x2days.table"),3)
-    writeTable(calLiteRunCount,file.path(calLiteInputDir,ptRunFolder,"Lookup_Tables"),
-               "eightriver",table2new,file.path(defTableDir,"eightriver.table"),2)
-    writeTable(calLiteRunCount,file.path(calLiteInputDir,ptRunFolder,"Lookup_Tables"),
-               "SacValleyIndex",table3new,file.path(defTableDir,"SacValleyIndex.table"),3)
-    writeTable(calLiteRunCount,file.path(calLiteInputDir,ptRunFolder,"Lookup_Tables"),
-               "wytypeSJR",table4new,file.path(defTableDir,"wytypeSJR.table"),9)
-    writeTable(calLiteRunCount,file.path(calLiteInputDir,ptRunFolder,"Lookup_Tables"),
-               "wytypeSJRave5",table5new,file.path(defTableDir,"wytypeSJRave5.table"),4)
-    writeTable(calLiteRunCount,file.path(calLiteInputDir,ptRunFolder,"Lookup_Tables"),
-               "FebEiRatio",table6new,file.path(defTableDir,"FebEiRatio.table"),2)
-    writeTable(calLiteRunCount,file.path(calLiteInputDir,ptRunFolder,"Lookup_Tables"),
-               "delta_index",table7new,file.path(defTableDir,"delta_index.table"),2)
-    writeTable(calLiteRunCount,file.path(calLiteInputDir,ptRunFolder,"Lookup_Tables"),
-               "wytypes",table8new,file.path(defTableDir,"wytypes.table"),11)
-    writeTable(calLiteRunCount,file.path(calLiteInputDir,ptRunFolder,"Lookup_Tables"),
-               "wytypeTRIN",table9new,file.path(defTableDir,"wytypeTRIN.table"),1)
-    writeTable(calLiteRunCount,file.path(calLiteInputDir,ptRunFolder,"Lookup_Tables"),
-               "FWS_BO_A3_Temp",table10new,file.path(defTableDir,"FWS_BO_A3_Temp.table"),8)
+  # Tables
+  table1new <- table1create(con,calLiteRunCount,modelYears,table1,wytResults,obs11stations)
+  table2new <- table2create(calLiteRunCount,modelYears,table2,obs11stations)
+  table3new <- table3create(calLiteRunCount,modelYears,table3,wytResults)
+  table4new <- table4create(calLiteRunCount,modelYears,table4,wytResults)
+  table5new <- table5create(calLiteRunCount,modelYears,table4new,table5)
+  table6new <- table6create(con,calLiteRunCount,modelYears,table6,obs11stations)
+  table7new <- table7create(calLiteRunCount,modelYears,table7,wytResults)
+  table8new <- table8create(calLiteRunCount,modelYears,table8,wytResults)
+  table9new <- table9create(calLiteRunCount,modelYears,table9,wytResults)
+  table10new <- table10create(calLiteRunCount,modelYears,
+                          table10,sacAirpTempAll,sacTempTrigger,t)
+  table11new <- table11create(con,calLiteRunCount,modelYears,
+                          table11,obs11stations,wytStationsHist,randForecast,forecastCase)
+  table12new <- table12create(con,calLiteRunCount,modelYears,
+                          table12,obs11stations,wytStationsHist,randForecast,forecastCase)
+  table13new <- table13create(con,calLiteRunCount,modelYears,
+                          table13,obs11stations,wytStationsHist,randForecast,forecastCase)
+  
+  # Lookup Tables
+  writeTable(calLiteRunCount,file.path(calLiteInputDir,ptRunFolder,"Lookup_Tables"),
+              "x2days",table1new,file.path(defTableDir,"x2days.table"),3)
+  writeTable(calLiteRunCount,file.path(calLiteInputDir,ptRunFolder,"Lookup_Tables"),
+              "eightriver",table2new,file.path(defTableDir,"eightriver.table"),2)
+  writeTable(calLiteRunCount,file.path(calLiteInputDir,ptRunFolder,"Lookup_Tables"),
+              "SacValleyIndex",table3new,file.path(defTableDir,"SacValleyIndex.table"),3)
+  writeTable(calLiteRunCount,file.path(calLiteInputDir,ptRunFolder,"Lookup_Tables"),
+              "wytypeSJR",table4new,file.path(defTableDir,"wytypeSJR.table"),9)
+  writeTable(calLiteRunCount,file.path(calLiteInputDir,ptRunFolder,"Lookup_Tables"),
+              "wytypeSJRave5",table5new,file.path(defTableDir,"wytypeSJRave5.table"),4)
+  writeTable(calLiteRunCount,file.path(calLiteInputDir,ptRunFolder,"Lookup_Tables"),
+              "FebEiRatio",table6new,file.path(defTableDir,"FebEiRatio.table"),2)
+  writeTable(calLiteRunCount,file.path(calLiteInputDir,ptRunFolder,"Lookup_Tables"),
+              "delta_index",table7new,file.path(defTableDir,"delta_index.table"),2)
+  writeTable(calLiteRunCount,file.path(calLiteInputDir,ptRunFolder,"Lookup_Tables"),
+              "wytypes",table8new,file.path(defTableDir,"wytypes.table"),11)
+  writeTable(calLiteRunCount,file.path(calLiteInputDir,ptRunFolder,"Lookup_Tables"),
+              "wytypeTRIN",table9new,file.path(defTableDir,"wytypeTRIN.table"),1)
+  writeTable(calLiteRunCount,file.path(calLiteInputDir,ptRunFolder,"Lookup_Tables"),
+              "FWS_BO_A3_Temp",table10new,file.path(defTableDir,"FWS_BO_A3_Temp.table"),8)
 
-    # Forecast Tables
-    writeTable(calLiteRunCount,file.path(calLiteInputDir,ptRunFolder,"New_ForecastTables"),
-               "american_runoff_forecast",table11new,
-               file.path(defTableDir,"american_runoff_forecast.table"),3)
-
-
-    writeTable(calLiteRunCount,file.path(calLiteInputDir,ptRunFolder,"New_ForecastTables"),
-               "feather_runoff_forecast",table12new,
-               file.path(defTableDir,"feather_runoff_forecast.table"),2)
+  # Forecast Tables
+  writeTable(calLiteRunCount,file.path(calLiteInputDir,ptRunFolder,"New_ForecastTables"),
+              "american_runoff_forecast",table11new,
+              file.path(defTableDir,"american_runoff_forecast.table"),3)
 
 
-    writeTable(calLiteRunCount,file.path(calLiteInputDir,ptRunFolder,"New_ForecastTables"),
-               "sacramento_runoff_forecast",table13new,
-               file.path(defTableDir,"sacramento_runoff_forecast.table"),3)
+  writeTable(calLiteRunCount,file.path(calLiteInputDir,ptRunFolder,"New_ForecastTables"),
+              "feather_runoff_forecast",table12new,
+              file.path(defTableDir,"feather_runoff_forecast.table"),2)
 
-    if(writeForecastToDB == T) {
-      writeDB(pChangeVal,tChangeVal,con,calLiteRunCount,modelYears,
-                            table11new,runName,4,c(2,3,4,5),'forecastAmerican',FALSE)
-      writeDB(pChangeVal,tChangeVal,con,calLiteRunCount,modelYears,
-                            table13new,runName,4,c(2,3,4,5),'forecastShasta',FALSE)
-      writeDB(pChangeVal,tChangeVal,con,calLiteRunCount,modelYears,
-                            table12new,runName,5,c(1,2,3),'forecastFeather',TRUE)
-    }
-    
+
+  writeTable(calLiteRunCount,file.path(calLiteInputDir,ptRunFolder,"New_ForecastTables"),
+              "sacramento_runoff_forecast",table13new,
+              file.path(defTableDir,"sacramento_runoff_forecast.table"),3)
+
+  if(writeForecastToDB == T) {
+    writeDB(pChangeVal,tChangeVal,con,calLiteRunCount,modelYears,
+                          table11new,runName,4,c(2,3,4,5),'forecastAmerican',FALSE)
+    writeDB(pChangeVal,tChangeVal,con,calLiteRunCount,modelYears,
+                          table13new,runName,4,c(2,3,4,5),'forecastShasta',FALSE)
+    writeDB(pChangeVal,tChangeVal,con,calLiteRunCount,modelYears,
+                          table12new,runName,5,c(1,2,3),'forecastFeather',TRUE)
   }
 }
 

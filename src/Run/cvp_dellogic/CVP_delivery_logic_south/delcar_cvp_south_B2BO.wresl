@@ -9,7 +9,10 @@ File determines CVP SOD delivery target based Water Supply, D1641 and Export Lim
 Tom FitzHugh, BOR, 11/9/2010  Edited this file to add in BO allocation procedures, and switches to control 
 selection of preBO vs BO procedures.
 */
-
+define perdv_cvpag_s { std kind 'percent-delivery' units 'none'}
+define perdv_cvpmi_s { std kind 'percent-delivery' units 'none'}
+define perdv_cvpex_s { std kind 'percent-delivery' units 'none'}
+define perdv_cvprf_s { std kind 'percent-delivery' units 'none'}
 ! In May, get the VAMP export restriction computed last month
 ! (code is adapted from B2VampCommon.wresl)
 ! This code generates values used for preBO allocation procedures
@@ -75,7 +78,7 @@ define PulseExpRes1 {
         value       0.0}
 }
 
-define B2Action4On {timeseries kind 'TRIGGER' units 'NONE'}
+define B2Action4On {VALUE 0.}
 
 ! ***********************************************************
 ! Read in inputs used for BO allocation procedures
@@ -196,33 +199,33 @@ define estCVPExp_JulAug {
         condition always
             value 0.}
 }
+define SACIND {select index from SacValleyIndex where wateryear=wateryear} !MBK SP add
+
+! Estimate Export Capability for use in determining delivery target limitations
+define estCVPExpThruAug {
+    case March { condition month==MAR select MarAug from EstExpCVP given index=SACIND use linear}
+    case April { condition month==APR select AprAug from EstExpCVP given index=SACIND use linear}
+    case May   { condition month==MAY select MayAug from EstExpCVP given index=SACIND use linear}
+    case otherwise {condition always value 0.}
+}
+define estCVPExpThruAugdv {alias estCVPExpThruAug kind 'EXP-CAPACITY' units 'TAF'}
+
+define HighCVPSLmod {
+    case HighMayS11 {
+        condition month==MAY .and. S_SLCVP(-1)>772.
+        value 90.}
+    case otherwise {
+        condition always 
+        value 0.}
+}
+
 
 ! Estimate Export Capability for use in determining delivery target limitations
 define CVPDelCapEst {
-    case March {
-        condition month==MAR
-        value estCVPExp_Mar*cfs_taf
-            + estCVPExp_Apr*cfs_taf(1)
-            + estCVPExp_May*cfs_taf(2)
-            + estCVPExp_Jun*cfs_taf(3)
-            + estCVPExp_JulAug*cfs_taf(4)
-            + estCVPExp_JulAug*cfs_taf(5)
-            + S_SLCVP(-1) - buffCVP_MarAug + jbypass_del + AnnualBanksCVP }
-    case April {
-        condition month == APR
-        value estCVPExp_Apr*cfs_taf
-            + estCVPExp_May*cfs_taf(1)
-            + estCVPExp_Jun*cfs_taf(2)
-            + estCVPExp_JulAug*cfs_taf(3)
-            + estCVPExp_JulAug*cfs_taf(4)
-            + S_SLCVP(-1) - buffCVP_AprAug + jbypass_del + AnnualBanksCVP }
-    case May {
-        condition month == MAY
-        value estCVPExp_May*cfs_taf
-            + estCVPExp_Jun*cfs_taf(1)
-            + estCVPExp_JulAug*cfs_taf(2)
-            + estCVPExp_JulAug*cfs_taf(3)
-            + S_SLCVP(-1) - buffCVP_MayAug + jbypass_del + AnnualBanksCVP }
+    case MarAprMay {
+        condition month>=MAR .and. month<=MAY
+        value estCVPExpThruAug
+            + S_SLCVP(-1) - 45. + jbypass_del + AnnualBanksCVP + HighCVPSLmod}
     case otherwise {
         condition always
         value 0.0 }

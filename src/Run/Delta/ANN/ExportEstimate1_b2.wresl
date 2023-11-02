@@ -27,11 +27,11 @@ define est_oro_release{
     case verylow {condition s_orovl[upstream] <= 1250.0 
     value 300.0}
     case low {condition s_orovl[upstream]>1250.0 .and. s_orovl[upstream] <= 1800.0 
-    value  0.25*(S_Orovl(-1) - 1000. - DrainTar_buffer)*taf_cfs}
+    value  0.25*(S_Orovl(-1) - 1600. - DrainTar_buffer)*taf_cfs}
     case high {condition s_orovl[upstream]>1800.0 .and. s_orovl[upstream] <= 2200.0 
-    value 0.50*(S_Orovl(-1) - 1000. - DrainTar_buffer)*taf_cfs}
+    value 0.50*(S_Orovl(-1) - 1600. - DrainTar_buffer)*taf_cfs}
     case veryhigh { condition always 
-    value 0.75*(S_Orovl(-1) - 1000. - DrainTar_buffer)*taf_cfs}
+    value 0.75*(S_Orovl(-1) - 1600. - DrainTar_buffer)*taf_cfs}
 }
 
  

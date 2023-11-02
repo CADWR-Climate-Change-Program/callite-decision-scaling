@@ -1,0 +1,36 @@
+! FixedOperations.wresl
+! Systemwide operations fixed to the Wheeling cycle
+
+!Coordinated Operations Agreement
+!!Unused Federal Share
+goal fixD419_EXP1 {lhs D_BANKS_EXP1 rhs D_BANKS_EXP1[Wheeling] lhs < rhs penalty 999. lhs > rhs constrain}
+goal fixD419_EXP2 {lhs D_BANKS_EXP2 rhs D_BANKS_EXP2[Wheeling] lhs < rhs penalty 0. lhs > rhs constrain}
+!goal fixD408_P_WHL_SB_E2 {D408_P_WHL_SB_E2 = D408_P_WHL_SB_E2[Wheeling]}
+!goal fixUNUSED_FS {UNUSED_FS = UNUSED_FS[Wheeling]}
+
+!!Unused State Share
+goal fixD418_EXP2 {lhs D_JONES_EXP2 rhs D_JONES_EXP2[Wheeling] lhs < rhs penalty 99999. lhs > rhs constrain}
+!goal fixD419_CVPDED_EXP2 {D419_CVPDED_EXP2 = D419_CVPDED_EXP2[Wheeling]}
+!goal fixD168B_EXP2 {D168B_EXP2 = D168B_EXP2[Wheeling]}
+goal fixD408_DS_EXP2 {D_CCWD = D_CCWD[Wheeling]}
+!goal fixD408_P_WHL_SF_E2 {D408_P_WHL_SF_E2 = D408_P_WHL_SF_E2[Wheeling]}
+!goal fixUNUSED_SS {UNUSED_SS = UNUSED_SS[Wheeling]}
+
+!!COA Sharing
+goal fixIBU2 {IBU = IBU[Wheeling]}
+goal fixUWFE2 {UWFE = UWFE[Wheeling]}
+goal fixint_IBU_UWFE {int_IBU_UWFE = int_IBU_UWFE[Wheeling]}
+
+!!Sharing of available export capacity
+goal fixSWPExpCapShare_D1641 {SWPExpCapShare_D1641 = SWPExpCapShare_D1641[Wheeling]}
+goal fixCVPExpCapShare_D1641 {CVPExpCapShare_D1641 = CVPExpCapShare_D1641[Wheeling]}
+
+!Storage
+/*
+goal fixS40 {S40 = S40[Wheeling]}
+goal fixS41 {S41 = S41[Wheeling]}
+goal fixS42 {S42 = S42[Wheeling]}
+goal fixS7 {S7 = S7[Wheeling]}
+goal fixF7 {F7 = F7[Wheeling]}
+!goal fixF6 {F6 = F6[Wheeling]}
+*/
