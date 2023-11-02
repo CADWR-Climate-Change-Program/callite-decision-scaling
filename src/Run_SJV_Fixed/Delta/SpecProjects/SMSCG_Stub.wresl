@@ -1,0 +1,18 @@
+!SMSCG_stub.wresl
+
+!******************************************************************************
+
+define SMSCG_NDO_adj { value 0. }  
+
+define D_DeltaReqd_SMSCGadj {std kind 'FLOW-DELIVERY' units 'CFS'} !SMSCG Ops NDO cost associated with salinity effect
+goal setSMSCGOper { D_DeltaReqd_smscgadj = SMSCG_NDO_adj }
+
+!******************************************************************************
+
+! Adjusted Net Delta Consumptive Use for calculating ANN MRDO
+define net_delta_cu_adj { value net_delta_cu + SMSCG_NDO_adj }     
+
+define net_DICU_adj { lower unbounded kind 'DICU-FLOW-Adj' units 'CFS' }
+goal def_net_DICU_adj { net_DICU_adj = net_DICU + D_DeltaReqd_smscgadj }
+
+define net_delta_cu_adjDV { ALIAS net_DICU_adj KIND 'NET-DICU-Adj' UNITS 'CFS' }

@@ -1,0 +1,142 @@
+!SMSCG_Operation_DELTA.wresl
+
+!******************************************************************************
+! Existing Fall/Winter/Spring Operation - repeat the result of the previous DELTA cycle
+
+define SMSCG_OpFlag_EX_DV { std kind 'Flag' units 'None' }
+define SMSCG_OpFlag_EX {value SMSCG_OpFlag_EX_DV[B2_BO2]}
+goal setSMSCGOpFlagEXDV { SMSCG_OpFlag_EX_DV = SMSCG_OpFlag_EX }
+
+!******************************************************************************
+! ROC on LTO Proposed Action Summer/Fall Delta Smelt Habitat Operation - repeat the result of the previous DELTA cycle
+
+define SMSCG_OpFlag_PA_DV { std kind 'Flag' units 'None' }
+define SMSCG_OpFlag_PA {value SMSCG_OpFlag_PA_DV[B2_BO2]}
+goal setSMSCGOpFlagPADV { SMSCG_OpFlag_PA_DV = SMSCG_OpFlag_PA }
+
+!******************************************************************************
+! ITP SMSCG re-operation implements dry year SMSCG re-operations following W, AN, or BN years
+! Re-operation is to occur for 60 days (2 months) following W and AN years and 30 days following a BN year
+! Re-operation is to occur between June and October, but given the X2 trigger conditions applied (> 76 km)
+! in a dry year it typically happens in June and July of that period.
+! Re-operation following Wet and AN years are dependent on carryover of ITP 100 TAF export cut (ITP_Carryover)
+define SMSCG_OpFlag_ITP_DV { std kind 'Flag' units 'None' }
+define SMSCG_OpFlag_ITP_Count_DV { std kind 'Flag' units 'None' }
+define SMSCG_OpFlag_ITP {
+    case firstyear  {
+        condition wateryear == 1922. .and. month <= MAY
+        value 0. }
+    case Check_months {
+        condition month >= NOV .and. month <= MAY ! exclude if November through May
+        value 0. }
+    case Check_WYT  {
+        condition wyt_SAC < 3.5 .or. wyt_SAC == 5 .or.  prev_wyt_SAC > 3.5 ! only dry years that follow W, AN, or BN years
+        value 0.}
+    case InsufficientCarryOver {
+        condition   prev_wyt_SAC < 2.5 .and. SWPITP_OroCarryover_(-1) < 10 !TAF
+        value       0. 
+    }
+    case Check_30day_60day_done {
+        condition (prev_wyt_SAC == 3 .and. SMSCG_OpFlag_ITP_Count_DV(-1) > 0.5) .or. SMSCG_OpFlag_ITP_Count_DV(-1) > 1.5
+        value 0. }
+    /*case Check_30day_done {
+        condition SMSCG_OpFlag_ITP_Count_DV(-1) == 1. .and. SMSCG_OpFlag_ITP_DV(-1) == 0.
+        value 0. }*/
+    case Check_X2_range {
+        condition X2_est <= 76. !.or. X2_MOD_est >= 87.
+        value 0. }
+    case Check_X2_delay_Jun_Jul {
+        condition month <= JUL .and. X2_last <= 76. ! delay start in June and July if previous X2 west of 76 km
+        value 0. }  
+    case Commence_GateOp {
+        condition always
+        value 1. }
+}
+goal setSMSCGOpFlagITPDV { SMSCG_OpFlag_ITP_DV = SMSCG_OpFlag_ITP }
+
+define SMSCG_OpFlag_ITP_Count {
+    case firstyear  {
+        condition wateryear == 1922. .and. month <= MAY
+        value 0. }
+    case reset {
+        condition month == NOV
+        value 0. }
+    case otherwise {
+        condition always
+        value SMSCG_OpFlag_ITP_Count_DV(-1) + SMSCG_OpFlag_ITP }
+}
+goal setSMSCGOpFlagITPCountDV { SMSCG_OpFlag_ITP_Count_DV = SMSCG_OpFlag_ITP_Count }
+
+!******************************************************************************
+
+define SMSCG_OpFlag_Count_DV { std kind 'Flag' units 'None' }
+define SMSCG_OpFlag_Count {
+    case firstyear  {
+        condition wateryear == 1922. .and. month == OCT
+        value max(SMSCG_OpFlag_EX,SMSCG_OpFlag_PA,SMSCG_OpFlag_ITP) }
+    case reset {
+        condition max(SMSCG_OpFlag_EX,SMSCG_OpFlag_PA,SMSCG_OpFlag_ITP) < 1.
+        value 0. }
+    case otherwise {
+        condition always
+        value SMSCG_OpFlag_Count_DV(-1) + max(SMSCG_OpFlag_EX,SMSCG_OpFlag_PA,SMSCG_OpFlag_ITP) }
+}
+goal setSMSCGOpFlagCountDV { SMSCG_OpFlag_Count_DV = SMSCG_OpFlag_Count }
+
+! first two months of continuous operation adjust for 500 cfs then drop to 200 cfs for each additional month; if interrupted, start again with 500 cfs
+define SMSCG_NDO_adj { 
+    case exclude_ANNschedule {
+        condition month <= FEB
+        value 0. }                      ! don't use an adjustment in months where ANN training already included SMSCG Ops
+    case OpFlagCount_low {
+        condition SMSCG_OpFlag_Count <= 2.
+        value max(SMSCG_OpFlag_EX,SMSCG_OpFlag_PA,SMSCG_OpFlag_ITP) * 500. }  ! assume SMSCG Ops has a salinity effect equivalent to a change in NDO of 500 CFS
+    case OpFlagCount_high {
+        condition SMSCG_OpFlag_Count >= 3.
+        value max(SMSCG_OpFlag_EX,SMSCG_OpFlag_PA,SMSCG_OpFlag_ITP) * 500. }  ! assume SMSCG Ops has a salinity effect equivalent to a change in NDO of 200 CFS
+}
+define SMSCG_ITP_NDO_adj {value SMSCG_OpFlag_ITP * 500. } 
+define SMSCG_ITP_NDO_adj_ {alias SMSCG_ITP_NDO_adj kind 'ITP-Action' units 'cfs'}
+
+define D_DeltaReqd_smscgadj {std kind 'FLOW-DELIVERY' units 'CFS'} !SMSCG Ops NDO cost associated with salinity effect
+goal setSMSCGOper { D_DeltaReqd_smscgadj = SMSCG_NDO_adj }
+
+!******************************************************************************
+
+! Adjusted Net Delta Consumptive Use for calculating ANN MRDO
+define net_delta_cu_adj { value net_delta_cu + SMSCG_NDO_adj }
+
+define net_DICU_adj { lower unbounded kind 'DICU-FLOW-Adj' units 'CFS' }
+goal def_net_DICU_adj { net_DICU_adj = net_DICU + D_DeltaReqd_smscgadj }
+                                                                                                                                                            
+define net_delta_cu_adjDV { ALIAS net_DICU_adj KIND 'NET-DICU-Adj' UNITS 'CFS' }
+
+!******************************************************************************
+
+define SMSCG_Oro_Rel_for_DO {
+    case Init {
+        condition   month == oct .and. wateryear == 1922
+        value       0.
+    }
+    case Following_WorAN {  
+        condition   prev_wyt_SAC < 2.5
+        value SMSCG_OpFlag_ITP*min(SWPITP_OroCarryover_(-1)*taf_cfs,500.)
+    }
+    case otherwise {    
+        condition   always
+        value SMSCG_OpFlag_ITP*500.
+    }
+    
+}
+define SMSCG_Carryover_Rel {
+    case Following_WorAN {
+        condition   prev_wyt_SAC < 2.5
+        value       SMSCG_Oro_Rel_for_DO
+    }
+    case otherwise {
+        condition   always
+        value       0.
+    }
+}
+define SMSCG_Oro_Rel_for_DO_ {alias SMSCG_Oro_Rel_for_DO kind 'ITP-Action' units 'cfs'}
+define SMSCG_Carryover_Rel_ {alias SMSCG_Carryover_Rel kind 'ITP-Action' units 'cfs'}

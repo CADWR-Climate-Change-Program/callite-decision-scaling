@@ -1,0 +1,6 @@
+! This file sets the minimum required flows at Below Keswick, Nimbus and Whiskeytown Dams
+! Sean Sou 10/3/01
+
+goal meet_min_C_WKYTN { C_WKYTN_mif < clearCrk_min}            ! Minimum required flows in Clear Creek below Whiskeytown Dam
+goal meet_min_C_NTOMA { C_Nimbus_mif < minflowFMPAmer}       ! Minimum required flows in American River below Nimbus Dam
+goal meet_min_C_KSWCK { C_KSWCK_MIF1 < effective_C_Keswick_min1} ! Minimum required flows in Sacramento River below Keswick Dam

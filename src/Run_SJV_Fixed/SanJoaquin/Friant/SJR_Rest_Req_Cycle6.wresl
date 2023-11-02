@@ -1,0 +1,81 @@
+! SJR_Rest_Full.wresl
+
+! Retrieve SJR Restoration Settlement flow requirements.
+! This file is included in full system cycles and uses average monthly values
+! for the restoration flow requirements.  This allows the solution for the overall
+! volume movement of water in the month.  
+
+define SJRR_rel {value SJRR_mon}
+
+define SJRR_relDV {alias SJRR_rel kind 'flow-min-requirement' units 'cfs'}
+
+! restrict the release from Friant to be the restoration release target
+! this value includes Gravelly Ford diversions and losses.  Set the segment
+! of flow below Gravelly Ford as the actual restoration flow - this will be
+! passed on to the restoration channel in SJR_Restrict.wresl
+goal boundC18main { C18m < SJRR_rel  }
+define SJRR_L605 {value max(0., min(SJRR_rel - C18_min*taf_cfs, 0.05*(SJRR_rel - C18_min*taf_cfs) + 95.))}
+goal setC603_mainSJRR {C603_mainSJRR < max(0.,SJRR_rel - C18_min*taf_cfs - SJRR_L605)}
+
+goal set_D603 { D603 < 0.4 * min(SJRR_rel, C18_min * taf_cfs) }
+goal set_L603 { L603 = min(SJRR_rel, C18_min * taf_cfs) - D603 }
+
+goal lim_I18_rest_bal {I18_rest_bal < 0.}
+
+goal set_C18A { C18A < Fr_snow_rel * taf_cfs}
+
+!*********************************************************************************************
+! SJRR Recapture Ops 
+
+! Set lower SJR recapture to the weighted average of previous cycle solutions (April)
+! or just SJR_WQ1 results (other months).  This accommodates recapture limits due to
+! flood control operations.
+
+define D620D_limit {
+    case April {
+        condition month==APR
+        value (D620D[SJR_WQ1]*14. + D620D[SJR_WQ2]*16.)/30.}
+    case otherwise {
+        condition always
+        value D620D[SJR_WQ1]}
+}
+define D630C_limit {
+    case April {
+        condition month==APR
+        value (D630C[SJR_WQ1]*14. + D630C[SJR_WQ2]*16.)/30.}
+    case otherwise {
+        condition always
+        value D630C[SJR_WQ1]}
+}
+define D639A_limit {
+    case April {
+        condition month==APR
+        value (D639A[SJR_WQ1]*14. + D639A[SJR_WQ2]*16.)/30.}
+    case otherwise {
+        condition always
+        value D639A[SJR_WQ1]}
+}
+define D639B_limit {
+    case April {
+        condition month==APR
+        value (D639B[SJR_WQ1]*14. + D639B[SJR_WQ2]*16.)/30.}
+    case otherwise {
+        condition always
+        value D639B[SJR_WQ1]}
+}
+
+goal set_D620D {D620D < D620D_limit}
+goal set_D630C {D630C < D630C_limit}
+goal set_D639A {D639A < D639A_limit}
+goal set_D639B {D639B < D639B_limit}
+
+!*********************************************************************************************
+! No South Delta Export of Recapture water prior to final cycle
+goal set_D4009_SRP_lmt { D4009_SRP = 0. }
+goal set_D418_SRP_lmt { D418_SRP = 0. }
+goal set_D419_SRP_lmt { D419_SRP = 0. }
+define FriantRecap_EXC {std kind 'SJRR-flow' units 'cfs'}
+goal zeroFriantRecap_EXC { FriantRecap_EXC = 0. }
+
+goal D639B_lmt1 { D639B = 0.}  
+

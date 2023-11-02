@@ -1,0 +1,9 @@
+define X2_est {value X2_prv(-1)}
+define X2_est_dv {alias X2_est kind 'X2-POSITION-ESTIMATE' units 'KM'}
+
+define X2_MOD_est {value X2_prv_MOD(-1)}
+define X2_MOD_est_dv {alias X2_MOD_est kind 'X2-POSITION-ESTIMATE' units 'KM'}
+
+define NDO_MOD_est_MW {value NDO(-1)}
+define X2_MOD_est_MW {value X2_MOD_est}
+

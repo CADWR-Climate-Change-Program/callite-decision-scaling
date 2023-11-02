@@ -1,0 +1,112 @@
+/************************************
+wsi_swp.wresl
+
+Nazrul Islam DWR 05/20/2010
+
+
+The Water Supply Index (WSI) for the SWP is the sum of the beginning of months storages
+(BOM) for Lake Oroville (S_Orovl) and SWP-San Luis Reservoir (S_SLSWP) and the Forecast of Runoff
+for the Feather River.
+
+Forecast of Runoff for SWP is defined as: Feather River component of the Sacramento
+River Index (SRI) - Sum of Oroville Lake Inflows (I_Orovl) since 1-OCT.
+************************************/
+
+define frcst_fea {
+    case JantoMay0  {
+        condition   month >= JAN .and. month <=MAY .and. Climate_Proj == 0
+        select      frcst_fea_0
+        from        feather_runoff_forecast
+        where       wateryear=wateryear, month=month  }        
+    case JantoMay1  {
+        condition   month >= JAN .and. month <=MAY .and. Climate_Proj == 1
+        select      frcst_fea_1
+        from        feather_runoff_forecast
+        where       wateryear=wateryear, month=month  }        
+    case JantoMay2  {
+        condition   month >= JAN .and. month <=MAY .and. Climate_Proj == 2
+        select      frcst_fea_2
+        from        feather_runoff_forecast
+        where       wateryear=wateryear, month=month  }        
+    case JantoMay3  {
+        condition   month >= JAN .and. month <=MAY .and. Climate_Proj == 3
+        select      frcst_fea_3
+        from        feather_runoff_forecast
+        where       wateryear=wateryear, month=month  }        
+    case JantoMay4  {
+        condition   month >= JAN .and. month <=MAY .and. Climate_Proj == 4
+        select      frcst_fea_4
+        from        feather_runoff_forecast
+        where       wateryear=wateryear, month=month  }        
+    case JantoMay5  {
+        condition   month >= JAN .and. month <=MAY .and. Climate_Proj == 5
+        select      frcst_fea_5
+        from        feather_runoff_forecast
+        where       wateryear=wateryear, month=month  }        
+    case JantoMay6  {
+        condition   month >= JAN .and. month <=MAY .and. Climate_Proj == 6
+        select      frcst_fea_6
+        from        feather_runoff_forecast
+        where       wateryear=wateryear, month=month  }        
+    case JantoMay7  {
+        condition   month >= JAN .and. month <=MAY .and. Climate_Proj == 7
+        select      frcst_fea_7
+        from        feather_runoff_forecast
+        where       wateryear=wateryear, month=month  }        
+    case JantoMay8  {
+        condition   month >= JAN .and. month <=MAY .and. Climate_Proj == 8
+        select      frcst_fea_8
+        from        feather_runoff_forecast
+        where       wateryear=wateryear, month=month  }        
+    case JantoMay9  {
+        condition   month >= JAN .and. month <=MAY .and. Climate_Proj == 9
+        select      frcst_fea_9
+        from        feather_runoff_forecast
+        where       wateryear=wateryear, month=month  }        
+    case JantoMay10  {
+        condition   month >= JAN .and. month <=MAY .and. Climate_Proj == 10
+        select      frcst_fea_10
+        from        feather_runoff_forecast
+        where       wateryear=wateryear, month=month  }                
+  case other {
+    condition   always
+    value       0.0 }
+}
+
+define co_final_dv {std kind 'carryover' units 'taf'}
+define co_final_sod_dv {std kind 'carryover' units 'taf'}
+define co_final_nod_dv {std kind 'carryover' units 'taf'}
+
+
+define co_available_dv {std kind 'carryover' units 'taf'}
+define co_available_nod_dv {std kind 'carryover' units 'taf'}
+define co_available_sod_dv {std kind 'carryover' units 'taf'}
+		   
+define S_SLSWP_effective {case Jan {
+                       condition month == JAN
+                       value max(S_SLSWP(-1) - co_final_sod_dv(-1), 0.0)}
+					 case FebtoMar {
+					   condition month >= FEB .and. month <= MAR
+                       value max(S_SLSWP(-1) - co_available_sod_dv(-1), 0.0)}
+                     case Rest {
+                       condition always
+                       value S_SLSWP(-1)}}
+					   
+					   
+!Define carryover of W and AN year 100 TAF ITP export cut.  It should not be included in the Table A allocation
+!since it will be used to support summer 80 km X2 in W, AN, BN years or salinity impacts of
+!re-operating the SMSCG in Dry years.
+define SWPITP_OroCarryover_ {std kind 'carryover' units 'taf'}
+
+define WSI_SWP {
+    case JantoMay {
+        condition  month >= JAN .and. month <= MAY
+        value     S_Orovl(-1) + S_SLSWP_effective + frcst_fea - SWPITP_OroCarryover_(-1) }     ! Previous month storage plus forecast inflow
+    case other {
+        condition   always
+        value       0.0 }
+}
+define WSI_SWP_dv {alias WSI_SWP kind 'water-supply-index' units 'taf'}
+
+
+

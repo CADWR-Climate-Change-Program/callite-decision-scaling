@@ -1,0 +1,50 @@
+/*************************************
+Keswickmin.wresl
+ 
+Tom FitzHugh BOR 4/7/2010; modified by Nazrul Islam, DWR, 10/13/2010 for B2 action implementation (commented out line 16)
+
+Sets minimum flow on Sacramento River below Keswick.  Minimum flow is a maximum of
+timeseries and a temperature surrogate.
+*************************************/
+
+/***define KesTrig {
+    case Oct {
+        condition month == OCT
+        value S_Shsta(prevSep)}
+    case rest {
+        condition always
+        value S_Shsta(-1)}
+}***/
+
+define minflow_C_Kswck {timeseries kind 'flow-min-required' units 'CFS'}
+define keswick_min1 {lower -999999.0 upper 999999.0 kind 'alias' units 'CFS'}
+define keswick_min2 {lower -999999.0 upper 999999.0 kind 'alias' units 'CFS'}
+
+! set up Fall Flow Stability release targets
+define C_Kswck_FallStab {
+    case OctFeb {
+        condition month <= FEB
+        select Base from KeswickWinterFlow given EoS=S_Shsta(prevSEP) use linear }
+    Case otherwise {
+        condition always
+        value 0. }
+}                   
+
+define tempCtrl_surrogate {value 3250.}
+!define C5_mif_CS2 {timeseries kind 'FLOW-MIN-REQUIRED' units 'cfs'}
+define C_Kswck_MIF1 {std kind 'FLOW-MIN-INSTREAM' units 'CFS'}
+define C_Kswck_MIF2 {std kind 'FLOW-MIN-INSTREAM' units 'CFS'}
+define C_Kswck_MIF3 {std kind 'FLOW-MIN-INSTREAM' units 'CFS'}
+goal C_Kswck_MIF_total {C_Kswck_MIF = C_Kswck_MIF1 + C_Kswck_MIF2 + C_Kswck_MIF3} 
+
+!goal C_Kswck_MIF_total {C_Kswck_MIF = C5_MIF_CS2}
+
+define effective_C_Keswick_min1 { value max(minflow_C_Kswck,tempCtrl_surrogate) }
+goal setKeswick_min1 {keswick_min1 = effective_C_Keswick_min1 }
+
+!goal setC_Kswckmin12 {C_Kswck_MIF2 < 0.}
+goal setC_Kswckmin2 {C_Kswck_MIF2 < max(C_Kswck_FallStab - effective_C_Keswick_min1,0.) }
+goal setC_Kswckmin3 {keswick_min2 = C_Kswck_FallStab}
+
+goal setC5min3 {C_Kswck_MIF3 = 0. }
+
