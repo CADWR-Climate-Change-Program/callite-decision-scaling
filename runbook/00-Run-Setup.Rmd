@@ -79,7 +79,7 @@ writeForecastToDB <- F  # whether to output forecast lookup tables to db
 ### Perturbation List
 ```{r}
 # Create incremental perturbation lookup list
-cc<-c(1,6:20)~~~~
+cc<-c(1,6:20)
 ```
 
 

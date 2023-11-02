@@ -727,7 +727,7 @@ else{INCLUDE 'Wheeling\wheelfixes.wresl'}
         INCLUDE '\output\SJR_cycle_output.wresl'
     }
 
-INCLUDE [LOCAL] 'Shortage\ShortWarning.wresl'
+!INCLUDE [LOCAL] 'Shortage\ShortWarning.wresl'
 INCLUDE [LOCAL] 'FlowCriteria\FlowCriteria.wresl'
 
 !INCLUDE [LOCAL] 'Export_Ops\JUL_NOV_PREFER_TD_EXP.wresl'
@@ -806,7 +806,7 @@ else{INCLUDE 'Wheeling\wheelfixes.wresl'}
         INCLUDE '\output\SJR_cycle_output.wresl'
     }
 
-INCLUDE [LOCAL] 'Shortage\ShortWarning.wresl'
+!INCLUDE [LOCAL] 'Shortage\ShortWarning.wresl'
 INCLUDE [LOCAL] 'FlowCriteria\FlowCriteria.wresl'
 
 !INCLUDE [LOCAL] 'Export_Ops\JUL_NOV_PREFER_TD_EXP.wresl'
