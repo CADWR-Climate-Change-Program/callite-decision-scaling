@@ -115,8 +115,8 @@ define sac_oth_est_ { alias sac_oth_est kind 'FLOW-INFLOW' units 'CFS'}
 
 !*************************************************************************************************************
 ! define the other flows that go into making the export component
-!define D514A {timeseries kind 'FLOW-DELIVERY' units 'CFS'} !Riparian Diversion from Delta for COSMA Ag DWSP
-!define D514B {timeseries kind 'FLOW-DELIVERY' units 'CFS'} !DWSP Diversion M&I
+define D514A {timeseries kind 'FLOW-DELIVERY' units 'CFS'} !Riparian Diversion from Delta for COSMA Ag DWSP
+define D514B {timeseries kind 'FLOW-DELIVERY' units 'CFS'} !DWSP Diversion M&I
 !define demand_D420 {timeseries kind 'DEMAND' units 'cfs' }
 define D514A_1_VAMP {timeseries kind 'FLOW-DELIVERY' units 'CFS'}
 define D514B_VAMP {timeseries kind 'FLOW-DELIVERY' units 'CFS'}

@@ -184,7 +184,12 @@ goal setQsod { Qsod = D_ExpTD + D_CCWDVCOR + netDICU_SOD}
 goal setC_IndnSl { C_IndnSl = coefB * Qsod + Qsod } ! Indian Slough component of OMR flow equation
 
 ! Flow split from San Joaquin to the Export pool
-goal setC_OldRiver { C_OldRiver = coefA * VERNQ + coefC } ! Vernalis and regression constant components of OMR flow equation
+! goal setC_OldRiver { C_OldRiver = coefA * VERNQ + coefC } ! Vernalis and regression constant components of OMR flow equation
+
+goal setC_OldRiver {lhs C_OldRiver rhs (coefA * VERNQ + coefC) lhs>rhs penalty 999999 lhs<rhs penalty 999999}
+define C_OldRiver_check {lower unbounded upper unbounded kind 'FLOW-ACCRDEPL' units 'CFS'}
+goal setC_OldRiver_check {C_OldRiver_check = C_OldRiver - (coefA * VERNQ + coefC)}
+
 
 define OMRFlow   {alias C_OMR  kind 'FLOW-CHANNEL' units 'CFS'} ! for output
 define QWestFlow {alias C_SJRVI kind 'FLOW-CHANNEL' units 'CFS'} ! for output

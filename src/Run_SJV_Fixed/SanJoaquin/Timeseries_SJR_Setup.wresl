@@ -14,18 +14,25 @@ define C_SJRVER {lower 0 upper 99999 kind 'FLOW-CHANNEL' units 'CFS'} !SJR below
 
 define AD_SJR {value AD_SJR_v}  !Flow at Vernalis  
 
-!define AD_SJR_VAMP {value AD_SJR_VAMP_v} !Flow at Vernalis during VAMP period
+define AD_SJR_VAMP {value AD_SJR_v} !Flow at Vernalis during VAMP period
 
 define AD_SJR_Pulse {value AD_SJR_Pulse_v}  !VAMP baseflow (April flow from SJR_WQ2 cycle)
 
 !For timeseries option set C_SJRVer = AD_SJR (timeseries from CS2CL) 
-goal setC_SJRVER {C_SJRVER = AD_SJR}
+!goal setC_SJRVER {C_SJRVER = AD_SJR}
+goal setC_SJRVER {lhs C_SJRVER rhs AD_SJR lhs>rhs penalty 999999 lhs<rhs penalty 999999}
+define C_SJRVER_check {lower unbounded upper unbounded kind 'FLOW-ACCRDEPL' units 'CFS'}
+goal setC_SJRVER_check {C_SJRVER_check = C_SJRVER - AD_SJR}
+
 
 define AD_Calaveras {timeseries kind 'FLOW-ACCRDEPL' units 'CFS'}
 define AD_SJRCalALL {std kind 'FLOW-ACCRDEPL' units 'CFS'}
 
 !For timeseries option set AD_SJRCalALL = AD_Calaveras (timeseries from CS2CL)  
-goal setAD_SJRCalALL {AD_SJRCalALL = AD_Calaveras}
+!goal setAD_SJRCalALL {AD_SJRCalALL = AD_Calaveras}
+goal setAD_SJRCalALL {lhs AD_SJRCalALL rhs AD_Calaveras lhs>rhs penalty 999999 lhs<rhs penalty 999999}
+define AD_SJRCalALL_check {lower unbounded upper unbounded kind 'FLOW-ACCRDEPL' units 'CFS'}
+goal setAD_SJRCalALL_check {AD_SJRCalALL_check = AD_SJRCalALL - AD_Calaveras}
 
 define VernQ {value AD_SJR}
 

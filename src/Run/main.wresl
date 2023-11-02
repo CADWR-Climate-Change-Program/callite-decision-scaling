@@ -237,11 +237,11 @@ MODEL block3 {
     define getFinalMrdo {EXTERNAL f90}  ! OBJ code file must be located in run\external directory for compilation
 
     if int(SLR_DLTSW)==0{
-		INCLUDE  'Delta\DeltaExtFuncs_7inpANN_roa0_slr0.wresl'}
+		INCLUDE  'Delta\DeltaExtFuncs_7inpANN_roa0_slr0_x64.wresl'}
 	elseif int(SLR_DLTSW) == 1{
-    	INCLUDE  'Delta\DeltaExtFuncs_7inpANNslr15cm.wresl'}
+    	INCLUDE  'Delta\DeltaExtFuncs_7inpANNslr15cm_x64.wresl'}
     elseif int(SLR_DLTSW) == 2{
-        INCLUDE  'Delta\DeltaExtFuncs_7inpANNslr45cm.wresl'}
+        INCLUDE  'Delta\DeltaExtFuncs_7inpANNslr45cm_x64.wresl'}
 
     INCLUDE  'swp_dellogic\allocation\co_extfcn.wresl'
 

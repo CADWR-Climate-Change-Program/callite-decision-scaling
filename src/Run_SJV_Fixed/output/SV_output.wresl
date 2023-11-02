@@ -73,9 +73,10 @@ define S_SLSWPLevel3dv {alias S_SLSWPlevel3 kind 'STORAGE-LEVEL' units 'TAF'}
 define S_SLSWPLevel4dv {alias S_SLSWPlevel4 kind 'STORAGE-LEVEL' units 'TAF'}
 define S_SLSWPLevel5dv {alias S_SLSWPlevel5 kind 'STORAGE-LEVEL' units 'TAF'}
 
+/*
 define S_ESTMNLevel4dv {alias S_ESTMNLevel4 kind 'STORAGE-LEVEL' units 'TAF'}
 define S_HNSLYLevel4dv {alias S_HNSLYLevel4 kind 'STORAGE-LEVEL' units 'TAF'}
 define S_PEDROLevel4dv {alias S_PedroLevel4 kind 'STORAGE-LEVEL' units 'TAF'}
 define S_MCLRELevel4dv {alias S_MclreLevel4 kind 'STORAGE-LEVEL' units 'TAF'}
-
+*/
 
